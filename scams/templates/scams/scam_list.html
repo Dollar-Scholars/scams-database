@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Method</th>
+                <th>Date Seen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scam in scams %}
+            <tr>
+                <td>{{ scam.title }}</td>
+                <td>{{ scam.get_scam_type_display }}</td>
+                <td>{{ scam.get_contact_method_display }}</td>
+                <td>{{ scam.date_seen }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No scams reported yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
