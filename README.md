@@ -1,6 +1,8 @@
 # scams-database
 Developed by volunteers from the Economics discord server.
 
+
+## Setup
 ```yaml
 # April 10, 2026
 # Instructions by Leslie D. @lespam for Economics Server Discord.
@@ -44,3 +46,23 @@ git add .
 git commit -m 'message'
 git push
 ```
+## How to contribute
+1. Add Yourself as a Contributor
+Open this link: https://github.com/Dollar-Scholars/koala-bor-ed-with-us
+Add your name to the Contributors to get started and be added to the project
+2. Set Up the Project
+Follow the setup instructions above
+3. Create a Branch
+Use the naming convention:
+your-name/short-task-description
+Example:
+maymay/reports-view
+4. Make Your Changes
+Test your code before committing
+5. Commit Your Work
+git add .
+git commit -m "clear description of your change"
+6. Push Your Branch
+git push
+7. Open a Pull Request
+Describe what you changed
