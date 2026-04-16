@@ -78,7 +78,6 @@ def validate_not_future(value):
 
 class Scam(models.Model):
     title = models.CharField(max_length=255)
-    scam_type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     date_occurred = models.DateField(validators=[validate_not_future], null=True, blank=True)
     amount_lost = models.DecimalField(
         max_digits=12,
@@ -91,6 +90,9 @@ class Scam(models.Model):
     platform = models.CharField(max_length=100, blank=True)
     description = models.TextField()
     phishing = models.BooleanField(null=True, blank=True)
+    contact_method = models.CharField(max_length=100,choices=CHANNEL_CHOICES, default="undefined")
+    scam_type = models.CharField(max_length=100,choices=TYPE_CHOICES, default="undefined")
+    url_or_contact = models.CharField(max_length=255, blank=True)
     severity = models.IntegerField(
         default=2,
         validators=[MinValueValidator(1), MaxValueValidator(5)]
@@ -98,7 +100,6 @@ class Scam(models.Model):
 
     scammer_name = models.CharField(max_length=255, blank=True)
     scammer_contact = models.CharField(max_length=255, blank=True)
-    contact_method = models.CharField(max_length=100, choices=CHANNEL_CHOICES)
 
     reporter_name = models.CharField(max_length=255, blank=True)
     reporter_email = models.EmailField(validators=[EmailValidator()])
