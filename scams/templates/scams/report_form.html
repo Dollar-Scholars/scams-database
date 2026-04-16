@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Report a Scam | ScamWatch Global</title>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
 
@@ -12,109 +13,280 @@
             --navy: #0f2444;
             --navy-mid: #1a3a6b;
             --accent: #c0392b;
-            --accent-light: #fdf1f0;
-            --gold: #b8941f;
             --surface: #ffffff;
             --surface-2: #f7f8fa;
             --border: rgba(15,36,68,0.12);
-            --border-focus: #1a3a6b;
             --text-primary: #0f2444;
             --text-secondary: #4a5568;
             --text-hint: #8a9ab5;
             --radius: 6px;
         }
 
-        body { background: var(--surface-2); font-family: 'DM Sans', sans-serif; color: var(--text-primary); }
+        body { background: var(--surface-2); font-family: 'DM Sans', sans-serif; }
 
         .header-banner { background: var(--navy); padding: 40px; text-align: center; color: white; }
         .header-title { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 10px; }
         .header-title em { font-style: italic; opacity: 0.7; }
 
         .content-wrap { max-width: 900px; margin: 0 auto; padding: 40px; }
-        .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
         .form-section { padding: 30px; border-bottom: 1px solid var(--border); }
-        .section-label { font-size: 12px; font-weight: bold; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .field { display: flex; flex-direction: column; gap: 8px; }
+        .section-label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 8px; transition: opacity 0.3s ease; }
         .field.full { grid-column: span 2; }
 
-        label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+        label { font-size: 13px; color: var(--text-secondary); }
 
         input, select, textarea {
-            width: 100%; padding: 12px;
-            border: 1px solid var(--border); border-radius: var(--radius);
-            font-family: inherit; font-size: 14px;
-            background: var(--surface-2); transition: all 0.2s;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface-2);
         }
+
         input:focus, select:focus, textarea:focus {
-            outline: none; border-color: var(--navy-mid); background: white;
-            box-shadow: 0 0 0 3px rgba(26,58,107,0.1);
+            outline: none;
+            border-color: var(--navy-mid);
+            background: white;
         }
 
-        .severity-wrap { padding: 10px 0; }
-        .severity-track { height: 6px; background: var(--border); border-radius: 3px; position: relative; overflow: hidden; margin-bottom: 10px; }
-        .severity-fill { height: 100%; background: linear-gradient(90deg, #2da44e, #d29922, #c0392b); transition: width 0.3s; }
+        /* Styles for Greying Out */
+        .is-greyed-out {
+            opacity: 0.4;
+            pointer-events: none; /* Disables interaction */
+        }
 
-        .submit-section { padding: 30px; background: var(--surface-2); display: flex; justify-content: space-between; align-items: center; }
-        .btn-submit { background: var(--navy); color: white; padding: 14px 30px; border: none; border-radius: var(--radius); cursor: pointer; font-weight: 500; font-size: 15px; }
-        .btn-submit:hover { background: var(--navy-mid); }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .radio-group input {
+            transform: translateY(1px);
+        }
+
+        .severity-track {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        .severity-fill {
+            height: 100%;
+            width: 25%;
+            background: #2da44e;
+            transition: all 0.3s;
+        }
+
+        .checkbox-row {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-section {
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-submit {
+            background: var(--navy);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            font-weight: 500;
+        }
     </style>
 </head>
+
 <body>
 
-    <div class="header-banner">
-        <h1 class="header-title">Report a <em>fraud or scam</em></h1>
-        <p>Help protect the community by sharing details of the incident.</p>
-    </div>
+<div class="header-banner">
+    <h1 class="header-title">Report a <em>fraud or scam</em></h1>
+    <p>Help protect the community by sharing details of the incident.</p>
+</div>
 
-    <div class="content-wrap">
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-card">
+<div class="content-wrap">
 
-                <div class="form-section">
-                    <div class="section-label">Incident Details</div>
-                    <div class="form-grid">
-                        {% for field in form %}
-                            <div class="field {% if field.name == 'title' or field.name == 'description' or field.name == 'severity' or field.name == 'scammer_contact' %}full{% endif %}">
+<form method="POST">
+{% csrf_token %}
+
+<div class="form-card">
+
+    <div class="form-section">
+        <div class="section-label">Incident Details</div>
+
+        <div class="form-grid">
+
+            {% for field in form %}
+
+                {% if field.name != 'date_seen' %}
+
+                    {% if field.name == 'anonymous' %}
+
+                        <div class="checkbox-row">
+                            {{ field }}
+                            {{ field.label_tag }}
+                        </div>
+
+                    {% else %}
+
+                        <div class="field {% if field.name == 'title' or field.name == 'description' or field.name == 'severity' %}full{% endif %}">
+
+                            {% if field.name != 'anonymous' %}
                                 {{ field.label_tag }}
-                                {{ field }}
-                                {% if field.errors %}<span style="color:red; font-size:12px;">{{ field.errors }}</span>{% endif %}
+                            {% endif %}
 
-                                {% if field.name == 'severity' %}
-                                    <div class="severity-wrap">
-                                        <div class="severity-track">
-                                            <div class="severity-fill" id="sevFill" style="width: 25%;"></div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
+                            {% if field.name == 'contact_method' %}
+                                <div class="radio-group">
+                                    {{ field }}
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <span style="color:red; font-size:12px;">{{ field.errors }}</span>
+                            {% endif %}
 
                             {% if field.name == 'severity' %}
-                                </div></div><div class="form-section"><div class="section-label">Your Information</div><div class="form-grid">
+                                <div class="severity-track">
+                                    <div id="sevFill" class="severity-fill"></div>
+                                </div>
                             {% endif %}
-                        {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endif %}
+
+                {% if field.name == 'contact_method' %}
                     </div>
                 </div>
 
-                <div class="submit-section">
-                    <p style="font-size: 12px; color: var(--text-hint); max-width: 400px;">
-                        By submitting, you confirm the information is accurate.
-                    </p>
-                    <button type="submit" class="btn-submit">Submit Report →</button>
-                </div>
+                <div class="form-section">
+                    <div class="section-label">Your Information</div>
+                    <div class="form-grid">
+                {% endif %}
 
-            </div>
-        </form>
+            {% endfor %}
+
+        </div>
     </div>
 
-    <script>
-        function updateSeverity(val) {
-            document.getElementById('sevFill').style.width = ((val - 1) / 4 * 100) + '%';
-        }
-    </script>
+    <div class="submit-section">
+        <button type="submit" class="btn-submit">Submit Report</button>
+    </div>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+// SEVERITY COLOR LOGIC
+function updateSeverity(val) {
+    const fill = document.getElementById('sevFill');
+    if (!fill) return;
+
+    const percent = ((val - 1) / 4) * 100;
+    fill.style.width = percent + '%';
+
+    if (val <= 2) fill.style.background = "#2da44e";
+    else if (val == 3) fill.style.background = "#d29922";
+    else fill.style.background = "#c0392b";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // 1. Severity Initialization
+    const severityInput = document.querySelector('[name="severity"]');
+    if (severityInput) {
+        updateSeverity(severityInput.value || 1);
+        severityInput.addEventListener("change", function () {
+            updateSeverity(this.value);
+        });
+    }
+
+    // 2. Date Constraint Logic
+    const dateField = document.querySelector('input[type="date"]');
+    if (dateField) {
+        const today = new Date().toISOString().split('T')[0];
+        dateField.setAttribute("max", today);
+    }
+
+    // 3. Anonymous Toggle (Grey Out Name, Phone, Email)
+    const anonCheckbox = document.querySelector('[name="anonymous"]');
+    // Ensure these names match your Django field names
+    const fieldsToGrey = ['reporter_name', 'reporter_phone', 'reporter_email'];
+
+    function handleAnonymousStatus() {
+        const isChecked = anonCheckbox.checked;
+
+        fieldsToGrey.forEach(fieldName => {
+            const input = document.querySelector(`[name="${fieldName}"]`);
+            if (input) {
+                // Finds the nearest parent div with class 'field'
+                const container = input.closest('.field');
+
+                if (isChecked) {
+                    input.disabled = true;
+                    input.value = ''; // Optional: clear inputs
+                    if (container) container.classList.add('is-greyed-out');
+                } else {
+                    input.disabled = false;
+                    if (container) container.classList.remove('is-greyed-out');
+                }
+            }
+        });
+    }
+
+    if (anonCheckbox) {
+        anonCheckbox.addEventListener('change', handleAnonymousStatus);
+        handleAnonymousStatus(); // Run on page load
+    }
+
+});
+</script>
+
 </body>
 </html>
