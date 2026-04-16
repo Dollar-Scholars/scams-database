@@ -12,21 +12,33 @@ def main():
     print("")
 
 if __name__ == "__main__":
-
+    
+    #delete all the data
+    Scam.objects.all().delete()
     #create a new scam:
     Scam.objects.create(
-    title="Scam phone call",
-    description="Trying to get credit card info",
-    phishing=True,
-    contact_method="phone_call",
-    scam_type="financial",
-    date_seen="2026-04-01",
-    url_or_contact="076 579 46 34"
+    title = "scam title test 1",
+    date_occurred = "2026-04-01",
+    amount_lost = 23413,
+    currency = "Other",
+    platform = "platform1",
+    description = "Some infos about the scam",
+    phishing = True,
+    url_or_contact = "scamers_email@test.com",
+
+    scammer_name = "test_1",
+    scammer_contact = "095 654 32 56",
+
+    reporter_name = "may1",
+    reporter_email = "my_email@test.com",
+    reporter_phone = "123 456 78 90",
+    country = "Switzerland"
     )
+    
     #create multiple scams
     Scam.objects.bulk_create([
-    Scam(title="scam A", description="some really bad scam...", phishing=True, contact_method="social_media", scam_type="idendity", date_seen="2026-04-01"),
-    Scam(title="scam B", description="dangerous scan...", phishing=True, contact_method="sms", scam_type="financial", date_seen="2026-04-02"),
+    Scam(title = "scam A", date_occurred = "2026-04-01", amount_lost = 23413, currency = "Other", platform = "platform1", description = "Some infos about the scam", phishing = True, url_or_contact = "scamers_email@test.com", scammer_name = "test_1", scammer_contact = "095 654 32 56", reporter_name = "may1", reporter_email = "my_email@test.com", reporter_phone = "123 456 78 90", country = "Switzerland"),
+    Scam(title = "scam B", date_occurred = "2026-04-01", amount_lost = 23413, currency = "Other", platform = "platform1", description = "Some infos about the scam", phishing = True, url_or_contact = "scamers_email@test.com", scammer_name = "test_1", scammer_contact = "095 654 32 56", reporter_name = "may1", reporter_email = "my_email@test.com", reporter_phone = "123 456 78 90", country = "Switzerland"),
     ])
 
     #read existing data
@@ -36,7 +48,7 @@ if __name__ == "__main__":
     
     #filter
     Scam.objects.filter(scam_type="financial")
-    Scam.objects.filter(date_seen__year=2026)
+    Scam.objects.filter(date_occurred__year=2026)
     
     #delete a scam
     Scam.objects.get(title="scam B").delete()
