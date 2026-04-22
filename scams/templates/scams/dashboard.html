@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scam Dashboard</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy: #0f2444;
+            --navy-mid: #1a3a6b;
+            --accent: #c0392b;
+            --surface: #ffffff;
+            --surface-2: #f7f8fa;
+            --border: rgba(15,36,68,0.12);
+            --text-primary: #0f2444;
+            --text-secondary: #4a5568;
+            --text-hint: #8a9ab5;
+            --radius: 6px;
+        }
+
+        body { background: var(--surface-2); font-family: 'DM Sans', sans-serif; }
+
+        .header-banner { background: var(--navy); padding: 40px; text-align: center; color: white; }
+        .header-title { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 10px; }
+        .header-title em { font-style: italic; opacity: 0.7; }
+
+        .content-wrap { max-width: 900px; margin: 0 auto; padding: 40px; }
+
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .form-section { padding: 30px; border-bottom: 1px solid var(--border); }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 8px; transition: opacity 0.3s ease; }
+        .field.full { grid-column: span 2; }
+
+        label { font-size: 13px; color: var(--text-secondary); }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface-2);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--navy-mid);
+            background: white;
+        }
+
+        /* Styles for Greying Out */
+        .is-greyed-out {
+            opacity: 0.4;
+            pointer-events: none; /* Disables interaction */
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .radio-group input {
+            transform: translateY(1px);
+        }
+
+        .severity-track {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        .severity-fill {
+            height: 100%;
+            width: 25%;
+            background: #2da44e;
+            transition: all 0.3s;
+        }
+
+        .checkbox-row {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-section {
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-submit {
+            background: var(--navy);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            font-weight: 500;
+        }
+        .chart-box {
+            grid-column: 2;
+            width: 50%;
+            height: 200px;
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+
+    .table-1 {
+    grid-column: 1;
+    max-height: 300px; 
+    overflow-y: auto; 
+    border: 1px solid rgba(0,0,0,0.1);
+    }
+    .table_o {
+    grid-column: 1;
+    max-height: 300px;   
+    overflow-y: auto;   
+    border: 1px solid rgba(0,0,0,0.1);
+    }
+    .chart_o {
+    grid-column: 1/3;
+    }
+    .text_o {
+    grid-column: 2;    
+    }
+    </style>
+</head>
+
+<body>
+
+<div class="header-banner">
+    <h1 class="header-title">Dashboard</h1>
+    <p>Key statistics and insights from reported scam data</p>
+</div>
+
+<div class="form-card">
+<form method="get">
+    Created at:
+    <select name="year" onchange="this.form.submit()">
+        <option value="">All years</option>
+
+        {% for y in years %}
+            <option value="{{ y }}"
+                {% if selected_year == y|stringformat:"s" %}selected{% endif %}>
+                {{ y }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="month" onchange="this.form.submit()">
+    <option value="">All months</option>
+
+    {% for num, name in months %}
+        <option value="{{ num }}"
+            {% if selected_month == num|stringformat:"s" %}selected{% endif %}>
+            {{ name }}
+        </option>
+    {% endfor %}
+    </select>
+    Date occured: 
+    <select name="year_o" onchange="this.form.submit()">
+        <option value="">All years</option>
+
+        {% for y in years_o %}
+            <option value="{{ y }}"
+                {% if selected_year_o == y|stringformat:"s" %}selected{% endif %}>
+                {{ y }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="month_o" onchange="this.form.submit()">
+    <option value="">All months</option>
+
+    {% for num, name in months_o %}
+        <option value="{{ num }}"
+            {% if selected_month_o == num|stringformat:"s" %}selected{% endif %}>
+            {{ name }}
+        </option>
+    {% endfor %}
+    </select>
+</form>
+</div>
+
+<div class="page-grid">
+<div class="table-1">
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for scam in scams %}
+        <tr>
+            <td>{{ scam.id }}</td>
+            <td>{{ scam.title }}</td>
+            <td>{{ scam.created_at|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div  class="chart-box">
+<canvas id="scamChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ chart_labels|safe }};
+    const data = {{ chart_data|safe }};
+
+    const ctx = document.getElementById('scamChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Scams',
+                data: data,
+                borderWidth: 2,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+Total amount of money lost: {{total_loss}} 
+</div>
+<hr><hr>
+<div class="table_o">
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date_occurred</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for scam in scams_o %}
+        <tr>
+            <td>{{ scam.id }}</td>
+            <td>{{ scam.title }}</td>
+            <td>{{ scam.date_occurred|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="text_o">
+    <li> Total number of scams reported during the selected period: {{total_scams_o}} </li>
+    <li> Total amount of money lost: {{total_loss_o}}</li>
+
+</div>
+
+<div class="chart_o">
+<canvas id="scamChart_o" height="50"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels_o = {{ chart_labels_o|safe }};
+    const data_o = {{ chart_data_o|safe }};
+
+    const ctx_o = document.getElementById('scamChart_o').getContext('2d');
+
+    new Chart(ctx_o, {
+        type: 'line',
+        data: {
+            labels: labels_o,
+            datasets: [{
+                label: 'Number of Scams',
+                data: data_o,
+                borderWidth: 2,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</div>
+
+</body>
+</html>
