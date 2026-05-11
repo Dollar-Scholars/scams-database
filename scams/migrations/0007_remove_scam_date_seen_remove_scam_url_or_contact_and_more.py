@@ -8,7 +8,7 @@ import scams.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('scams', '0005_alter_scam_country'),
+        ('scams', '0006_remove_scam_date_seen'),
     ]
 
     operations = [

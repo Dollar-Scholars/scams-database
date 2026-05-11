@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('scams', '0004_scam_amount_lost_scam_anonymous_scam_country_and_more'),
+        ('scams', '0005_alter_scam_country'),
     ]
 
     operations = [
