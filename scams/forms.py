@@ -1,6 +1,9 @@
 from django import forms
 from .models import Scam
 from django.core.exceptions import ValidationError
+from thefuzz import fuzz
+from django.utils import timezone
+from datetime import timedelta
 
 
 class ScamReportForm(forms.ModelForm):
@@ -54,5 +57,18 @@ class ScamReportForm(forms.ModelForm):
 
         if amount and amount > 0 and not currency:
             self.add_error('currency', "Please select a currency for the reported loss.")
+
+        description = cleaned_data.get('description', '')
+        if len(description) > 10:
+            one_day_ago = timezone.now() - timedelta(days=1)
+
+            recent_scams = Scam.objects.filter(created_at__gte=one_day_ago)
+
+            for scam in recent_scams:
+                score = fuzz.token_set_ratio(description, scam.description)
+
+                if score > 50:
+                    self.add_error('description', "A very similar scam report has already been submitted.")
+                    break
 
         return cleaned_data
