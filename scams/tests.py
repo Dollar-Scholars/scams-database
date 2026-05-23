@@ -60,5 +60,4 @@ class ScamDuplicateCheckTest(TestCase):
         form = ScamReportForm(data=data)
         
         
-        print(form.errors)
         self.assertTrue(form.is_valid())
