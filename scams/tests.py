@@ -144,12 +144,6 @@ class ScamDuplicateCheckTest(TestCase):
                 is_valid = form.is_valid()
                 
                 if case["is_duplicate"]:
-                    if is_valid:
-                        print()
-                        print(case["existing_desc"], "\n", case["new_desc"])
-                        print(form.errors)
-                        print()
-
                     self.assertFalse(
                         is_valid, 
                         f"Expected form to be blocked as a duplicate, but it was accepted."
@@ -160,10 +154,6 @@ class ScamDuplicateCheckTest(TestCase):
                         "A very similar scam report has already been submitted."
                     )
                 else:
-                    if not is_valid:
-                        print()
-                        print(case["existing_desc"], "\n", case["new_desc"])
-                        print()
                     self.assertTrue(
                         is_valid, 
                         f"Expected form to be accepted, but got errors: {form.errors}"
