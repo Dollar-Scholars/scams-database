@@ -5,6 +5,7 @@ from thefuzz import fuzz
 from django.utils import timezone
 from datetime import timedelta
 
+SMALL_REPORT_LENGTH = 100
 
 class ScamReportForm(forms.ModelForm):
     class Meta:
@@ -59,16 +60,30 @@ class ScamReportForm(forms.ModelForm):
             self.add_error('currency', "Please select a currency for the reported loss.")
 
         description = cleaned_data.get('description', '')
-        if len(description) > 10:
-            one_day_ago = timezone.now() - timedelta(days=1)
+        one_day_ago = timezone.now() - timedelta(days=1)
 
-            recent_scams = Scam.objects.filter(created_at__gte=one_day_ago)
+        recent_scams = Scam.objects.filter(created_at__gte=one_day_ago)
 
-            for scam in recent_scams:
-                score = fuzz.token_set_ratio(description, scam.description)
+        for scam in recent_scams:
+            description_lengths = [len(description), len(scam.description)] 
+            smallest_description_length = min(description_lengths)
+            largest_description_length = max(description_lengths)
+            size_difference = largest_description_length / smallest_description_length
 
-                if score > 50:
-                    self.add_error('description', "A very similar scam report has already been submitted.")
-                    break
+            # If it's much longer then it's not a duplicate
+            if size_difference > 4:
+                continue
+
+            score = fuzz.token_set_ratio(description, scam.description)
+
+            is_small_report = len(description) < SMALL_REPORT_LENGTH
+            if is_small_report:
+                threshold = 95
+            else:
+                threshold = 50
+
+            if score >= threshold:
+                self.add_error('description', "A very similar scam report has already been submitted.")
+                break
 
         return cleaned_data
