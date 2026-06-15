@@ -23,6 +23,9 @@ def report_scam(request):
 def thank_you(request):
     return render(request, 'scams/thank_you.html')
 
+def information_page(request):
+    return render(request, 'scams/information_page.html')
+
 def scam_list(request):
     scams = Scam.objects.all().order_by('-created_at')
     return render(request, 'scams/scam_list.html', {'scams': scams})
