@@ -23,8 +23,30 @@ def report_scam(request):
 def thank_you(request):
     return render(request, 'scams/thank_you.html')
 
-def information_page(request):
-    return render(request, 'scams/information_page.html')
+def scam_awareness_page(request):
+    resources = [
+        {
+            'name': 'Federal Trade Commission (FTC)',
+            'url': 'https://reportfraud.ftc.gov/',
+            'description': 'File a report with the Federal Trade Commission.',
+        },
+        {
+            'name': 'FBI Internet Crime Complaint Center (IC3)',
+            'url': 'https://www.ic3.gov/',
+            'description': 'Report internet-based fraud.',
+        },
+        {
+            'name': 'Consumer Financial Protection Bureau (CFPB)',
+            'url': 'https://www.consumerfinance.gov/',
+            'description': 'Learn your rights and file a complaint about a financial company.',
+        },
+        {
+            'name': 'USA.gov',
+            'url': 'https://www.usa.gov/legal-aid',
+            'description': 'For legal help and services.',
+        },
+    ]
+    return render(request, 'scams/scam_awareness_page.html', {'resources': resources})
 
 def scam_list(request):
     scams = Scam.objects.all().order_by('-created_at')

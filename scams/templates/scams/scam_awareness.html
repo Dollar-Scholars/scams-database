@@ -1,0 +1,442 @@
+{% comment %}
+  Stay Informed — Scam Awareness page
+
+  Setup:
+  1. Place this file in your app's templates/ directory (e.g. reports/templates/reports/scam_awareness.html)
+  2. If your base template isn't called "base.html", change the {% extends %} line below.
+  3. If your base.html doesn't use {% block content %} / {% block title %}, rename
+     the block tags below to match the ones your base.html defines.
+  4. Everything else (CSS + JS) is self-contained in this one file — nothing else to wire up.
+{% endcomment %}
+{% extends "base.html" %}
+
+{% block title %}Stay Informed — Scam Awareness{% endblock %}
+
+{% block content %}
+<section class="scam-page">
+  <style>
+    .scam-page {
+      --ink: #0F2E2B;
+      --teal: #163F3B;
+      --teal-deep: #0F2E2B;
+      --teal-soft: #E4EEEA;
+      --bg: #F3F6F2;
+      --gold: #C98A3C;
+      --brick: #B5483B;
+      --white: #FFFFFF;
+      --border: #D8E2DC;
+      --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-body: 'IBM Plex Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      display: block;
+    }
+    .scam-page * { box-sizing: border-box; }
+
+    .scam-page__container { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+
+    /* Hero */
+    .scam-hero { text-align: center; padding-bottom: 1.5rem; }
+    .scam-hero__seal { width: 64px; height: 64px; margin: 0 auto 0.75rem; }
+    .scam-hero__seal .seal-ring,
+    .scam-hero__seal .seal-check { transition: stroke 0.4s ease; }
+    .scam-hero__seal.seal--earned .seal-ring,
+    .scam-hero__seal.seal--earned .seal-check { stroke: var(--gold); }
+    .seal-caption { font-size: 0.8rem; color: #5C7A74; margin: 0 0 1.1rem; }
+    .scam-hero__eyebrow {
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--teal); font-weight: 600; margin: 0 0 0.6rem;
+    }
+    .scam-hero__title {
+      font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.25rem);
+      font-weight: 600; line-height: 1.25; margin: 0 0 0.85rem; color: var(--teal-deep);
+    }
+    .scam-hero__sub { font-size: 1.02rem; color: #3C5E58; max-width: 480px; margin: 0 auto 1rem; }
+    .scam-hero__lang-note { font-size: 0.88rem; color: #5C7A74; }
+    .scam-hero__lang-note a { color: var(--teal); font-weight: 600; text-decoration: underline; }
+
+    /* Progress */
+    .progress-track { margin: 1.5rem 0 2.5rem; }
+    .progress-track__bar { height: 8px; border-radius: 999px; background: var(--teal-soft); overflow: hidden; }
+    .progress-track__fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transition: width 0.4s ease;
+    }
+    .progress-track__label { margin: 0.6rem 0 0; font-size: 0.88rem; color: #5C7A74; text-align: center; }
+
+    /* Sections */
+    .scam-section { margin-bottom: 2.75rem; }
+    .scam-section__title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; color: var(--teal-deep); margin: 0 0 0.35rem; }
+    .scam-section__intro { font-size: 0.95rem; color: #5C7A74; margin: 0 0 1.1rem; }
+
+    /* Accordion */
+    .accordion-group { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--white); }
+    .accordion-item { border-bottom: 1px solid var(--border); }
+    .accordion-item:last-child { border-bottom: none; }
+    .accordion-heading { margin: 0; }
+    .accordion-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      padding: 1.05rem 1.25rem; background: transparent; border: none;
+      font-family: var(--font-body); font-size: 1rem; font-weight: 600; color: var(--ink);
+      text-align: left; cursor: pointer;
+    }
+    .accordion-trigger:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .accordion-trigger-text { flex: 1; }
+    .accordion-reviewed-tag {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; color: var(--gold);
+      text-transform: uppercase; opacity: 0; transition: opacity 0.2s ease; flex-shrink: 0;
+    }
+    .accordion-item.is-reviewed .accordion-reviewed-tag { opacity: 1; }
+    .accordion-chevron { flex-shrink: 0; transition: transform 0.3s ease; color: var(--teal); }
+    .accordion-item.is-open .accordion-chevron { transform: rotate(180deg); }
+    .accordion-panel-wrap {
+      display: grid; grid-template-rows: 0fr; overflow: hidden;
+      transition: grid-template-rows 0.35s ease; background: var(--teal-soft);
+    }
+    .accordion-item.is-open .accordion-panel-wrap { grid-template-rows: 1fr; }
+    .accordion-panel-inner { min-height: 0; }
+    .accordion-panel-inner p { margin: 0; padding: 0 1.25rem 1.15rem; font-size: 0.96rem; color: #2A4A45; }
+
+    /* Checklist */
+    .checklist { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.65rem; }
+    .checklist__item label {
+      display: flex; align-items: flex-start; gap: 0.7rem; background: var(--white);
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem;
+      cursor: pointer; font-size: 0.96rem;
+    }
+    .checklist__item input[type="checkbox"] { margin-top: 0.18rem; width: 18px; height: 18px; accent-color: var(--brick); flex-shrink: 0; }
+    .link-reset { background: none; border: none; color: var(--teal); font-size: 0.86rem; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 0; }
+
+    /* Callout / steps */
+    .scam-section--callout { background: var(--teal-deep); color: var(--white); border-radius: 16px; padding: 1.75rem 1.5rem; }
+    .scam-section--callout .scam-section__title { color: var(--white); }
+    .scam-section--callout .scam-section__intro { color: #B9D1CC; }
+    .steps { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.65rem; font-size: 0.97rem; }
+    .steps li::marker { color: var(--gold); font-weight: 700; }
+
+    /* Resources */
+    .resource-grid { display: grid; gap: 0.75rem; }
+    .resource-card {
+      display: flex; flex-direction: column; gap: 0.2rem; padding: 1rem 1.15rem;
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+      text-decoration: none; transition: border-color 0.2s ease;
+    }
+    .resource-card:hover, .resource-card:focus-visible { border-color: var(--gold); }
+    .resource-card__name { font-weight: 700; color: var(--teal-deep); }
+    .resource-card__desc { font-size: 0.9rem; color: #5C7A74; }
+
+    /* Footer */
+    .scam-footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: #6B8780; }
+
+    @media (min-width: 720px) { .resource-grid { grid-template-columns: 1fr 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .scam-page * { transition: none !important; animation: none !important; } }
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <div class="scam-page__container">
+
+    <header class="scam-hero">
+      <div class="scam-hero__seal" data-seal aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+          <circle class="seal-ring" cx="32" cy="32" r="28" stroke="#163F3B" stroke-width="3"/>
+          <circle cx="32" cy="32" r="22" stroke="#D8E2DC" stroke-width="1.5"/>
+          <path class="seal-check" d="M21 33L28 40L43 24" stroke="#163F3B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="seal-caption" data-seal-caption aria-live="polite">Read through the topics below to earn this seal.</p>
+
+      <p class="scam-hero__eyebrow">Thank you for your report</p>
+      <h1 class="scam-hero__title">Now let's make sure you never have to file one again.</h1>
+      <p class="scam-hero__sub">Scams keep changing, but the warning signs don't. Spend a few minutes here so you can spot trouble before it reaches your wallet.</p>
+      <p class="scam-hero__lang-note">¿Prefiere esta información en español? <a href="#contact">Contáctenos</a> y se la enviamos.</p>
+    </header>
+
+    <div class="progress-track">
+      <div class="progress-track__bar">
+        <div class="progress-track__fill" data-progress-fill></div>
+      </div>
+      <p class="progress-track__label" data-progress-label aria-live="polite">0 of 6 topics reviewed</p>
+    </div>
+
+    <section class="scam-section" aria-labelledby="heading-scams">
+      <h2 id="heading-scams" class="scam-section__title">Common scams to recognize</h2>
+      <p class="scam-section__intro">Tap each one to see what it looks like in real life.</p>
+
+      <div class="accordion-group" data-accordion-group>
+
+        <div class="accordion-item" data-accordion-item data-item-id="phishing" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-phishing" id="trigger-phishing">
+              <span class="accordion-trigger-text">Phishing texts &amp; emails</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-phishing" role="region" aria-labelledby="trigger-phishing">
+            <div class="accordion-panel-inner">
+              <p>You get a text or email that looks like it's from your bank, a delivery company, or a government office. It says there's a problem and asks you to click a link and log in. The link goes to a fake site built to steal your password. Real companies never ask you to confirm a password through a text link.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" data-accordion-item data-item-id="job" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-job" id="trigger-job">
+              <span class="accordion-trigger-text">Fake job &amp; "easy money" offers</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-job" role="region" aria-labelledby="trigger-job">
+            <div class="accordion-panel-inner">
+              <p>Someone offers a job with great pay for very little work, often by text or social media. Before you start, they ask you to pay for training or equipment, or to deposit a check and send part of it back. A real employer never asks you to pay them before you start working.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" data-accordion-item data-item-id="immigration" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-immigration" id="trigger-immigration">
+              <span class="accordion-trigger-text">Fake immigration &amp; government notices</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-immigration" role="region" aria-labelledby="trigger-immigration">
+            <div class="accordion-panel-inner">
+              <p>You get a call, text, or letter claiming to be from immigration, the IRS, or another agency. It says you owe a fee or risk losing your status unless you pay right away, often by gift card or wire transfer. Government agencies contact you by official mail first, and they never demand gift cards.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" data-accordion-item data-item-id="marketplace" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-marketplace" id="trigger-marketplace">
+              <span class="accordion-trigger-text">Marketplace &amp; payment scams</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-marketplace" role="region" aria-labelledby="trigger-marketplace">
+            <div class="accordion-panel-inner">
+              <p>You're buying or selling something online — a car, an apartment, furniture. The other person pushes you to pay outside the platform, send a deposit before you see it in person, or sends a check for more than the price and asks you to refund the difference. Never pay for something you haven't seen in person.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" data-accordion-item data-item-id="techsupport" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-techsupport" id="trigger-techsupport">
+              <span class="accordion-trigger-text">Tech support &amp; remote access scams</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-techsupport" role="region" aria-labelledby="trigger-techsupport">
+            <div class="accordion-panel-inner">
+              <p>A pop-up or phone call claims your computer has a virus and offers to "fix" it if you let them remotely access your device or pay for software. Once they're in, they can see your files and accounts. Hang up — real tech companies don't call you out of the blue about a virus.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" data-accordion-item data-item-id="romance" data-track="scam-type">
+          <h3 class="accordion-heading">
+            <button class="accordion-trigger" data-accordion-trigger aria-expanded="false" aria-controls="panel-romance" id="trigger-romance">
+              <span class="accordion-trigger-text">Romance &amp; relationship scams</span>
+              <span class="accordion-reviewed-tag" aria-hidden="true">Reviewed</span>
+              <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="accordion-panel-wrap" data-accordion-panel id="panel-romance" role="region" aria-labelledby="trigger-romance">
+            <div class="accordion-panel-inner">
+              <p>Someone you met online builds a relationship with you over weeks or months, then asks for money for an emergency, travel, or an investment, even though you've never met in person. If someone you've never met in person asks you for money, that's a strong sign something is wrong.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="scam-section" aria-labelledby="heading-redflags">
+      <h2 id="heading-redflags" class="scam-section__title">Red flags checklist</h2>
+      <p class="scam-section__intro">Check off anything that sounds familiar. This list stays on your device — nothing here is sent anywhere.</p>
+      <ul class="checklist">
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="urgency">
+            <span>They're pushing you to act right now, with no time to think.</span>
+          </label>
+        </li>
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="payment-method">
+            <span>They ask for payment by gift card, wire transfer, or cryptocurrency.</span>
+          </label>
+        </li>
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="unsolicited">
+            <span>They contacted you first, out of nowhere.</span>
+          </label>
+        </li>
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="personal-info">
+            <span>They ask for your Social Security number, PIN, or passwords.</span>
+          </label>
+        </li>
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="threat">
+            <span>They threaten arrest, deportation, or loss of your immigration status.</span>
+          </label>
+        </li>
+        <li class="checklist__item">
+          <label>
+            <input type="checkbox" data-checklist-item="too-good">
+            <span>It feels too good to be true — a prize, a refund, a job offer.</span>
+          </label>
+        </li>
+      </ul>
+      <button type="button" class="link-reset" data-reset-checklist>Clear my checklist</button>
+    </section>
+
+    <section class="scam-section scam-section--callout" aria-labelledby="heading-whattodo">
+      <h2 id="heading-whattodo" class="scam-section__title">If you suspect a scam</h2>
+      <ol class="steps">
+        <li><strong>Stop.</strong> Don't send money, gift cards, or personal information.</li>
+        <li><strong>Verify independently.</strong> Call the company or agency yourself, using a number from their official website — not the one the caller gave you.</li>
+        <li><strong>Talk to someone you trust</strong> before you act — a family member, friend, or community organization.</li>
+        <li><strong>Report it</strong>, using the resources below, so others can be warned too.</li>
+      </ol>
+    </section>
+
+    <section class="scam-section" aria-labelledby="heading-resources" id="contact">
+      <h2 id="heading-resources" class="scam-section__title">Where to report a scam</h2>
+      <div class="resource-grid">
+        <a class="resource-card" href="https://reportfraud.ftc.gov" target="_blank" rel="noopener">
+          <span class="resource-card__name">FTC</span>
+          <span class="resource-card__desc">File a report with the Federal Trade Commission.</span>
+        </a>
+        <a class="resource-card" href="https://www.ic3.gov" target="_blank" rel="noopener">
+          <span class="resource-card__name">FBI IC3</span>
+          <span class="resource-card__desc">Report internet-based fraud to the FBI's Internet Crime Complaint Center.</span>
+        </a>
+        <a class="resource-card" href="https://www.consumerfinance.gov" target="_blank" rel="noopener">
+          <span class="resource-card__name">CFPB</span>
+          <span class="resource-card__desc">Learn your rights and file a complaint about a financial company.</span>
+        </a>
+        <a class="resource-card" href="https://www.naag.org" target="_blank" rel="noopener">
+          <span class="resource-card__name">Your State AG</span>
+          <span class="resource-card__desc">Find your state Attorney General's consumer protection office.</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="scam-footer">
+      <p>This page shares general information and isn't legal advice. If you're in immediate danger or have already lost money, contact local law enforcement or a qualified attorney right away.</p>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = 'scamAwarenessProgress_v1';
+      var CHECKLIST_KEY = 'scamAwarenessChecklist_v1';
+
+      function safeGet(key) {
+        try { return JSON.parse(window.localStorage.getItem(key)) || {}; }
+        catch (e) { return {}; }
+      }
+      function safeSet(key, val) {
+        try { window.localStorage.setItem(key, JSON.stringify(val)); }
+        catch (e) { /* storage unavailable — feature still works for this visit */ }
+      }
+
+      var progress = safeGet(STORAGE_KEY);
+      var checklist = safeGet(CHECKLIST_KEY);
+
+      var root = document.currentScript.closest('.scam-page');
+      var accordionItems = root.querySelectorAll('[data-accordion-item]');
+      var progressFill = root.querySelector('[data-progress-fill]');
+      var progressLabel = root.querySelector('[data-progress-label]');
+      var sealEl = root.querySelector('[data-seal]');
+      var sealCaption = root.querySelector('[data-seal-caption]');
+      var totalScamTypes = root.querySelectorAll('[data-track="scam-type"]').length;
+
+      function updateProgress() {
+        var reviewedCount = Object.keys(progress).filter(function (k) { return progress[k]; }).length;
+        var pct = totalScamTypes ? Math.round((reviewedCount / totalScamTypes) * 100) : 0;
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (progressLabel) progressLabel.textContent = reviewedCount + ' of ' + totalScamTypes + ' topics reviewed';
+        var earned = totalScamTypes > 0 && reviewedCount >= totalScamTypes;
+        if (sealEl) sealEl.classList.toggle('seal--earned', earned);
+        if (sealCaption) {
+          sealCaption.textContent = earned
+            ? "You've reviewed every common scam pattern. Nicely done."
+            : 'Read through the topics below to earn this seal.';
+        }
+      }
+
+      accordionItems.forEach(function (item) {
+        var trigger = item.querySelector('[data-accordion-trigger]');
+        var id = item.getAttribute('data-item-id');
+        var trackType = item.getAttribute('data-track');
+
+        if (progress[id]) item.classList.add('is-reviewed');
+
+        trigger.addEventListener('click', function () {
+          var isOpen = item.classList.contains('is-open');
+          var group = item.closest('[data-accordion-group]');
+          if (group) {
+            group.querySelectorAll('[data-accordion-item].is-open').forEach(function (openItem) {
+              if (openItem !== item) {
+                openItem.classList.remove('is-open');
+                openItem.querySelector('[data-accordion-trigger]').setAttribute('aria-expanded', 'false');
+              }
+            });
+          }
+          item.classList.toggle('is-open', !isOpen);
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+
+          if (!isOpen && trackType === 'scam-type' && !progress[id]) {
+            progress[id] = true;
+            safeSet(STORAGE_KEY, progress);
+            item.classList.add('is-reviewed');
+            updateProgress();
+          }
+        });
+      });
+
+      updateProgress();
+
+      var checkboxes = root.querySelectorAll('[data-checklist-item]');
+      checkboxes.forEach(function (box) {
+        var id = box.getAttribute('data-checklist-item');
+        box.checked = !!checklist[id];
+        box.addEventListener('change', function () {
+          checklist[id] = box.checked;
+          safeSet(CHECKLIST_KEY, checklist);
+        });
+      });
+
+      var resetBtn = root.querySelector('[data-reset-checklist]');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          checkboxes.forEach(function (box) { box.checked = false; });
+          checklist = {};
+          safeSet(CHECKLIST_KEY, checklist);
+        });
+      }
+    })();
+  </script>
+
+</section>
+{% endblock %}

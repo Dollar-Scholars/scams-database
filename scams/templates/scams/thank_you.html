@@ -2,12 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <style>
+        :root {
+            --navy: #0f2444;
+            --accent: #c0392b;
+            --surface: #ffffff;
+            --border: rgba(15,36,68,0.12);
+            --text-primary: #0f2444;
+            --text-secondary: #4a5568;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef3f7;
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px 16px;
+        }
+
+        .card {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(15,36,68,0.05);
+        }
+
+        h2 { margin-bottom: 12px; color: var(--navy); }
+        p { color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+
+        .english-note {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .spanish-note {
+            color: #4c6f8a;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-top: -6px;
+            margin-bottom: 16px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .action-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 2px;
+        }
+
+        .action-label.primary {
+            color: var(--navy);
+        }
+
+        .action-label.secondary {
+            color: var(--accent);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            background: var(--navy);
+            color: white;
+        }
+
+        .btn.secondary {
+            background: var(--accent);
+        }
+    </style>
 </head>
 <body>
-    <h2>Thank You/Gracias!</h2>
-    <p>Your report has been submitted successfully and is currently pending review.</p>
-    <a href="{% url 'report_scam' %}">Submit another report</a>
-    <a href="{% url 'information_page' %}">Learn more about scam reporting</a>
+    <div class="card">
+        <h2>Thank You / Gracias!</h2>
+        <p class="english-note">Your report has been submitted successfully and is currently pending review.</p>
+        <p class="spanish-note">Su informe ha sido enviado y actualmente está en espera de revisión.</p>
+
+        <div class="actions">
+            <div class="action-block">
+                <a href="{% url 'report_scam' %}" class="btn">Submit Another Report</a>
+                <span class="action-label primary">(Enviar Otro Informe de Estafa)</span>
+            </div>
+            <div class="action-block">
+                <a href="{% url 'scam_awareness_page' %}" class="btn secondary">Learn How to Protect Yourself From Future Scams</a>
+                <span class="action-label secondary">(Aprenda a Cómo Protegerse de Futuras Estafas)</span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
