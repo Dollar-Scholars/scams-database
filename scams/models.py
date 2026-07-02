@@ -25,6 +25,7 @@ TYPE_CHOICES = [
 CURRENCY_CHOICES = [
     ("USD", "USD — US Dollar"), ("EUR", "EUR — Euro"), ("GBP", "GBP — British Pound"),
     ("AUD", "AUD — Australian Dollar"), ("CAD", "CAD — Canadian Dollar"), ("INR", "INR — Indian Rupee"),
+    ("MXN", "MXN — Mexican Peso"),
     ("NGN", "NGN — Nigerian Naira"), ("ZAR", "ZAR — South African Rand"), ("BRL", "BRL — Brazilian Real"),
     ("JPY", "JPY — Japanese Yen"), ("CNY", "CNY — Chinese Yuan"), ("Other", "Other"),
 ]
