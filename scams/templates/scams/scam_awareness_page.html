@@ -9,22 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #0f2444;
-            --navy-mid: #1a3a6b;
-            --accent: #c0392b;
-            --surface: #ffffff;
-            --surface-2: #f7f8fa;
-            --border: rgba(15,36,68,0.12);
-            --text-primary: #0f2444;
-            --text-secondary: #4a5568;
-            --text-hint: #8a9ab5;
+            --navy: #163d5b;
+            --navy-mid: #245d82;
+            --accent: #e76f51;
+            --surface: #fffdfb;
+            --surface-2: #edf6f5;
+            --border: rgba(22,61,91,0.14);
+            --text-primary: #18364c;
+            --text-secondary: #4d6579;
+            --text-hint: #7a8ea0;
             --ink: var(--text-primary);
-            --teal: var(--navy);
-            --teal-deep: var(--navy);
-            --teal-soft: var(--surface-2);
-            --bg: var(--surface-2);
-            --gold: var(--accent);
-            --brick: var(--accent);
+            --teal: #2f8f99;
+            --teal-deep: #123d52;
+            --teal-soft: #ddf0ee;
+            --bg: #f5faf9;
+            --gold: #f4b942;
+            --brick: #d96c5c;
             --white: #ffffff;
             --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
             --font-body: 'IBM Plex Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -136,13 +136,13 @@
             color: var(--text-secondary);
         }
 
-        .guide-section {
+                .guide-section {
             margin-bottom: 2.25rem;
-            background: linear-gradient(180deg, rgba(15,36,68,0.12), rgba(15,36,68,0.2));
+            background: linear-gradient(180deg, rgba(47,143,153,0.12), rgba(22,61,91,0.04));
             border: none;
             border-radius: 16px;
             padding: 1.2rem 1.15rem 1.15rem;
-            box-shadow: 0 10px 30px rgba(15, 36, 68, 0.08);
+            box-shadow: 0 10px 30px rgba(18, 61, 82, 0.08);
         }
 
         .guide-section:not(.callout) .section-head {
@@ -267,8 +267,8 @@
         }
 
         .checklist-item.is-checked label {
-            background: #ffe5e5;
-            border-color: #c0392b;
+            background: #fff1ee;
+            border-color: var(--accent);
         }
 
         .checklist-item input[type="checkbox"] {
@@ -291,7 +291,7 @@
         }
 
         .callout {
-            background: var(--navy);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
             color: var(--white);
             border-radius: 16px;
             padding: 1.25rem 1.15rem;
@@ -312,7 +312,7 @@
             font-size: 0.96rem;
         }
 
-        .step-list strong { color: var(--accent); }
+        .step-list strong { color: var(--gold); }
 
         .resource-grid {
             display: grid;
@@ -409,7 +409,6 @@
                 <p class="hero__lead">Read through the topics below to</p>
                 <h1 class="hero__title">Stay Informed & Protect Yourself<br>From Future Scams</h1>
                 <p class="hero__copy">Scams keep changing, but the warning signs don't. Spend a few minutes here so you can spot trouble before it reaches your wallet.</p>
-                <p class="hero__note">¿Prefiere esta información en español? <a href="mailto:grezzia@dollarscholars.org" target="_blank" rel="noopener noreferrer">Contáctenos</a> para enviársela.</p>
             </header>
 
             <div class="progress" aria-live="polite">
