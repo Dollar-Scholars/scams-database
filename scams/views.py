@@ -74,11 +74,6 @@ CURRENCY_NAMES = {code: label[len(code):].lstrip(' —–-') or label for code, 
 # range is longer than this (e.g. one report of a scam from decades ago).
 DASHBOARD_MAX_FILLED_MONTHS = 240
 
-# The "Latest reports" table: how many rows, and the only columns it loads. The
-# reporter's name, email and phone are never loaded for this public page.
-DASHBOARD_RECENT_COUNT = 10
-DASHBOARD_RECENT_FIELDS = ('title', 'scam_type', 'date_occurred', 'amount_lost', 'currency', 'status', 'created_at')
-
 
 def _int_param(request, name, low, high):
     """GET parameter as an int in [low, high], or None when it is missing or invalid."""
@@ -305,7 +300,6 @@ def dashboard(request):
         "period_label_o": _period_label(year_o, month_o),
         "loss_by_currency": _losses_by_currency(scams),
         "loss_by_currency_o": _losses_by_currency(scams_o),
-        "recent_scams": list(scams.only(*DASHBOARD_RECENT_FIELDS)[:DASHBOARD_RECENT_COUNT]),
         "chart_rows": series,
         "chart_rows_o": series_o,
         "chart_summary": _chart_summary(series, 'Bar chart of reports submitted per month'),

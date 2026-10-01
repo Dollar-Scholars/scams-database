@@ -151,7 +151,6 @@ class DashboardViewTests(TestCase):
 
         response = self.get(year='2026', month='3')
         self.assertEqual(response.context['total_scams'], 1)
-        self.assertEqual([s.title for s in response.context['recent_scams']], ['March'])
         self.assertContains(response, '<option value="3" selected>')
 
         # Month on its own spans every year.
@@ -186,14 +185,6 @@ class DashboardViewTests(TestCase):
         make_scam('Newer', occurred=date(2025, 1, 1))
         titles = [s.title for s in self.get().context['scams_o']]
         self.assertEqual(titles, ['Newer', 'Older', 'Undated'])
-
-    def test_recent_reports_are_newest_first_and_capped(self):
-        for day in range(1, 13):
-            make_scam(f'Day {day}', created=utc(2026, 3, day, 12))
-        recent = list(self.get().context['recent_scams'])
-        self.assertEqual(len(recent), 10)
-        self.assertEqual(recent[0].title, 'Day 12')
-        self.assertContains(self.get(), 'Showing the 10 most recent of 12')
 
     # --- money -----------------------------------------------------------------------
 
@@ -322,21 +313,21 @@ class DashboardViewTests(TestCase):
         payload = chart_payload(self.get(month_o='1'))
         self.assertEqual(payload['occurred']['labels'], ['Jan 1901', 'Jan 2026'])
 
-    def test_user_text_is_escaped(self):
+    def test_report_text_never_reaches_the_page(self):
         make_scam('</script><script>alert("x")</script>', created=utc(2026, 3, 5, 12))
         html = self.get().content.decode()
-        self.assertNotIn('<script>alert("x")</script>', html)
-        self.assertIn('&lt;/script&gt;&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;', html)
+        self.assertNotIn('alert(', html)
 
     # --- privacy and contract ------------------------------------------------------
 
-    def test_no_reporter_pii_in_html(self):
+    def test_no_report_details_or_reporter_pii_in_html(self):
         make_scam('Visible title', created=utc(2026, 3, 5, 12), occurred=date(2026, 3, 1),
                   amount=Decimal('9.99'), currency='GBP')
         for params in ({}, {'year': '2026'}, {'year_o': '2026', 'month_o': '3'}):
             with self.subTest(params=params):
                 response = self.get(**params)
-                self.assertContains(response, 'Visible title')
+                # The public dashboard shows totals and charts only, never individual reports.
+                self.assertNotContains(response, 'Visible title')
                 for value in REPORTER_PII.values():
                     self.assertNotContains(response, value)
 
