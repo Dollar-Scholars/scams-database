@@ -214,7 +214,7 @@ html.no-js .awareness-progress {
     font-weight: 600;
     line-height: 1.45;
     letter-spacing: -0.01em;
-    text-align: left;
+    text-align: start;
     transition: background-color .2s ease;
 }
 
@@ -423,7 +423,7 @@ html.no-js .warning-reset {
     position: relative;
     min-height: 30px;
     margin: 0;
-    padding-left: 44px;
+    padding-inline-start: 44px;
     color: var(--cta-muted);
     font-size: 1rem;
     line-height: 1.6;
@@ -434,7 +434,7 @@ html.no-js .warning-reset {
     content: counter(step);
     position: absolute;
     top: -2px;
-    left: 0;
+    inset-inline-start: 0;
     display: grid;
     place-items: center;
     width: 30px;
@@ -500,7 +500,8 @@ html[data-theme="dark"] .step-list strong {
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    padding: 18px 52px 18px 20px;
+    padding-block: 18px;
+    padding-inline: 20px 52px;  /* room for the icon at the end */
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--ds-surface);
@@ -540,7 +541,7 @@ html[data-theme="dark"] .step-list strong {
 .resource-card-icon {
     position: absolute;
     top: 18px;
-    right: 18px;
+    inset-inline-end: 18px;
     width: 20px;
     height: 20px;
     color: var(--teal);
@@ -636,7 +637,7 @@ html[data-theme="dark"] .step-list strong {
     }
 
     .resource-card {
-        padding-right: 20px;
+        padding-inline-end: 20px;
         box-shadow: none;
     }
 

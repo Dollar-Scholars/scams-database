@@ -80,7 +80,8 @@ CSRF_TRUSTED_ORIGINS = env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
 # The main Dollar Scholars site, whose header and footer every page shows (loaded live from
 # <DS_SITE_URL>/embed/site-header.js and site-footer.js). Empty = use this app's own copies.
-DS_SITE_URL = env_str('DS_SITE_URL', 'https://dollarscholars.org').rstrip('/')
+# Set but empty (DS_SITE_URL=) also means off, so not env_str, which treats empty as unset.
+DS_SITE_URL = os.environ.get('DS_SITE_URL', 'https://dollarscholars.org').strip().rstrip('/')
 
 
 # Application definition

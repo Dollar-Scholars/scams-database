@@ -138,7 +138,7 @@ html.no-js #sevValue {
 .report-steps li {
     position: relative;
     margin: 0;
-    padding-left: 44px;
+    padding-inline-start: 44px;
     color: var(--muted);
     font-size: .9375rem;
     line-height: 1.55;
@@ -153,7 +153,7 @@ html.no-js #sevValue {
     content: counter(report-step);
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     display: grid;
     place-items: center;
     width: 28px;

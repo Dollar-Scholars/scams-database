@@ -2,34 +2,39 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, EmailValidator
 from django.core.exceptions import ValidationError
 from datetime import date
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
+# Choice labels are translated (gettext_lazy), so they show in the page's language.
 CHANNEL_CHOICES = [
-    ("phone", "Phone call"),
-    ("sms", "SMS"),
-    ("email", "Email"),
-    ("mail","Mail"),
-    ("social", "Social media"),
-    ("messaging", "Messaging app"),
-    ("website", "Website / ad"),
-    ("in_person", "In person approach"),
-    ("other","Other channel"),
+    ("phone", _("Phone call")),
+    ("sms", _("SMS")),
+    ("email", _("Email")),
+    ("mail", _("Mail")),
+    ("social", _("Social media")),
+    ("messaging", _("Messaging app")),
+    ("website", _("Website / ad")),
+    ("in_person", _("In person approach")),
+    ("other", _("Other channel")),
 ]
 
 TYPE_CHOICES = [
-    ("financial", "Financial transfer scams"),
-    ("identity", "Identity and impersonation scams"),
-    ("investment", "Investment and wealth scams"),
-    ("other", "Other scams"),
+    ("financial", _("Financial transfer scams")),
+    ("identity", _("Identity and impersonation scams")),
+    ("investment", _("Investment and wealth scams")),
+    ("other", _("Other scams")),
 ]
 
+# The report form shows these with Babel's currency names in the page's language (forms.py).
 CURRENCY_CHOICES = [
-    ("USD", "USD — US Dollar"), ("EUR", "EUR — Euro"), ("GBP", "GBP — British Pound"),
-    ("AUD", "AUD — Australian Dollar"), ("CAD", "CAD — Canadian Dollar"), ("INR", "INR — Indian Rupee"),
-    ("MXN", "MXN — Mexican Peso"),
-    ("NGN", "NGN — Nigerian Naira"), ("ZAR", "ZAR — South African Rand"), ("BRL", "BRL — Brazilian Real"),
-    ("JPY", "JPY — Japanese Yen"), ("CNY", "CNY — Chinese Yuan"), ("Other", "Other"),
+    ("USD", _("USD — US Dollar")), ("EUR", _("EUR — Euro")), ("GBP", _("GBP — British Pound")),
+    ("AUD", _("AUD — Australian Dollar")), ("CAD", _("CAD — Canadian Dollar")), ("INR", _("INR — Indian Rupee")),
+    ("MXN", _("MXN — Mexican Peso")),
+    ("NGN", _("NGN — Nigerian Naira")), ("ZAR", _("ZAR — South African Rand")), ("BRL", _("BRL — Brazilian Real")),
+    ("JPY", _("JPY — Japanese Yen")), ("CNY", _("CNY — Chinese Yuan")), ("Other", pgettext_lazy("currency", "Other")),
 ]
 
+# English names. The report form shows Babel's names in the page's language instead
+# (forms.py), so these are not marked for translation.
 COUNTRY_CHOICES = [
     ('AF', 'Afghanistan'), ('AL', 'Albania'), ('DZ', 'Algeria'), ('AS', 'American Samoa'), ('AD', 'Andorra'),
     ('AO', 'Angola'), ('AI', 'Anguilla'), ('AQ', 'Antarctica'), ('AG', 'Antigua and Barbuda'), ('AR', 'Argentina'),
@@ -75,7 +80,7 @@ COUNTRY_CHOICES = [
 
 def validate_not_future(value):
     if value and value > date.today():
-        raise ValidationError("The date cannot be in the future.")
+        raise ValidationError(_("The date cannot be in the future."))
 
 class Scam(models.Model):
     title = models.CharField(max_length=255)

@@ -4,11 +4,32 @@
    - Date it happened: no future dates (max = today).
    - Submit anonymously: switches off and clears the name and phone fields. The email
      stays on: it is required so the team can follow up, and is never shown publicly.
-   - Error summary: focused on load; its links focus the field they point to. */
+   - Error summary: focused on load; its links focus the field they point to.
+   - Words shown on the page come from the template (#report-form-i18n), translated. */
 (function () {
     'use strict';
 
-    var SEVERITY_LABELS = { 1: 'Very low', 2: 'Low', 3: 'Medium', 4: 'High', 5: 'Severe' };
+    // The page's words, in the page's language: report_form.html renders them as JSON in
+    // <script type="application/json" id="report-form-i18n">. Nothing here is in English, so
+    // if that block is missing the slider just shows its number.
+    function readStrings() {
+        var el = document.getElementById('report-form-i18n');
+        if (!el) return {};
+        try {
+            return JSON.parse(el.textContent) || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    // { "1": <word for 1>, ..., "5": <word for 5> }: the same words as the scale under the slider.
+    // Read on first use, so it works wherever the script tag is.
+    var severityLabels = null;
+
+    function severityLabel(value) {
+        if (!severityLabels) severityLabels = readStrings().severityLabels || {};
+        return severityLabels[value] || '';
+    }
 
     // Same colour bands as before the redesign: 1-2 low (green), 3 medium (amber), 4-5 high (red)
     function severityLevel(value) {
@@ -29,7 +50,8 @@
 
         var percent = ((value - min) / (max - min)) * 100;
         var level = severityLevel(value);
-        var text = value + (SEVERITY_LABELS[value] ? ' · ' + SEVERITY_LABELS[value] : '');
+        var label = severityLabel(value);
+        var text = label ? value + ' · ' + label : String(value);
 
         range.style.setProperty('--fill', percent + '%');
         range.setAttribute('data-level', level);

@@ -8,6 +8,10 @@
  *
  * Without Chart.js (CDN blocked or offline) the canvases are hidden and the
  * "Show the numbers" tables are opened instead.
+ *
+ * This file has no text of its own: the dataset labels, month labels and tooltips come
+ * translated in the json_script payload, and numbers are formatted for the page
+ * language (<html lang>) with Intl.NumberFormat.
  */
 (() => {
     'use strict';
@@ -51,11 +55,37 @@
         font: css('--font-sans'),
     });
 
-    const plural = (n) => `${n.toLocaleString()} ${n === 1 ? 'report' : 'reports'}`;
+    // The page language, e.g. "es" or "zh-hans", if the browser can format numbers in it.
+    const pageLocale = (() => {
+        const lang = (document.documentElement.lang || '').trim();
+        if (!lang || typeof Intl === 'undefined' || !Intl.NumberFormat) return undefined;
+        try {
+            return Intl.NumberFormat.supportedLocalesOf([lang]).length ? lang : undefined;
+        } catch (_) {
+            return undefined; // not a valid language tag
+        }
+    })();
+
+    const formatNumber = (n) => {
+        try {
+            return new Intl.NumberFormat(pageLocale).format(n);
+        } catch (_) {
+            return String(n);
+        }
+    };
+
+    // Tooltip text for one bar: the translated template from the server ("{count} reports")
+    // with the number filled in, or just the number if there is no template.
+    const tooltipText = (series, index, n) => {
+        const template = series && Array.isArray(series.tooltips) ? series.tooltips[index] : null;
+        const number = formatNumber(n);
+        return typeof template === 'string' ? template.split('{count}').join(number) : number;
+    };
 
     // Options are rebuilt from the current theme on every theme change.
-    const buildOptions = (t) => ({
+    const buildOptions = (t, series) => ({
         responsive: true,
+        locale: pageLocale, // axis numbers in the page language
         maintainAspectRatio: false,
         animation: reduceMotion ? false : { duration: 400 },
         interaction: { mode: 'index', intersect: false },
@@ -72,7 +102,7 @@
                 padding: 10,
                 displayColors: false,
                 titleFont: { weight: '700' },
-                callbacks: { label: (ctx) => plural(ctx.parsed.y) },
+                callbacks: { label: (ctx) => tooltipText(series, ctx.dataIndex, ctx.parsed.y) },
             },
         },
         scales: {
@@ -100,15 +130,20 @@
 
     const charts = [];
 
-    const draw = (canvasId, series, label) => {
+    const draw = (canvasId, series) => {
         const canvas = document.getElementById(canvasId);
         if (!canvas || !series || !Array.isArray(series.labels) || series.labels.length === 0) return;
         const t = readTheme();
-        charts.push(new Chart(canvas, {
+        const chart = new Chart(canvas, {
             type: 'bar',
-            data: { labels: series.labels, datasets: [styleDataset({ label, data: series.data }, t)] },
-            options: buildOptions(t),
-        }));
+            data: {
+                labels: series.labels,
+                datasets: [styleDataset({ label: series.label || '', data: series.data }, t)],
+            },
+            options: buildOptions(t, series),
+        });
+        chart.$series = series;
+        charts.push(chart);
     };
 
     const applyTheme = () => {
@@ -117,7 +152,7 @@
         Chart.defaults.color = t.text;
         charts.forEach((chart) => {
             styleDataset(chart.data.datasets[0], t);
-            chart.options = buildOptions(t);
+            chart.options = buildOptions(t, chart.$series);
             chart.update('none');
         });
     };
@@ -127,8 +162,8 @@
     Chart.defaults.color = t0.text;
 
     try {
-        draw('scamChart', payload.submitted, 'Reports submitted');
-        draw('scamChart_o', payload.occurred, 'Scams that occurred');
+        draw('scamChart', payload.submitted);
+        draw('scamChart_o', payload.occurred);
     } catch (err) {
         showTables();
         if (window.console) console.error(err);

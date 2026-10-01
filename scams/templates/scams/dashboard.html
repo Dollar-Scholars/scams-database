@@ -1,96 +1,103 @@
 {% extends "scams/base.html" %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Scam dashboard{% endblock %}
-{% block meta_description %}Charts and totals of the scams people have reported to the Dollar Scholars Foundation: when reports arrived, when the scams happened and how much money was lost.{% endblock %}
+{% block title %}{% translate "Scam dashboard" %}{% endblock %}
+{% block meta_description %}{% translate "Charts and totals of the scams people have reported to the Dollar Scholars Foundation: when reports arrived, when the scams happened and how much money was lost." %}{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'scams/css/pages/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
+{# Text used inside HTML attributes is escaped, so a translation with quotes cannot break the markup. #}
+{% translate "Month" as t_month %}{% translate "Reports" as t_reports %}
 <div class="container">
     <header class="page-header">
-        <p class="eyebrow">Scam Reports</p>
-        <h1>Scam dashboard</h1>
-        <p class="lead">What the community has reported: how many reports arrive each month, when the scams actually happened, and how much money people lost.</p>
+        <p class="eyebrow">{% translate "Scam Reports" %}</p>
+        <h1>{% translate "Scam dashboard" %}</h1>
+        <p class="lead">{% translate "What the community has reported: how many reports arrive each month, when the scams actually happened, and how much money people lost." %}</p>
         <div class="page-header-actions">
-            <a class="btn btn-primary" href="{% url 'report_scam' %}">Report a scam</a>
+            <a class="btn btn-primary" href="{% url 'report_scam' %}">{% translate "Report a scam" %}</a>
         </div>
     </header>
 
     {% if not has_reports %}
-    <section class="section" aria-label="No data yet">
+    {% translate "No data yet" as t_no_data %}
+    <section class="section" aria-label="{{ t_no_data|force_escape }}">
         <div class="empty-state">
             <div class="empty-state-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
             </div>
-            <h2 class="empty-state-title">No reports yet</h2>
-            <p>Charts and totals appear here as soon as people start reporting scams. Seen one? Your report helps warn others.</p>
-            <div class="cluster"><a class="btn btn-primary" href="{% url 'report_scam' %}">Report a scam</a></div>
+            <h2 class="empty-state-title">{% translate "No reports yet" %}</h2>
+            <p>{% translate "Charts and totals appear here as soon as people start reporting scams. Seen one? Your report helps warn others." %}</p>
+            <div class="cluster"><a class="btn btn-primary" href="{% url 'report_scam' %}">{% translate "Report a scam" %}</a></div>
         </div>
     </section>
     {% else %}
 
     {# ---------- Summary tiles ---------- #}
     <section class="section dash-summary" aria-labelledby="summary-heading">
-        <h2 class="visually-hidden" id="summary-heading">Summary</h2>
+        <h2 class="visually-hidden" id="summary-heading">{% translate "Summary" %}</h2>
         <div class="grid grid-2 dash-stats">
             <div class="stat stat-count">
-                <p class="stat-label">Reports submitted</p>
+                <p class="stat-label">{% translate "Reports submitted" %}</p>
                 <p class="stat-value">{{ total_scams|floatformat:"g" }}</p>
                 <p class="stat-meta">{{ period_label }}</p>
             </div>
 
             <div class="stat stat-count">
-                <p class="stat-label">Scams by date occurred</p>
+                <p class="stat-label">{% translate "Scams by date occurred" %}</p>
                 <p class="stat-value">{{ total_scams_o|floatformat:"g" }}</p>
-                <p class="stat-meta">{{ period_label_o }}{% if undated_count_o %} &middot; {{ undated_count_o|floatformat:"g" }} with no date given{% endif %}</p>
+                <p class="stat-meta">{{ period_label_o }}{% if undated_count_o %} &middot; {% blocktranslate trimmed count counter=undated_count_o with shown=undated_count_o|floatformat:"g" %}
+                    {{ shown }} with no date given
+                {% plural %}
+                    {{ shown }} with no date given
+                {% endblocktranslate %}{% endif %}</p>
             </div>
 
             <div class="stat stat-loss">
-                <p class="stat-label" id="loss-heading">Money lost &middot; by date submitted</p>
+                <p class="stat-label" id="loss-heading">{% translate "Money lost" %} &middot; {% translate "by date submitted" %}</p>
                 {% if loss_by_currency %}
                 <dl class="loss-list" aria-labelledby="loss-heading">
                     {% for row in loss_by_currency %}
                     <div class="loss-row">
-                        <dt>{% if row.code %}<abbr title="{{ row.label }}">{{ row.code }}</abbr>{% else %}{{ row.label }}{% endif %}</dt>
+                        <dt>{% if row.abbr %}<abbr title="{{ row.label }}">{{ row.abbr }}</abbr>{% else %}{{ row.label }}{% endif %}</dt>
                         <dd>{{ row.total|floatformat:"2g" }}</dd>
                     </div>
                     {% endfor %}
                 </dl>
                 {% else %}
-                <p class="loss-empty">No amounts reported</p>
+                <p class="loss-empty">{% translate "No amounts reported" %}</p>
                 {% endif %}
-                <p class="stat-meta">Reports submitted &middot; {{ period_label }}</p>
+                <p class="stat-meta">{% translate "Reports submitted" %} &middot; {{ period_label }}</p>
             </div>
 
             <div class="stat stat-loss stat-loss-o">
-                <p class="stat-label" id="loss-heading-o">Money lost &middot; by date occurred</p>
+                <p class="stat-label" id="loss-heading-o">{% translate "Money lost" %} &middot; {% translate "by date occurred" %}</p>
                 {% if loss_by_currency_o %}
                 <dl class="loss-list" aria-labelledby="loss-heading-o">
                     {% for row in loss_by_currency_o %}
                     <div class="loss-row">
-                        <dt>{% if row.code %}<abbr title="{{ row.label }}">{{ row.code }}</abbr>{% else %}{{ row.label }}{% endif %}</dt>
+                        <dt>{% if row.abbr %}<abbr title="{{ row.label }}">{{ row.abbr }}</abbr>{% else %}{{ row.label }}{% endif %}</dt>
                         <dd>{{ row.total|floatformat:"2g" }}</dd>
                     </div>
                     {% endfor %}
                 </dl>
                 {% else %}
-                <p class="loss-empty">No amounts reported</p>
+                <p class="loss-empty">{% translate "No amounts reported" %}</p>
                 {% endif %}
-                <p class="stat-meta">Scams by date occurred &middot; {{ period_label_o }}</p>
+                <p class="stat-meta">{% translate "Scams by date occurred" %} &middot; {{ period_label_o }}</p>
             </div>
         </div>
-        <p class="dash-note text-small text-muted">Money lost is shown in the currency each person reported. Amounts are never converted or added across currencies.</p>
+        <p class="dash-note text-small text-muted">{% translate "Money lost is shown in the currency each person reported. Amounts are never converted or added across currencies." %}</p>
     </section>
 
     {# ---------- Charts: each card has its own filter ---------- #}
     <section class="section" aria-labelledby="charts-heading">
         <div class="section-header">
             <div>
-                <h2 class="section-title" id="charts-heading">Reports over time</h2>
-                <p class="section-subtitle">Filter each chart on its own. The totals above follow the same filters.</p>
+                <h2 class="section-title" id="charts-heading">{% translate "Reports over time" %}</h2>
+                <p class="section-subtitle">{% translate "Filter each chart on its own. The totals above follow the same filters." %}</p>
             </div>
         </div>
 
@@ -98,8 +105,8 @@
             <article class="card dash-card" id="submitted" aria-labelledby="submitted-title">
                 <div class="card-header">
                     <div>
-                        <h3 class="card-title" id="submitted-title">Reports submitted per month</h3>
-                        <p class="card-subtitle">By the date the report reached us</p>
+                        <h3 class="card-title" id="submitted-title">{% translate "Reports submitted per month" %}</h3>
+                        <p class="card-subtitle">{% translate "By the date the report reached us" %}</p>
                     </div>
                     <span class="badge badge-neutral">{{ period_label }}</span>
                 </div>
@@ -108,43 +115,44 @@
                     {% if selected_year_o %}<input type="hidden" name="year_o" value="{{ selected_year_o }}">{% endif %}
                     {% if selected_month_o %}<input type="hidden" name="month_o" value="{{ selected_month_o }}">{% endif %}
                     <div class="field">
-                        <label for="f-year">Year submitted</label>
+                        <label for="f-year">{% translate "Year submitted" %}</label>
                         <select id="f-year" name="year">
-                            <option value="">All years</option>
+                            <option value="">{% translate "All years" %}</option>
                             {% for y in years %}
                             <option value="{{ y }}"{% if selected_year == y|stringformat:"s" %} selected{% endif %}>{{ y }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="field">
-                        <label for="f-month">Month</label>
+                        <label for="f-month">{% translate "Month" %}</label>
                         <select id="f-month" name="month">
-                            <option value="">All months</option>
+                            <option value="">{% translate "All months" %}</option>
                             {% for num, name in months %}
                             <option value="{{ num }}"{% if selected_month == num|stringformat:"s" %} selected{% endif %}>{{ name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="dash-filter-actions">
-                        <button class="btn btn-primary btn-sm" type="submit">Apply</button>
-                        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard' %}{% if reset_query %}?{{ reset_query }}{% endif %}#submitted">Reset</a>
+                        <button class="btn btn-primary btn-sm" type="submit">{% translate "Apply" %}</button>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard' %}{% if reset_query %}?{{ reset_query }}{% endif %}#submitted">{% translate "Reset" %}</a>
                     </div>
                 </form>
 
                 {% if chart_rows|length > 1 %}
+                {% translate "Reports submitted per month, as a table" as t_table %}
                 <div class="chart-container dash-chart">
                     <canvas id="scamChart" role="img" aria-label="{{ chart_summary }}">{{ chart_summary }}</canvas>
                 </div>
                 <details class="chart-data">
-                    <summary>Show the numbers</summary>
-                    <div class="table-wrap" tabindex="0" role="region" aria-label="Reports submitted per month, as a table">
+                    <summary>{% translate "Show the numbers" %}</summary>
+                    <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t_table|force_escape }}">
                         <table class="table table-compact">
                             <thead>
-                                <tr><th scope="col">Month</th><th scope="col" class="num">Reports</th></tr>
+                                <tr><th scope="col">{% translate "Month" %}</th><th scope="col" class="num">{% translate "Reports" %}</th></tr>
                             </thead>
                             <tbody>
                                 {% for label, count in chart_rows %}
-                                <tr><td data-label="Month">{{ label }}</td><td data-label="Reports" class="num">{{ count }}</td></tr>
+                                <tr><td data-label="{{ t_month|force_escape }}">{{ label }}</td><td data-label="{{ t_reports|force_escape }}" class="num">{{ count }}</td></tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -154,7 +162,12 @@
                 {% with row=chart_rows.0 %}
                 <div class="dash-single">
                     <p class="dash-single-value">{{ row.1|floatformat:"g" }}</p>
-                    <p class="dash-single-label">report{{ row.1|pluralize }} submitted in {{ row.0 }}</p>
+                    {# Translators: shown under a large number, e.g. "2" / "reports submitted in Mar 2026". #}
+                    <p class="dash-single-label">{% blocktranslate trimmed count counter=row.1 with month=row.0 %}
+                        report submitted in {{ month }}
+                    {% plural %}
+                        reports submitted in {{ month }}
+                    {% endblocktranslate %}</p>
                 </div>
                 {% endwith %}
                 {% else %}
@@ -162,8 +175,10 @@
                     <div class="empty-state-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
                     </div>
-                    <h4 class="empty-state-title">No reports match these filters</h4>
-                    <p>Nothing was submitted in {{ period_label }}. Try another year or month.</p>
+                    <h4 class="empty-state-title">{% translate "No reports match these filters" %}</h4>
+                    <p>{% blocktranslate trimmed with period=period_label %}
+                        Nothing was submitted in {{ period }}. Try another year or month.
+                    {% endblocktranslate %}</p>
                 </div>
                 {% endif %}
             </article>
@@ -171,8 +186,8 @@
             <article class="card dash-card" id="occurred" aria-labelledby="occurred-title">
                 <div class="card-header">
                     <div>
-                        <h3 class="card-title" id="occurred-title">Scams by the month they occurred</h3>
-                        <p class="card-subtitle">By the date the person says the scam happened</p>
+                        <h3 class="card-title" id="occurred-title">{% translate "Scams by the month they occurred" %}</h3>
+                        <p class="card-subtitle">{% translate "By the date the person says the scam happened" %}</p>
                     </div>
                     <span class="badge badge-neutral">{{ period_label_o }}</span>
                 </div>
@@ -181,43 +196,44 @@
                     {% if selected_year %}<input type="hidden" name="year" value="{{ selected_year }}">{% endif %}
                     {% if selected_month %}<input type="hidden" name="month" value="{{ selected_month }}">{% endif %}
                     <div class="field">
-                        <label for="f-year-o">Year occurred</label>
+                        <label for="f-year-o">{% translate "Year occurred" %}</label>
                         <select id="f-year-o" name="year_o">
-                            <option value="">All years</option>
+                            <option value="">{% translate "All years" %}</option>
                             {% for y in years_o %}
                             <option value="{{ y }}"{% if selected_year_o == y|stringformat:"s" %} selected{% endif %}>{{ y }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="field">
-                        <label for="f-month-o">Month</label>
+                        <label for="f-month-o">{% translate "Month" %}</label>
                         <select id="f-month-o" name="month_o">
-                            <option value="">All months</option>
+                            <option value="">{% translate "All months" %}</option>
                             {% for num, name in months_o %}
                             <option value="{{ num }}"{% if selected_month_o == num|stringformat:"s" %} selected{% endif %}>{{ name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="dash-filter-actions">
-                        <button class="btn btn-primary btn-sm" type="submit">Apply</button>
-                        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard' %}{% if reset_query_o %}?{{ reset_query_o }}{% endif %}#occurred">Reset</a>
+                        <button class="btn btn-primary btn-sm" type="submit">{% translate "Apply" %}</button>
+                        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard' %}{% if reset_query_o %}?{{ reset_query_o }}{% endif %}#occurred">{% translate "Reset" %}</a>
                     </div>
                 </form>
 
                 {% if chart_rows_o|length > 1 %}
+                {% translate "Scams by the month they occurred, as a table" as t_table_o %}
                 <div class="chart-container dash-chart">
                     <canvas id="scamChart_o" role="img" aria-label="{{ chart_summary_o }}">{{ chart_summary_o }}</canvas>
                 </div>
                 <details class="chart-data">
-                    <summary>Show the numbers</summary>
-                    <div class="table-wrap" tabindex="0" role="region" aria-label="Scams by the month they occurred, as a table">
+                    <summary>{% translate "Show the numbers" %}</summary>
+                    <div class="table-wrap" tabindex="0" role="region" aria-label="{{ t_table_o|force_escape }}">
                         <table class="table table-compact">
                             <thead>
-                                <tr><th scope="col">Month</th><th scope="col" class="num">Reports</th></tr>
+                                <tr><th scope="col">{% translate "Month" %}</th><th scope="col" class="num">{% translate "Reports" %}</th></tr>
                             </thead>
                             <tbody>
                                 {% for label, count in chart_rows_o %}
-                                <tr><td data-label="Month">{{ label }}</td><td data-label="Reports" class="num">{{ count }}</td></tr>
+                                <tr><td data-label="{{ t_month|force_escape }}">{{ label }}</td><td data-label="{{ t_reports|force_escape }}" class="num">{{ count }}</td></tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -227,7 +243,12 @@
                 {% with row=chart_rows_o.0 %}
                 <div class="dash-single">
                     <p class="dash-single-value">{{ row.1|floatformat:"g" }}</p>
-                    <p class="dash-single-label">scam{{ row.1|pluralize }} reported as happening in {{ row.0 }}</p>
+                    {# Translators: shown under a large number, e.g. "2" / "scams reported as happening in Mar 2025". #}
+                    <p class="dash-single-label">{% blocktranslate trimmed count counter=row.1 with month=row.0 %}
+                        scam reported as happening in {{ month }}
+                    {% plural %}
+                        scams reported as happening in {{ month }}
+                    {% endblocktranslate %}</p>
                 </div>
                 {% endwith %}
                 {% else %}
@@ -236,24 +257,30 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
                     </div>
                     {% if selected_year_o or selected_month_o %}
-                    <h4 class="empty-state-title">No reports match these filters</h4>
-                    <p>No scams were reported as happening in {{ period_label_o }}. Try another year or month.</p>
+                    <h4 class="empty-state-title">{% translate "No reports match these filters" %}</h4>
+                    <p>{% blocktranslate trimmed with period=period_label_o %}
+                        No scams were reported as happening in {{ period }}. Try another year or month.
+                    {% endblocktranslate %}</p>
                     {% else %}
-                    <h4 class="empty-state-title">No dates to chart</h4>
-                    <p>None of the reports say when the scam happened yet.</p>
+                    <h4 class="empty-state-title">{% translate "No dates to chart" %}</h4>
+                    <p>{% translate "None of the reports say when the scam happened yet." %}</p>
                     {% endif %}
                 </div>
                 {% endif %}
-                {% if undated_count_o and chart_rows_o %}<p class="text-small text-muted m-0">{{ undated_count_o|floatformat:"g" }} report{{ undated_count_o|pluralize }} with no date given {{ undated_count_o|pluralize:"is,are" }} not in this chart.</p>{% endif %}
+                {% if undated_count_o and chart_rows_o %}<p class="text-small text-muted m-0">{% blocktranslate trimmed count counter=undated_count_o with shown=undated_count_o|floatformat:"g" %}
+                    {{ shown }} report with no date given is not in this chart.
+                {% plural %}
+                    {{ shown }} reports with no date given are not in this chart.
+                {% endblocktranslate %}</p>{% endif %}
             </article>
         </div>
     </section>
 
     <section class="section">
         <div class="cta-banner">
-            <h2>Seen a scam? Warn others.</h2>
-            <p>It takes a few minutes and helps people spot the same trick before it costs them.</p>
-            <div class="cluster"><a class="btn btn-white btn-lg" href="{% url 'report_scam' %}">Report a scam</a></div>
+            <h2>{% translate "Seen a scam? Warn others." %}</h2>
+            <p>{% translate "It takes a few minutes and helps people spot the same trick before it costs them." %}</p>
+            <div class="cluster"><a class="btn btn-white btn-lg" href="{% url 'report_scam' %}">{% translate "Report a scam" %}</a></div>
         </div>
     </section>
     {% endif %}
@@ -262,6 +289,7 @@
 
 {% block extra_js %}
 {% if has_reports %}
+{# Chart data and every piece of text dashboard.js shows, already translated. #}
 {{ chart_json|json_script:"dashboard-chart-data" }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{% static 'scams/js/dashboard.js' %}" defer></script>

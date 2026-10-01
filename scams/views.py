@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Sum
+from django.utils.translation import get_language, gettext as _, ngettext
 from .contributors import CONTRIBUTORS
 from .forms import ScamReportForm
 from .models import Scam, CURRENCY_CHOICES
@@ -8,7 +9,13 @@ from django.db.models.functions import ExtractMonth
 from django.db.models.functions import TruncMonth
 from django.db.models import Count, F
 from urllib.parse import urlencode
+from datetime import date
+from functools import lru_cache
 import json
+
+from babel import Locale, UnknownLocaleError
+from babel.dates import format_date, format_skeleton
+from babel.numbers import get_currency_name
 
 def report_scam(request):
     if request.method == "POST":
@@ -30,26 +37,28 @@ def contributors(request):
 
 
 def scam_awareness_page(request):
+    # The agencies' names are proper names and stay as they are; what each one is for
+    # is translated.
     resources = [
         {
             'name': 'Federal Trade Commission (FTC)',
             'url': 'https://reportfraud.ftc.gov/',
-            'description': 'File a report with the Federal Trade Commission.',
+            'description': _('File a report with the Federal Trade Commission.'),
         },
         {
             'name': 'FBI Internet Crime Complaint Center (IC3)',
             'url': 'https://www.ic3.gov/',
-            'description': 'Report internet-based fraud.',
+            'description': _('Report internet-based fraud.'),
         },
         {
             'name': 'Consumer Financial Protection Bureau (CFPB)',
             'url': 'https://www.consumerfinance.gov/',
-            'description': 'Learn your rights and file a complaint about a financial company.',
+            'description': _('Learn your rights and file a complaint about a financial company.'),
         },
         {
             'name': 'USA.gov',
             'url': 'https://www.usa.gov/legal-aid',
-            'description': 'For legal help and services.',
+            'description': _('For legal help and services.'),
         },
     ]
     return render(request, 'scams/scam_awareness_page.html', {
@@ -61,18 +70,57 @@ def scam_awareness_page(request):
 
 # --- Dashboard helpers ---------------------------------------------------------------
 
-MONTH_NAMES = {
-    1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr",
-    5: "May", 6: "Jun", 7: "Jul", 8: "Aug",
-    9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"
-}
-
-# "USD — US Dollar" -> "US Dollar"; "Other" stays "Other".
+# "USD — US Dollar" -> "US Dollar"; "Other" stays "Other". The English fallback for a
+# currency Babel has no name for.
 CURRENCY_NAMES = {code: label[len(code):].lstrip(' —–-') or label for code, label in CURRENCY_CHOICES}
 
 # Months with no reports are drawn as 0 so the chart's time axis is even, unless the
 # range is longer than this (e.g. one report of a scam from decades ago).
 DASHBOARD_MAX_FILLED_MONTHS = 240
+
+
+@lru_cache(maxsize=None)
+def _babel_locale(language_code):
+    """Babel locale for a Django language code (zh-hans -> zh_Hans, es-mx -> es_MX,
+    other '-' -> '_'), falling back to the base language and then to English."""
+    parts = (language_code or 'en').replace('_', '-').split('-')
+    candidates = []
+    if len(parts) > 1:
+        region = parts[1].title() if len(parts[1]) == 4 else parts[1].upper()
+        candidates.append(f'{parts[0].lower()}_{region}')
+    candidates += [parts[0].lower(), 'en']
+    for candidate in candidates:
+        try:
+            return Locale.parse(candidate)
+        except (UnknownLocaleError, ValueError):
+            continue
+    return Locale('en')
+
+
+def _locale():
+    """Babel locale of the language the page is being shown in."""
+    return _babel_locale(get_language() or 'en')
+
+
+def _month_name(month):
+    """Short month name on its own, in the page language: "Mar", "mar", "3月"."""
+    return format_date(date(2000, month, 1), 'LLL', locale=_locale())
+
+
+def _month_year(year, month, full=False):
+    """Month and year in the page language's own order and words:
+    "Mar 2026" / "mar 2026" / "2026年3月", or with full=True "March 2026" / "marzo de 2026"."""
+    return format_skeleton('yMMMM' if full else 'yMMM', date(year, month, 1), locale=_locale())
+
+
+def _currency_name(code):
+    """The currency's name in the page language: "US Dollar", "dólar estadounidense"."""
+    if code == 'Other':
+        return _('Other currency')
+    name = get_currency_name(code, locale=_locale())
+    if not name or name == code:  # Babel returns the code when it has no name for it
+        name = CURRENCY_NAMES.get(code, code)
+    return name
 
 
 def _int_param(request, name, low, high):
@@ -95,19 +143,23 @@ def _with_selected(values, selected, reverse=False):
 
 def _period_label(year, month):
     if year and month:
-        return f'{MONTH_NAMES[month]} {year}'
+        return _month_year(year, month, full=True)  # "March 2026"
     if year:
         return str(year)
     if month:
-        return f'{MONTH_NAMES[month]}, any year'
-    return 'All time'
+        # Translators: a month filter with no year chosen, e.g. "March, any year".
+        return _('%(month)s, any year') % {
+            'month': format_date(date(2000, month, 1), 'LLLL', locale=_locale()),
+        }
+    return _('All time')
 
 
 def _monthly_counts(queryset, field, only_month=None):
     """[(label, count)] per calendar month of `field`, oldest first. Rows where the
     field is NULL are left out, and empty months inside the range count as 0.
     With `only_month` (a month filter without a year) only that month of each year
-    is filled in, so the filtered-out months never show up as months with 0 reports."""
+    is filled in, so the filtered-out months never show up as months with 0 reports.
+    Labels are in the page language ("Mar 2026", "mar 2026")."""
     rows = (
         queryset
         .filter(**{f'{field}__isnull': False})
@@ -136,7 +188,7 @@ def _monthly_counts(queryset, field, only_month=None):
                 (first_year + (first_month - 1 + i) // 12, (first_month - 1 + i) % 12 + 1)
                 for i in range(span)
             ]
-    return [(f'{MONTH_NAMES[m]} {y}', counts.get((y, m), 0)) for y, m in months]
+    return [(_month_year(y, m), counts.get((y, m), 0)) for y, m in months]
 
 
 def _chart_summary(series, description):
@@ -145,10 +197,31 @@ def _chart_summary(series, description):
         return ''
     first, last = series[0][0], series[-1][0]
     peak_label, peak = max(series, key=lambda row: row[1])
-    span = first if first == last else f'{first} to {last}'
-    noun = 'report' if peak == 1 else 'reports'
-    return (f'{description}, {span}. Busiest month: {peak_label} with {peak} {noun}. '
-            f'Exact numbers are in the table below the chart.')
+    # Translators: a range of months, e.g. "Jan 2026 to Mar 2026".
+    span = first if first == last else _('%(first)s to %(last)s') % {'first': first, 'last': last}
+    return ngettext(
+        '%(description)s, %(span)s. Busiest month: %(month)s with %(count)s report. '
+        'Exact numbers are in the table below the chart.',
+        '%(description)s, %(span)s. Busiest month: %(month)s with %(count)s reports. '
+        'Exact numbers are in the table below the chart.',
+        peak,
+    ) % {'description': description, 'span': span, 'month': peak_label, 'count': peak}
+
+
+def _chart_series(series, label):
+    """One chart's data for dashboard.js. All of its text arrives here already in the page
+    language: the month labels, the dataset label and one tooltip per bar, in which the
+    browser replaces "{count}" with the number formatted for the page language."""
+    return {
+        'label': label,
+        'labels': [month for month, _count in series],
+        'data': [count for _month, count in series],
+        'tooltips': [
+            # Translators: chart tooltip. Keep %(count)s; it becomes the number of reports.
+            ngettext('%(count)s report', '%(count)s reports', count) % {'count': '{count}'}
+            for _month, count in series
+        ],
+    }
 
 
 def _losses_by_currency(queryset):
@@ -164,7 +237,10 @@ def _losses_by_currency(queryset):
     losses = [
         {
             'code': row['currency'],
-            'label': CURRENCY_NAMES.get(row['currency'], row['currency']) if row['currency'] else 'Currency not given',
+            # The ISO code shown on the tile; empty for "Other" and for no currency,
+            # which show their (translated) label instead.
+            'abbr': row['currency'] if len(row['currency'] or '') == 3 and row['currency'].isupper() else '',
+            'label': _currency_name(row['currency']) if row['currency'] else _('Currency not given'),
             'total': row['total'],
             'count': row['count'],
         }
@@ -251,16 +327,16 @@ def dashboard(request):
         .order_by('month_o')
     )
 
-    # convert to (number, name)
-    months = [(m, MONTH_NAMES[m]) for m in _with_selected(months_raw, month) if m in MONTH_NAMES]
-    months_o = [(m, MONTH_NAMES[m]) for m in _with_selected(months_raw_o, month_o) if m in MONTH_NAMES]
+    # convert to (number, name), the name in the page language
+    months = [(m, _month_name(m)) for m in _with_selected(months_raw, month) if 1 <= m <= 12]
+    months_o = [(m, _month_name(m)) for m in _with_selected(months_raw_o, month_o) if 1 <= m <= 12]
 
     series = _monthly_counts(scams, 'created_at', only_month=month)
     series_o = _monthly_counts(scams_o, 'date_occurred', only_month=month_o)
-    labels = [label for label, _ in series]  # e.g. "Jan 2026"
-    data = [count for _, count in series]
-    labels_o = [label for label, _ in series_o]
-    data_o = [count for _, count in series_o]
+    labels = [label for label, _count in series]  # e.g. "Jan 2026", in the page language
+    data = [count for _label, count in series]
+    labels_o = [label for label, _count in series_o]
+    data_o = [count for _label, count in series_o]
 
     # Legacy totals: these add amounts across currencies, so the page shows
     # loss_by_currency / loss_by_currency_o instead.
@@ -302,15 +378,15 @@ def dashboard(request):
         "loss_by_currency_o": _losses_by_currency(scams_o),
         "chart_rows": series,
         "chart_rows_o": series_o,
-        "chart_summary": _chart_summary(series, 'Bar chart of reports submitted per month'),
-        "chart_summary_o": _chart_summary(series_o, 'Bar chart of scams by the month they occurred'),
+        "chart_summary": _chart_summary(series, _('Bar chart of reports submitted per month')),
+        "chart_summary_o": _chart_summary(series_o, _('Bar chart of scams by the month they occurred')),
         # Rendered with json_script, so no user text can break out of the <script>.
+        # It also carries dashboard.js's text, already in the page language.
         "chart_json": {
-            "submitted": {"labels": labels, "data": data},
-            "occurred": {"labels": labels_o, "data": data_o},
+            "submitted": _chart_series(series, _('Reports submitted')),
+            "occurred": _chart_series(series_o, _('Scams that occurred')),
         },
         # Each card's reset link clears only its own filter and keeps the other card's.
         "reset_query": query(year_o=year_o, month_o=month_o),
         "reset_query_o": query(year=year, month=month),
     })
-

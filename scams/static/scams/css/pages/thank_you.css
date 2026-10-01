@@ -50,14 +50,6 @@
     color: var(--ink);
 }
 
-.thanks-es {
-    max-width: 68ch;
-    margin: 0 auto;
-    color: var(--muted);
-    font-size: .9375rem;
-    font-weight: 600;
-}
-
 /* ---- What happens next ---- */
 
 .thanks-next {
@@ -83,7 +75,7 @@
 .next-steps li {
     position: relative;
     min-height: 32px;
-    padding-left: 48px;
+    padding-inline-start: 48px;
     counter-increment: next-step;
 }
 
@@ -91,7 +83,7 @@
     content: counter(next-step);
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     display: grid;
     place-items: center;
     width: 32px;
@@ -142,12 +134,6 @@
 .action-block .btn {
     max-width: 100%;
     white-space: normal;
-}
-
-.action-label {
-    color: var(--muted);
-    font-size: .75rem;
-    font-weight: 600;
 }
 
 @media (max-width: 639.98px) {

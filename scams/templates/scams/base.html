@@ -1,4 +1,4 @@
-{% load static %}<!doctype html>
+{% load i18n static %}<!doctype html>
 <html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" class="no-js">
 <head>
     <meta charset="utf-8">
@@ -23,8 +23,8 @@
         })();
     </script>
 
-    <title>{% block title %}Scam Reports{% endblock %} | Dollar Scholars</title>
-    <meta name="description" content="{% block meta_description %}Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation.{% endblock %}">
+    <title>{% block title %}{% translate "Scam Reports" %}{% endblock %} | Dollar Scholars</title>
+    <meta name="description" content="{% block meta_description %}{% translate "Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation." %}{% endblock %}">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
     <meta property="og:site_name" content="Dollar Scholars">
@@ -46,7 +46,7 @@
 </head>
 
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">{% translate "Skip to main content" %}</a>
 
     {# The main site's live header; this app's own header shows until it loads, or if it cannot. #}
     <ds-site-header>

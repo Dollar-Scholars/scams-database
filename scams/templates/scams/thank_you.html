@@ -1,8 +1,8 @@
 {% extends "scams/base.html" %}
-{% load static %}
+{% load i18n static %}
 
-{% block title %}Thank you{% endblock %}
-{% block meta_description %}Your scam report was submitted to Dollar Scholars and is pending review.{% endblock %}
+{% block title %}{% translate "Thank you" %}{% endblock %}
+{% block meta_description %}{% translate "Your scam report was submitted to Dollar Scholars and is pending review." %}{% endblock %}
 
 {% block extra_head %}
 <meta name="robots" content="noindex">
@@ -16,42 +16,39 @@
             <span class="thanks-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>
             </span>
-            <p class="eyebrow">Report submitted</p>
-            <h1 id="thanks-heading">Thank you / <span lang="es">&iexcl;Gracias!</span></h1>
-            <p class="lead">Your report has been submitted successfully and is currently pending review.</p>
-            <p class="thanks-es" lang="es">Su informe ha sido enviado y actualmente está en espera de revisión.</p>
+            <p class="eyebrow">{% translate "Report submitted" %}</p>
+            <h1 id="thanks-heading">{% translate "Thank you" %}</h1>
+            <p class="lead">{% translate "Your report has been submitted successfully and is currently pending review." %}</p>
         </div>
 
         <div class="thanks-next">
-            <h2 class="thanks-next-title">What happens next</h2>
+            <h2 class="thanks-next-title">{% translate "What happens next" %}</h2>
             <ol class="next-steps" role="list">
                 <li>
-                    <h3>We review your report</h3>
-                    <p>It shows as <span class="badge badge-dot badge-pending">Pending</span> until it has been reviewed.</p>
+                    <h3>{% translate "We review your report" %}</h3>
+                    <p>{% blocktranslate trimmed %}It shows as <span class="badge badge-dot badge-pending">Pending</span> until it has been reviewed.{% endblocktranslate %}</p>
                 </li>
                 <li>
-                    <h3>It helps warn others</h3>
-                    <p>Reports are counted on the <a href="{% url 'dashboard' %}">dashboard</a> without the reporter's name, email or phone number.</p>
+                    <h3>{% translate "It helps warn others" %}</h3>
+                    {% url 'dashboard' as dashboard_url %}
+                    <p>{% blocktranslate trimmed %}Reports are counted on the <a href="{{ dashboard_url }}">dashboard</a> without the reporter's name, email or phone number.{% endblocktranslate %}</p>
                 </li>
                 <li>
-                    <h3>Protect yourself now</h3>
-                    <p>If you lost money or shared bank or card details, contact your bank or card provider straight away, using the number on their website or the back of your card.</p>
+                    <h3>{% translate "Protect yourself now" %}</h3>
+                    <p>{% blocktranslate trimmed %}If you lost money or shared bank or card details, contact your bank or card provider straight away, using the number on their website or the back of your card.{% endblocktranslate %}</p>
                 </li>
             </ol>
         </div>
 
         <div class="thanks-actions">
             <div class="action-block">
-                <a class="btn btn-primary" href="{% url 'report_scam' %}">Submit another report</a>
-                <span class="action-label" lang="es">(Enviar otro informe de estafa)</span>
+                <a class="btn btn-primary" href="{% url 'report_scam' %}">{% translate "Submit another report" %}</a>
             </div>
             <div class="action-block">
-                <a class="btn btn-secondary" href="{% url 'dashboard' %}">View the dashboard</a>
-                <span class="action-label" lang="es">(Ver el panel de datos)</span>
+                <a class="btn btn-secondary" href="{% url 'dashboard' %}">{% translate "View the dashboard" %}</a>
             </div>
             <div class="action-block">
-                <a class="btn btn-secondary" href="{% url 'scam_awareness_page' %}?from=report">Learn how to protect yourself from future scams</a>
-                <span class="action-label" lang="es">(Aprenda cómo protegerse de futuras estafas)</span>
+                <a class="btn btn-secondary" href="{% url 'scam_awareness_page' %}?from=report">{% translate "Learn how to protect yourself from future scams" %}</a>
             </div>
         </div>
     </section>
