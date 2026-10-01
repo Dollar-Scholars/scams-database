@@ -249,53 +249,6 @@
         </div>
     </section>
 
-    {# ---------- Latest reports (no reporter details) ---------- #}
-    <section class="section" aria-labelledby="recent-heading">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title" id="recent-heading">Latest reports</h2>
-                <p class="section-subtitle">
-                    {% if total_scams > recent_scams|length %}Showing the {{ recent_scams|length }} most recent of {{ total_scams|floatformat:"g" }} reports submitted{% else %}Reports submitted{% endif %} &middot; {{ period_label }}
-                </p>
-            </div>
-        </div>
-
-        {% if recent_scams %}
-        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="recent-heading">
-            <table class="table table-stack dash-recent">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Occurred</th>
-                        <th scope="col" class="num">Amount lost</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Submitted</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for scam in recent_scams %}
-                    <tr>
-                        <td data-label="Title" class="dash-title">{{ scam.title }}</td>
-                        <td data-label="Type">{% if scam.scam_type and scam.scam_type != "undefined" %}{{ scam.get_scam_type_display }}{% else %}<span class="text-muted">Not given</span>{% endif %}</td>
-                        <td data-label="Occurred" class="nowrap">{% if scam.date_occurred %}{{ scam.date_occurred|date:"j M Y" }}{% else %}<span class="text-muted">Not given</span>{% endif %}</td>
-                        <td data-label="Amount lost" class="num">{% if scam.amount_lost is not None %}<span class="nowrap">{{ scam.amount_lost|floatformat:"2g" }}{% if scam.currency %} <abbr title="{{ scam.get_currency_display }}">{{ scam.currency }}</abbr>{% endif %}</span>{% else %}<span class="text-muted">&mdash;</span>{% endif %}</td>
-                        <td data-label="Status"><span class="badge badge-{{ scam.status }}">{{ scam.status|capfirst }}</span></td>
-                        <td data-label="Submitted" class="nowrap">{{ scam.created_at|date:"j M Y" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="empty-state">
-            <h3 class="empty-state-title">No reports match these filters</h3>
-            <p>Nothing was submitted in {{ period_label }}.</p>
-            <div class="cluster"><a class="btn btn-secondary" href="{% url 'dashboard' %}{% if reset_query %}?{{ reset_query }}{% endif %}">Clear the date filter</a></div>
-        </div>
-        {% endif %}
-    </section>
-
     <section class="section">
         <div class="cta-banner">
             <h2>Seen a scam? Warn others.</h2>

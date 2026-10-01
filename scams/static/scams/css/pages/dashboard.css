@@ -251,26 +251,6 @@ html.no-js .dash-chart {
     }
 }
 
-/* ---------- Latest reports table ---------- */
-.dash-recent .dash-title {
-    min-width: 16ch;
-    max-width: 40ch;
-    color: var(--ink);
-    font-weight: 600;
-    overflow-wrap: anywhere;
-}
-
-.dash-recent abbr {
-    text-decoration: none;
-    cursor: help;
-}
-
-@media (max-width: 639.98px) {
-    .dash-recent .dash-title {
-        max-width: none;
-    }
-}
-
 /* ---------- Print: charts are canvases; print the tables instead ---------- */
 @media print {
     .dash-chart,
