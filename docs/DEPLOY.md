@@ -12,8 +12,9 @@ The two sites don't share anything except nginx and the machine.
 | nginx site | `/etc/nginx/sites-enabled/quiz` | `/etc/nginx/sites-enabled/scamdb.dollarscholars.org` |
 | Code | (the quiz's checkout) | `~/scams-database` |
 
-The database is the `scams` database on the PostgreSQL VM, reached over Azure's
-private network (no public port).
+The database is the `scams` database on the PostgreSQL VM. The app reaches it the
+same way the quiz does (see the quiz's `DB_HOST`: `docker exec <quiz-container>
+printenv DB_HOST`), always encrypted (`POSTGRES_SSLMODE=require`).
 
 ## One-time setup
 
@@ -29,9 +30,14 @@ If not done yet, create the role and database as in
 Use a password made of letters and digits only (`openssl rand -hex 24`):
 Docker's `--env-file` passes quotes through literally.
 
-The app connects from the quiz VM's private address (run `hostname -I` on the
-quiz VM; the first address, e.g. `10.x.x.x` or `172.16.x.x`). Check whether
-`pg_hba.conf` already allows it (the quiz's own entry may cover it):
+Find the address the PostgreSQL VM sees the quiz VM connecting from, and whether
+those connections are encrypted (run on the PostgreSQL VM):
+
+```bash
+sudo -u postgres psql -c "SELECT DISTINCT a.client_addr, a.usename, a.datname, s.ssl FROM pg_stat_activity a JOIN pg_stat_ssl s USING (pid) WHERE a.client_addr IS NOT NULL;"
+```
+
+Then check whether `pg_hba.conf` already allows that address for `scams`:
 
 ```bash
 sudo -u postgres psql -c 'SHOW hba_file;'
@@ -42,7 +48,7 @@ If no line covers database `scams`, user `scams_app` from that address, add this
 at the end and reload (a reload does not interrupt existing connections):
 
 ```text
-host    scams    scams_app    <quiz-vm-private-ip>/32    scram-sha-256
+hostssl    scams    scams_app    <quiz-vm-address>/32    scram-sha-256
 ```
 
 ```bash
@@ -68,12 +74,12 @@ DJANGO_ALLOWED_HOSTS=scamdb.dollarscholars.org
 DJANGO_CSRF_TRUSTED_ORIGINS=https://scamdb.dollarscholars.org
 DJANGO_SECURE_PROXY_SSL_HEADER=True
 
-POSTGRES_HOST=<private IP of the PostgreSQL VM>
+POSTGRES_HOST=<same address as the quiz's DB_HOST>
 POSTGRES_PORT=5432
 POSTGRES_DB=scams
 POSTGRES_USER=scams_app
 POSTGRES_PASSWORD=<the scams_app password>
-POSTGRES_SSLMODE=prefer
+POSTGRES_SSLMODE=require
 ```
 
 Lock the file down: `chmod 600 .env`.
