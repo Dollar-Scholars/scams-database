@@ -1,0 +1,46 @@
+{% extends "scams/base.html" %}
+{% load static %}
+
+{% block title %}Contributors{% endblock %}
+{% block meta_description %}The volunteers who built Scam Reports for Dollar Scholars.{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'scams/css/pages/contributors.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <p class="eyebrow">Scam Reports</p>
+        <h1>Contributors</h1>
+        <p class="lead">Scam Reports is built and run by volunteers from the Dollar Scholars community and the Economics Discord server. Thank you to everyone who has helped.</p>
+    </header>
+
+    <section class="section" aria-labelledby="people-heading">
+        <h2 class="visually-hidden" id="people-heading">People</h2>
+        <ul class="grid grid-auto contributor-grid" role="list">
+            {% for person in contributors %}
+            <li class="card contributor">
+                <span class="contributor-initial" aria-hidden="true">{{ person.github|first|upper }}</span>
+                <div class="contributor-body">
+                    <h3 class="contributor-name">{{ person.name|default:person.github }}</h3>
+                    <a class="contributor-github" href="https://github.com/{{ person.github }}" rel="noopener">@{{ person.github }} on GitHub</a>
+                    <p class="contributor-work">{{ person.work }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="section">
+        <div class="cta-banner">
+            <h2>Want to help?</h2>
+            <p>New volunteers are welcome, whatever your experience. Start with a small first task, then pick something on Scam Reports.</p>
+            <div class="cluster">
+                <a class="btn btn-white btn-lg" href="https://github.com/Dollar-Scholars/koala-bor-ed-with-us" rel="noopener">Make your first contribution</a>
+                <a class="btn btn-white btn-lg" href="https://github.com/Dollar-Scholars/scams-database" rel="noopener">See the code</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

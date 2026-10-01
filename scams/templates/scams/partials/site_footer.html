@@ -1,0 +1,67 @@
+{% load static %}
+<footer class="ds-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand-col">
+                <a href="https://dollarscholars.org/" class="footer-brand" aria-label="Dollar Scholars home">
+                    <img src="{% static 'scams/img/vector_logo_ds_small_white.svg' %}" alt="" width="32" height="32">
+                    <span translate="no">Dollar Scholars</span>
+                </a>
+                <p class="footer-tagline">Growing the economy through adult financial education.</p>
+                <p class="footer-about">Scam Reports is our free community tool for reporting scams, seeing what others have reported and learning how to protect yourself.</p>
+            </div>
+
+            <nav aria-labelledby="footer-heading-app">
+                <h2 class="footer-heading" id="footer-heading-app">Scam Reports</h2>
+                <ul class="footer-links">
+                    <li><a href="{% url 'report_scam' %}">Report a scam</a></li>
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'scam_list' %}">All reports</a></li>
+                    <li><a href="{% url 'scam_awareness_page' %}">Scam awareness</a></li>
+                    <li><a href="{% url 'contributors' %}">Contributors</a></li>
+                </ul>
+            </nav>
+
+            <nav aria-labelledby="footer-heading-work">
+                <h2 class="footer-heading" id="footer-heading-work">Our Work</h2>
+                <ul class="footer-links">
+                    <li><a href="https://dollarscholars.org/what-we-do/">What We Do</a></li>
+                    <li><a href="https://dollarscholars.org/core-curriculum/">Core Curriculum</a></li>
+                    <li><a href="https://dollarscholars.org/resources/">Resources</a></li>
+                    <li><a href="https://dollarscholars.org/blog/">News &amp; Blog</a></li>
+                </ul>
+            </nav>
+
+            <nav aria-labelledby="footer-heading-help">
+                <h2 class="footer-heading" id="footer-heading-help">Help &amp; Policies</h2>
+                <ul class="footer-links">
+                    <li><a href="https://dollarscholars.org/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="https://dollarscholars.org/accessibility-statement/">Accessibility</a></li>
+                    <li><a href="mailto:partnerships@dollarscholars.org">Contact Us</a></li>
+                    <li><a href="https://www.paypal.com/donate/?hosted_button_id=QUDB8VUWZX5RQ">Donate</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} <span translate="no">Dollar Scholars Foundation</span>. All rights reserved.</p>
+
+            <ul class="footer-social">
+                <li>
+                    <a href="https://www.linkedin.com/company/dollarscholars/" aria-label="LinkedIn">
+                        <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Dollar-Scholars" aria-label="GitHub">
+                        <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.105 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,53 @@
+{% load static %}<!doctype html>
+<html lang="en" dir="ltr" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        // Apply the saved (or OS) theme before first paint. Same key as dollarscholars.org.
+        (() => {
+            const root = document.documentElement;
+            root.classList.remove('no-js');
+            root.classList.add('js');
+            let theme = null;
+            try {
+                const stored = localStorage.getItem('ds.website.theme');
+                if (stored === 'dark' || stored === 'light') theme = stored;
+            } catch (_) { }
+            if (!theme) {
+                theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+            root.style.colorScheme = theme;
+        })();
+    </script>
+
+    <title>{% block title %}Scam Reports{% endblock %} | Dollar Scholars</title>
+    <meta name="description" content="{% block meta_description %}Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation.{% endblock %}">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
+    <meta property="og:site_name" content="Dollar Scholars">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/svg+xml" href="{% static 'scams/img/vector_logo_ds_small.svg' %}">
+    <link rel="stylesheet" href="{% static 'scams/css/ds-theme.css' %}">
+    <script src="{% static 'scams/js/theme-toggle.js' %}" defer></script>
+    <script src="{% static 'scams/js/site-nav.js' %}" defer></script>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    {% include "scams/partials/site_header.html" %}
+
+    <main id="main-content" class="site-main" tabindex="-1">
+        {% include "scams/partials/messages.html" %}
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "scams/partials/site_footer.html" %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

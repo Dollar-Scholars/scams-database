@@ -1,0 +1,285 @@
+/* =====================================================================================
+   Dashboard page (scams/templates/scams/dashboard.html)
+   Builds on ds-theme.css: only layout and a few page-specific pieces live here.
+   Colours come from theme tokens, so light and dark mode switch automatically.
+   ===================================================================================== */
+
+/* ---------- Summary tiles ---------- */
+.dash-stats {
+    --grid-gap: 16px;
+}
+
+.dash-stats .stat {
+    justify-content: flex-start;
+}
+
+/* Wide screens: the two counts stack in the first column, the two money tiles
+   (which can list several currencies) sit beside them at full height. */
+@media (min-width: 1024px) {
+    .dash-stats {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.3fr);
+    }
+
+    .dash-stats .stat-count {
+        grid-column: 1;
+    }
+
+    .dash-stats .stat-loss {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+
+    .dash-stats .stat-loss-o {
+        grid-column: 3;
+    }
+}
+
+/* Keep the meta line at the bottom so tiles in a row line up */
+.dash-stats .stat-meta {
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+/* Money lost, one row per currency (never summed across currencies) */
+.loss-list {
+    display: grid;
+    gap: 6px;
+    margin: 2px 0 0;
+}
+
+.loss-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+.loss-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.loss-row dt {
+    margin: 0;
+    color: var(--muted);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+.loss-row dt abbr {
+    text-decoration: none;
+    cursor: help;
+}
+
+.loss-row dd {
+    margin: 0 0 0 auto;
+    color: var(--ink);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.loss-empty {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+.dash-note {
+    margin: 16px 0 0;
+}
+
+/* ---------- Chart cards ---------- */
+.dash-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dash-card > * {
+    margin-bottom: 0;
+}
+
+.dash-card .card-header {
+    margin-bottom: 0;
+}
+
+/* Filter well: a raised strip above each chart */
+.dash-filters {
+    gap: 12px 16px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--ds-raised);
+}
+
+/* Both selects share one row in a half-width card; the buttons wrap below them */
+.dash-filters .field {
+    flex: 1 1 140px;
+    margin: 0;
+}
+
+@media (min-width: 640px) {
+    .dash-filters .field { flex: 1 1 140px; max-width: 220px; }
+}
+
+.dash-filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px; /* matches the select height so the buttons sit on the same baseline */
+}
+
+@media (max-width: 639.98px) {
+    .dash-filter-actions {
+        flex: 1 1 100%;
+    }
+
+    .dash-filter-actions .btn {
+        flex: 1 1 0;
+    }
+}
+
+.dash-chart {
+    --chart-height: 300px;
+    --chart-height-mobile: 240px;
+}
+
+/* Without JavaScript the chart cannot draw; the data table below still works */
+html.no-js .dash-chart {
+    display: none;
+}
+
+.dash-empty {
+    padding-block: 32px;
+}
+
+/* A single month: one figure instead of a one-bar / one-point chart */
+.dash-single {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    background: var(--teal-light);
+}
+
+.dash-single > p {
+    margin: 0;
+}
+
+.dash-single-value {
+    color: var(--teal);
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.dash-single-label {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+/* "Show the numbers": data table fallback for each chart */
+.chart-data {
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.chart-data > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--link);
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--radius-sm);
+}
+
+.chart-data > summary::-webkit-details-marker {
+    display: none;
+}
+
+.chart-data > summary::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform .2s ease;
+}
+
+.chart-data[open] > summary::before {
+    transform: rotate(45deg) translate(-2px, -2px);
+}
+
+.chart-data > summary:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: .2em;
+}
+
+.chart-data .table-wrap {
+    max-height: 320px;
+    margin: 12px 0 0;
+    overflow-y: auto;
+    box-shadow: none;
+}
+
+.chart-data thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chart-data > summary::before {
+        transition: none;
+    }
+}
+
+/* ---------- Latest reports table ---------- */
+.dash-recent .dash-title {
+    min-width: 16ch;
+    max-width: 40ch;
+    color: var(--ink);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.dash-recent abbr {
+    text-decoration: none;
+    cursor: help;
+}
+
+@media (max-width: 639.98px) {
+    .dash-recent .dash-title {
+        max-width: none;
+    }
+}
+
+/* ---------- Print: charts are canvases; print the tables instead ---------- */
+@media print {
+    .dash-chart,
+    .dash-filters {
+        display: none;
+    }
+
+    .chart-data .table-wrap {
+        max-height: none;
+        overflow: visible;
+    }
+}

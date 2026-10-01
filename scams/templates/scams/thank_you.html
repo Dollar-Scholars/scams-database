@@ -1,112 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You</title>
-    <style>
-        :root {
-            --navy: #0f2444;
-            --accent: #c0392b;
-            --surface: #ffffff;
-            --border: rgba(15,36,68,0.12);
-            --text-primary: #0f2444;
-            --text-secondary: #4a5568;
-        }
+{% extends "scams/base.html" %}
+{% load static %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #eef3f7;
-            color: var(--text-primary);
-            margin: 0;
-            padding: 40px 16px;
-        }
+{% block title %}Thank you{% endblock %}
+{% block meta_description %}Your scam report was submitted to Dollar Scholars and is pending review.{% endblock %}
 
-        .card {
-            max-width: 700px;
-            margin: 0 auto;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 28px;
-            box-shadow: 0 1px 3px rgba(15,36,68,0.05);
-        }
+{% block extra_head %}
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="{% static 'scams/css/pages/thank_you.css' %}">
+{% endblock %}
 
-        h2 { margin-bottom: 12px; color: var(--navy); }
-        p { color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+{% block content %}
+<div class="container container-narrow thanks-page">
+    <section class="card thanks" aria-labelledby="thanks-heading">
+        <div class="thanks-hero">
+            <span class="thanks-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>
+            </span>
+            <p class="eyebrow">Report submitted</p>
+            <h1 id="thanks-heading">Thank you / <span lang="es">&iexcl;Gracias!</span></h1>
+            <p class="lead">Your report has been submitted successfully and is currently pending review.</p>
+            <p class="thanks-es" lang="es">Su informe ha sido enviado y actualmente está en espera de revisión.</p>
+        </div>
 
-        .english-note {
-            font-size: 14px;
-            line-height: 1.5;
-        }
+        <div class="thanks-next">
+            <h2 class="thanks-next-title">What happens next</h2>
+            <ol class="next-steps" role="list">
+                <li>
+                    <h3>We review your report</h3>
+                    <p>It shows as <span class="badge badge-dot badge-pending">Pending</span> until it has been reviewed.</p>
+                </li>
+                <li>
+                    <h3>It helps warn others</h3>
+                    <p>Reports appear in <a href="{% url 'scam_list' %}">All reports</a> and on the dashboard without the reporter's name, email or phone number.</p>
+                </li>
+                <li>
+                    <h3>Protect yourself now</h3>
+                    <p>If you lost money or shared bank or card details, contact your bank or card provider straight away, using the number on their website or the back of your card.</p>
+                </li>
+            </ol>
+        </div>
 
-        .spanish-note {
-            color: #4c6f8a;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-top: -6px;
-            margin-bottom: 16px;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .action-block {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
-        }
-
-        .action-label {
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 2px;
-        }
-
-        .action-label.primary {
-            color: var(--navy);
-        }
-
-        .action-label.secondary {
-            color: var(--accent);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            background: var(--navy);
-            color: white;
-        }
-
-        .btn.secondary {
-            background: var(--accent);
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2>Thank You / Gracias!</h2>
-        <p class="english-note">Your report has been submitted successfully and is currently pending review.</p>
-        <p class="spanish-note">Su informe ha sido enviado y actualmente está en espera de revisión.</p>
-
-        <div class="actions">
+        <div class="thanks-actions">
             <div class="action-block">
-                <a href="{% url 'report_scam' %}" class="btn">Submit Another Report</a>
-                <span class="action-label primary">(Enviar Otro Informe de Estafa)</span>
+                <a class="btn btn-primary" href="{% url 'report_scam' %}">Submit another report</a>
+                <span class="action-label" lang="es">(Enviar otro informe de estafa)</span>
             </div>
             <div class="action-block">
-                <a href="{% url 'scam_awareness_page' %}" class="btn secondary">Learn How to Protect Yourself From Future Scams</a>
-                <span class="action-label secondary">(Aprenda a Cómo Protegerse de Futuras Estafas)</span>
+                <a class="btn btn-secondary" href="{% url 'dashboard' %}">View the dashboard</a>
+                <span class="action-label" lang="es">(Ver el panel de datos)</span>
+            </div>
+            <div class="action-block">
+                <a class="btn btn-secondary" href="{% url 'scam_awareness_page' %}?from=report">Learn how to protect yourself from future scams</a>
+                <span class="action-label" lang="es">(Aprenda cómo protegerse de futuras estafas)</span>
             </div>
         </div>
-    </div>
-</body>
-</html>
+    </section>
+</div>
+{% endblock %}

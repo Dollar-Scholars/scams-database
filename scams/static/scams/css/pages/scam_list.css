@@ -1,0 +1,77 @@
+/* =====================================================================================
+   All reports page (scams/templates/scams/scam_list.html)
+   Builds on .table / .table-stack / .pagination from ds-theme.css.
+   ===================================================================================== */
+
+.reports-range {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- Table ---- */
+
+/* Long unbroken titles (URLs, codes) must never push the page sideways */
+.reports-table .report-title {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+
+@media (min-width: 640px) {
+    .reports-table .report-title {
+        min-width: 14rem;
+        max-width: 28rem;
+    }
+
+    .reports-table .report-date {
+        white-space: nowrap;
+    }
+}
+
+/* Phones: each row is a card headed by its title (the row header has no data-label) */
+@media (max-width: 639.98px) {
+    .reports-table tbody th.report-title {
+        padding-bottom: 8px;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+    }
+}
+
+/* ---- Pager ---- */
+
+.pager .pagination {
+    margin-top: 8px;
+}
+
+.pagination .pager-prev::before {
+    content: "\2190";
+    content: "\2190" / "";
+    margin-right: 6px;
+}
+
+.pagination .pager-next::after {
+    content: "\2192";
+    content: "\2192" / "";
+    margin-left: 6px;
+}
+
+/* "Page 2 of 6" is plain text, not a button (the ellipsis style comes from ds-theme.css) */
+.pagination .pager-status span {
+    border-color: transparent;
+    background: transparent;
+    color: var(--muted);
+}
+
+/* Phones: Previous / "Page 2 of 6" / Next instead of the numbered links */
+@media (max-width: 639.98px) {
+    .pagination .pager-num {
+        display: none;
+    }
+}
+
+@media (min-width: 640px) {
+    .pagination .pager-status {
+        display: none;
+    }
+}

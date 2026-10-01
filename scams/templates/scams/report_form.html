@@ -1,292 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Report a Scam | ScamWatch Global</title>
+{% extends "scams/base.html" %}
+{% load static %}
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+{% block title %}{% if form.errors %}Error: {% endif %}Report a scam{% endblock %}
+{% block meta_description %}Report a scam to the Dollar Scholars community. Your report helps warn others, and your contact details are never shown publicly.{% endblock %}
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'scams/css/pages/report_form.css' %}">
+{% endblock %}
 
-        :root {
-            --navy: #0f2444;
-            --navy-mid: #1a3a6b;
-            --accent: #c0392b;
-            --surface: #ffffff;
-            --surface-2: #f7f8fa;
-            --border: rgba(15,36,68,0.12);
-            --text-primary: #0f2444;
-            --text-secondary: #4a5568;
-            --text-hint: #8a9ab5;
-            --radius: 6px;
-        }
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <p class="eyebrow">Scam Reports</p>
+        <h1>Report a scam</h1>
+        <p class="lead">Tell us what happened. Your report helps warn others about scams going around right now. Your name, email and phone number are never shown publicly.</p>
+    </header>
 
-        body { background: var(--surface-2); font-family: 'DM Sans', sans-serif; }
-
-        .header-banner { background: var(--navy); padding: 40px; text-align: center; color: white; }
-        .header-title { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 10px; }
-        .header-title em { font-style: italic; opacity: 0.7; }
-
-        .content-wrap { max-width: 900px; margin: 0 auto; padding: 40px; }
-
-        .form-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .form-section { padding: 30px; border-bottom: 1px solid var(--border); }
-
-        .section-label {
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .field { display: flex; flex-direction: column; gap: 8px; transition: opacity 0.3s ease; }
-        .field.full { grid-column: span 2; }
-
-        label { font-size: 13px; color: var(--text-secondary); }
-
-        input, select, textarea {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--surface-2);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--navy-mid);
-            background: white;
-        }
-
-        /* Styles for Greying Out */
-        .is-greyed-out {
-            opacity: 0.4;
-            pointer-events: none; /* Disables interaction */
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .radio-group input {
-            transform: translateY(1px);
-        }
-
-        .severity-track {
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            margin-top: 10px;
-        }
-
-        .severity-fill {
-            height: 100%;
-            width: 25%;
-            background: #2da44e;
-            transition: all 0.3s;
-        }
-
-        .checkbox-row {
-            grid-column: span 2;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .submit-section {
-            padding: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-submit {
-            background: var(--navy);
-            color: white;
-            padding: 14px 30px;
-            border: none;
-            cursor: pointer;
-            border-radius: var(--radius);
-            font-weight: 500;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="header-banner">
-    <h1 class="header-title">Report a <em>fraud or scam</em></h1>
-    <p>Help protect the community by sharing details of the incident.</p>
-</div>
-
-<div class="content-wrap">
-
-<form method="POST">
-{% csrf_token %}
-
-<div class="form-card">
-
-    <div class="form-section">
-        <div class="section-label">Incident Details</div>
-
-        <div class="form-grid">
-
-            {% for field in form %}
-
-                {% if field.name != 'date_seen' %}
-
-                    {% if field.name == 'anonymous' %}
-
-                        <div class="checkbox-row">
-                            {{ field }}
-                            {{ field.label_tag }}
-                        </div>
-
-                    {% else %}
-
-                        <div class="field {% if field.name == 'title' or field.name == 'description' or field.name == 'severity' %}full{% endif %}">
-
-                            {% if field.name != 'anonymous' %}
-                                {{ field.label_tag }}
-                            {% endif %}
-
-                            {% if field.name == 'contact_method' %}
-                                <div class="radio-group">
-                                    {{ field }}
-                                </div>
+    <div class="grid grid-main-aside report-layout">
+        <div class="report-main">
+            {% with summary=form.error_summary %}
+            {% if summary %}
+            <div class="alert alert-error error-summary" id="error-summary" role="alert" tabindex="-1"
+                aria-labelledby="error-summary-title">
+                <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v5M12 16.5v.01" />
+                </svg>
+                <div class="alert-body">
+                    <h2 class="alert-title" id="error-summary-title">There is a problem with your report</h2>
+                    <p>Please fix {% if summary|length == 1 %}this{% else %}these {{ summary|length }} things{% endif %} and send it again:</p>
+                    <ul class="error-summary-list">
+                        {% for item in summary %}
+                        <li>
+                            {% if item.anchor %}
+                            <a href="#{{ item.anchor }}"><span class="error-summary-label">{{ item.label }}</span> {{ item.message }}</a>
                             {% else %}
+                            {{ item.message }}
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="card report-form" novalidate aria-describedby="required-note">
+                {% csrf_token %}
+
+                <p class="required-note" id="required-note">Fields marked <span class="req" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+                {% for section in form.sections %}
+                <section class="form-section" aria-labelledby="section-{{ section.id }}">
+                    <h2 class="form-section-title" id="section-{{ section.id }}">{{ section.title }}</h2>
+                    {% if section.intro %}<p class="form-section-intro">{{ section.intro }}</p>{% endif %}
+
+                    <div class="form-grid">
+                        {% for field in section.fields %}
+                        {% with widget_type=field.widget_type %}
+
+                        {% if widget_type == 'radioselect' %}
+                        <fieldset class="field{% if field.name in form.FULL_WIDTH_FIELDS %} field-full{% endif %}{% if field.errors %} has-error{% endif %}">
+                            <legend class="label">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</legend>
+                            <div class="choice-chips">{{ field }}</div>
+                            {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                        </fieldset>
+
+                        {% elif widget_type == 'checkbox' %}
+                        <div class="field{% if field.name in form.FULL_WIDTH_FIELDS %} field-full{% endif %}{% if field.errors %} has-error{% endif %}">
+                            <label class="check" for="{{ field.id_for_label }}">
                                 {{ field }}
-                            {% endif %}
-
-                            {% if field.errors %}
-                                <span style="color:red; font-size:12px;">{{ field.errors }}</span>
-                            {% endif %}
-
-                            {% if field.name == 'severity' %}
-                                <div class="severity-track">
-                                    <div id="sevFill" class="severity-fill"></div>
-                                </div>
-                            {% endif %}
-
+                                <span>{{ field.label }}{% if field.help_text %}<span class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% endif %}</span>
+                            </label>
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
                         </div>
 
-                    {% endif %}
+                        {% elif field.name == 'severity' %}
+                        <div class="field field-full severity-field{% if field.errors %} has-error{% endif %}">
+                            <div class="range-head">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+                                <output class="range-value" id="sevValue" for="{{ field.id_for_label }}" aria-hidden="true">{{ field.value|default:"2" }}</output>
+                            </div>
+                            {{ field }}
+                            <ul class="range-scale" aria-hidden="true">
+                                <li>1 · Very low</li>
+                                <li>5 · Severe</li>
+                            </ul>
+                            {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                        </div>
 
-                {% endif %}
+                        {% else %}
+                        <div class="field{% if field.name in form.FULL_WIDTH_FIELDS %} field-full{% endif %}{% if field.errors %} has-error{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+                            {{ field }}
+                            {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                        </div>
+                        {% endif %}
 
-                {% if field.name == 'contact_method' %}
+                        {% endwith %}
+                        {% endfor %}
                     </div>
+                </section>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit report</button>
                 </div>
-
-                <div class="form-section">
-                    <div class="section-label">Your Information</div>
-                    <div class="form-grid">
-                {% endif %}
-
-            {% endfor %}
-
+            </form>
         </div>
+
+        <aside class="report-aside stack" aria-label="About your report">
+            <section class="card" aria-labelledby="next-steps-title">
+                <div class="card-header">
+                    <h2 class="card-title" id="next-steps-title">What happens next</h2>
+                </div>
+                <ol class="report-steps">
+                    <li>
+                        <strong>We save your report.</strong>
+                        It is added to the database with the status Pending.
+                    </li>
+                    <li>
+                        <strong>It joins the community data.</strong>
+                        Reports feed the <a href="{% url 'dashboard' %}">Dashboard</a> and <a href="{% url 'scam_list' %}">All reports</a>, so others can spot the same scam.
+                    </li>
+                    <li>
+                        <strong>Your details stay private.</strong>
+                        Your name, email and phone number are never shown on public pages.
+                    </li>
+                </ol>
+            </section>
+
+            <section class="card card-muted" aria-labelledby="safety-tips-title">
+                <div class="card-header">
+                    <h2 class="card-title" id="safety-tips-title">If you have been scammed</h2>
+                </div>
+                <ul class="checklist">
+                    <li>Stop replying to the scammer and do not send any more money.</li>
+                    <li>If you paid or shared card details, call your bank or card provider straight away.</li>
+                    <li>Change any passwords you shared and turn on two-step verification.</li>
+                    <li>Keep screenshots, messages and receipts as evidence.</li>
+                    <li>This form does not alert the police or your bank. Report it to them as well.</li>
+                </ul>
+                <a class="btn-link" href="{% url 'scam_awareness_page' %}">How to spot and report scams</a>
+            </section>
+
+            <section class="card card-muted privacy-note" aria-labelledby="privacy-title">
+                <div class="privacy-note-head">
+                    <span class="icon-tile" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="11" width="16" height="10" rx="2" />
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                        </svg>
+                    </span>
+                    <h2 class="card-title" id="privacy-title">Your privacy</h2>
+                </div>
+                <p class="text-small text-muted">Your name, email and phone number are kept with your report. They are never shown on the dashboard or in the list of reports. <a href="https://dollarscholars.org/privacy-policy/">Read our privacy policy</a>.</p>
+            </section>
+        </aside>
     </div>
-
-    <div class="submit-section">
-        <button type="submit" class="btn-submit">Submit Report</button>
-    </div>
-
 </div>
+{% endblock %}
 
-</form>
-
-</div>
-
-<script>
-// SEVERITY COLOR LOGIC
-function updateSeverity(val) {
-    const fill = document.getElementById('sevFill');
-    if (!fill) return;
-
-    const percent = ((val - 1) / 4) * 100;
-    fill.style.width = percent + '%';
-
-    if (val <= 2) fill.style.background = "#2da44e";
-    else if (val == 3) fill.style.background = "#d29922";
-    else fill.style.background = "#c0392b";
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // 1. Severity Initialization
-    const severityInput = document.querySelector('[name="severity"]');
-    if (severityInput) {
-        updateSeverity(severityInput.value || 1);
-        severityInput.addEventListener("change", function () {
-            updateSeverity(this.value);
-        });
-    }
-
-    // 2. Date Constraint Logic
-    const dateField = document.querySelector('input[type="date"]');
-    if (dateField) {
-        const today = new Date().toISOString().split('T')[0];
-        dateField.setAttribute("max", today);
-    }
-
-    // 3. Anonymous Toggle (Grey Out Name, Phone, Email)
-    const anonCheckbox = document.querySelector('[name="anonymous"]');
-    // Ensure these names match your Django field names
-    const fieldsToGrey = ['reporter_name', 'reporter_phone', 'reporter_email'];
-
-    function handleAnonymousStatus() {
-        const isChecked = anonCheckbox.checked;
-
-        fieldsToGrey.forEach(fieldName => {
-            const input = document.querySelector(`[name="${fieldName}"]`);
-            if (input) {
-                // Finds the nearest parent div with class 'field'
-                const container = input.closest('.field');
-
-                if (isChecked) {
-                    input.disabled = true;
-                    input.value = ''; // Optional: clear inputs
-                    if (container) container.classList.add('is-greyed-out');
-                } else {
-                    input.disabled = false;
-                    if (container) container.classList.remove('is-greyed-out');
-                }
-            }
-        });
-    }
-
-    if (anonCheckbox) {
-        anonCheckbox.addEventListener('change', handleAnonymousStatus);
-        handleAnonymousStatus(); // Run on page load
-    }
-
-});
-</script>
-
-</body>
-</html>
+{% block extra_js %}
+<script src="{% static 'scams/js/report_form.js' %}"></script>
+{% endblock %}
