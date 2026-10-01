@@ -28,7 +28,6 @@
             <ul class="nav-links">
                 <li><a href="{% url 'report_scam' %}"{% if current == 'report_scam' %} aria-current="page"{% elif current == 'thank_you' %} aria-current="true"{% endif %}>Report a scam</a></li>
                 <li><a href="{% url 'dashboard' %}"{% if current == 'dashboard' %} aria-current="page"{% endif %}>Dashboard</a></li>
-                {% if user.is_staff %}<li><a href="{% url 'scam_list' %}"{% if current == 'scam_list' %} aria-current="page"{% endif %}>All reports</a></li>{% endif %}
                 <li><a href="{% url 'scam_awareness_page' %}"{% if current == 'scam_awareness_page' %} aria-current="page"{% endif %}>Scam awareness</a></li>
             </ul>
         </nav>

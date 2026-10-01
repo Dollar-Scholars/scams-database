@@ -208,7 +208,7 @@
             <a href="{% url 'thank_you' %}" class="btn btn-secondary btn-block-mobile">Back to the Thank You page</a>
             {% else %}
             <a href="{% url 'report_scam' %}" class="btn btn-primary btn-block-mobile">Report a scam</a>
-            {% if user.is_staff %}<a href="{% url 'scam_list' %}" class="btn btn-secondary btn-block-mobile">View all reports</a>{% else %}<a href="{% url 'dashboard' %}" class="btn btn-secondary btn-block-mobile">View the dashboard</a>{% endif %}
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-block-mobile">View the dashboard</a>
             {% endif %}
         </div>
     </div>

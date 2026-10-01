@@ -16,7 +16,6 @@
         <p class="lead">What the community has reported: how many reports arrive each month, when the scams actually happened, and how much money people lost.</p>
         <div class="page-header-actions">
             <a class="btn btn-primary" href="{% url 'report_scam' %}">Report a scam</a>
-            {% if user.is_staff %}<a class="btn btn-secondary" href="{% url 'scam_list' %}">Browse all reports</a>{% endif %}
         </div>
     </header>
 
@@ -259,7 +258,6 @@
                     {% if total_scams > recent_scams|length %}Showing the {{ recent_scams|length }} most recent of {{ total_scams|floatformat:"g" }} reports submitted{% else %}Reports submitted{% endif %} &middot; {{ period_label }}
                 </p>
             </div>
-            {% if user.is_staff %}<a class="btn-link" href="{% url 'scam_list' %}">View all reports</a>{% endif %}
         </div>
 
         {% if recent_scams %}

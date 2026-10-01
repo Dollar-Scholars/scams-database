@@ -1,7 +1,6 @@
 """Tests for the shared Dollar Scholars page chrome: scams/templates/scams/base.html,
 its partials, and the static files it references."""
 import re
-from types import SimpleNamespace
 
 from django import forms
 from django.contrib import messages
@@ -43,14 +42,10 @@ APP_NAV = [
     ('dashboard', 'Dashboard'),
     ('scam_awareness_page', 'Scam awareness'),
 ]
-# Staff only for now (scam_list requires a staff login)
-STAFF_NAV = ('scam_list', 'All reports')
 
 
-def make_request(path='/', message_list=(), staff=False):
+def make_request(path='/', message_list=()):
     request = RequestFactory().get(path)
-    if staff:
-        request.user = SimpleNamespace(is_staff=True, is_authenticated=True, is_active=True)
     request.resolver_match = resolve(path)
     request.session = {}
     request._messages = FallbackStorage(request)
@@ -59,8 +54,8 @@ def make_request(path='/', message_list=(), staff=False):
     return request
 
 
-def render_child(path='/', message_list=(), staff=False):
-    return engines['django'].from_string(CHILD_TEMPLATE).render({}, make_request(path, message_list, staff))
+def render_child(path='/', message_list=()):
+    return engines['django'].from_string(CHILD_TEMPLATE).render({}, make_request(path, message_list))
 
 
 def nav_block(html):
@@ -120,19 +115,12 @@ class BaseTemplateTests(SimpleTestCase):
         nav = nav_block(render_child('/scam-awareness/'))
         for url_name, label in APP_NAV:
             self.assertRegex(nav, rf'<a href="{re.escape(reverse(url_name))}"[^>]*>{label}</a>')
-        self.assertNotIn(reverse(STAFF_NAV[0]), nav)
-
-    def test_staff_see_all_reports_in_nav_and_footer(self):
-        html = render_child('/scam-awareness/', staff=True)
-        url_name, label = STAFF_NAV
-        self.assertRegex(nav_block(html), rf'<a href="{re.escape(reverse(url_name))}"[^>]*>{label}</a>')
-        footer = html[html.index('<footer class="ds-footer">'):html.index('</footer>')]
-        self.assertInHTML(f'<a href="{reverse(url_name)}">{label}</a>', footer)
+        self.assertNotIn('/all-scams/', nav)
 
     def test_active_nav_item_marked_with_aria_current(self):
-        for url_name, label in APP_NAV + [STAFF_NAV]:
+        for url_name, label in APP_NAV:
             with self.subTest(url_name=url_name):
-                nav = nav_block(render_child(reverse(url_name), staff=(url_name, label) == STAFF_NAV))
+                nav = nav_block(render_child(reverse(url_name)))
                 self.assertEqual(nav.count('aria-current'), 1)
                 self.assertIn(f'<a href="{reverse(url_name)}" aria-current="page">{label}</a>', nav)
 
@@ -168,7 +156,7 @@ class BaseTemplateTests(SimpleTestCase):
             self.assertIn(f'>{heading}</h2>', footer)
         for url_name, label in APP_NAV:
             self.assertInHTML(f'<a href="{reverse(url_name)}">{label}</a>', footer)
-        self.assertNotIn(reverse(STAFF_NAV[0]), footer)
+        self.assertNotIn('/all-scams/', footer)
         for href in (
             'https://dollarscholars.org/',
             'https://dollarscholars.org/what-we-do/',

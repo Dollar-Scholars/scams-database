@@ -1,5 +1,3 @@
-from django.contrib.admin.views.decorators import staff_member_required
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.db.models import Sum
 from .contributors import CONTRIBUTORS
@@ -60,29 +58,6 @@ def scam_awareness_page(request):
         # site nav, so the "thank you for your report" wording is only shown to reporters.
         'from_report': request.GET.get('from') == 'report',
     })
-
-REPORTS_PER_PAGE = 25
-
-# Columns the "All reports" page shows (staff only for now). Loading only these keeps the reporter's
-# name, email and phone (and the long description) out of the page entirely.
-SCAM_LIST_FIELDS = ('title', 'scam_type', 'contact_method', 'date_occurred', 'country', 'status', 'created_at')
-
-
-# Staff only for now: reports are listed before anyone has reviewed them.
-@staff_member_required
-def scam_list(request):
-    scams = Scam.objects.only(*SCAM_LIST_FIELDS).order_by('-created_at', '-pk')
-    paginator = Paginator(scams, REPORTS_PER_PAGE)
-    # get_page() never raises: a non-number gives page 1, an out-of-range number the last page.
-    page_obj = paginator.get_page(request.GET.get('page'))
-    return render(request, 'scams/scam_list.html', {
-        'scams': page_obj.object_list,
-        'page_obj': page_obj,
-        'paginator': paginator,
-        'is_paginated': page_obj.has_other_pages(),
-        'page_range': paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1),
-    })
-
 
 # --- Dashboard helpers ---------------------------------------------------------------
 
