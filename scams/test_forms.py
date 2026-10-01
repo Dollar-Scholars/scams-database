@@ -233,3 +233,10 @@ class ReportPageTests(TestCase):
         html = response.content.decode()
         self.assertEqual(html.count('test@example.com'), 1)
         self.assertIn('value="test@example.com"', html)
+
+
+class ReportPageWordingTests(TestCase):
+    def test_what_happens_next_says_scamdb_generates_reports(self):
+        response = self.client.get(reverse('report_scam'))
+        self.assertContains(
+            response, 'ScamDB generates reports on the latest scams to help other individuals and organizations.')

@@ -382,6 +382,19 @@ html[data-theme="dark"] ::selection {
    Desktop (>= 1024px): brand | nav links | CTA + theme toggle, in one row.
    Mobile (< 1024px): brand | hamburger; nav, CTA and toggle drop down in a panel.
    ===================================================================================== */
+/* The main site's live header and footer (base.html). The header wrapper sticks to the
+   top, so both this app's fallback header and the main site's one stay in view. */
+ds-site-header,
+ds-site-footer {
+    display: block;
+}
+
+ds-site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 .site-header {
     position: sticky;
     top: 0;
