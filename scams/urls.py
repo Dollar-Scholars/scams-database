@@ -7,4 +7,5 @@ urlpatterns = [
     path('all-scams/', views.scam_list, name='scam_list'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('scam-awareness/', views.scam_awareness_page, name='scam_awareness_page'),
+    path('contributors/', views.contributors, name='contributors'),
 ]

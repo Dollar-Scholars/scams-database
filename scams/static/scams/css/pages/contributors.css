@@ -1,0 +1,55 @@
+/* Contributors page: one card per person */
+
+.contributor-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.contributor {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.contributor-initial {
+    flex: 0 0 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.contributor-body {
+    min-width: 0;
+}
+
+.contributor-name {
+    margin: 0;
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+}
+
+.contributor-github {
+    display: inline-block;
+    margin-top: 2px;
+    color: var(--action);
+    font-size: .875rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+html[data-theme="dark"] .contributor-github {
+    color: var(--teal);
+}
+
+.contributor-work {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: .9375rem;
+}

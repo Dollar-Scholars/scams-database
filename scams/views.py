@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.db.models import Sum
+from .contributors import CONTRIBUTORS
 from .forms import ScamReportForm
 from .models import Scam, CURRENCY_CHOICES
 from django.db.models.functions import ExtractYear
@@ -24,6 +25,10 @@ def report_scam(request):
 
 def thank_you(request):
     return render(request, 'scams/thank_you.html')
+
+def contributors(request):
+    return render(request, 'scams/contributors.html', {'contributors': CONTRIBUTORS})
+
 
 def scam_awareness_page(request):
     resources = [
