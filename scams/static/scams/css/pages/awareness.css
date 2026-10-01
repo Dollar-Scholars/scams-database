@@ -37,15 +37,6 @@
     font-weight: 600;
 }
 
-.awareness-lang {
-    color: var(--muted);
-    font-size: .9375rem;
-}
-
-.awareness-lang a {
-    font-weight: 600;
-}
-
 
 /* 2. Progress ------------------------------------------------------------------------- */
 .awareness-progress {
