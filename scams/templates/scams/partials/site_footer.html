@@ -16,7 +16,7 @@
                 <ul class="footer-links">
                     <li><a href="{% url 'report_scam' %}">Report a scam</a></li>
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'scam_list' %}">All reports</a></li>
+                    {% if user.is_staff %}<li><a href="{% url 'scam_list' %}">All reports</a></li>{% endif %}
                     <li><a href="{% url 'scam_awareness_page' %}">Scam awareness</a></li>
                     <li><a href="{% url 'contributors' %}">Contributors</a></li>
                 </ul>

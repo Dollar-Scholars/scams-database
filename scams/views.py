@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.db.models import Sum
@@ -62,11 +63,13 @@ def scam_awareness_page(request):
 
 REPORTS_PER_PAGE = 25
 
-# Columns the public "All reports" page shows. Loading only these keeps the reporter's
+# Columns the "All reports" page shows (staff only for now). Loading only these keeps the reporter's
 # name, email and phone (and the long description) out of the page entirely.
 SCAM_LIST_FIELDS = ('title', 'scam_type', 'contact_method', 'date_occurred', 'country', 'status', 'created_at')
 
 
+# Staff only for now: reports are listed before anyone has reviewed them.
+@staff_member_required
 def scam_list(request):
     scams = Scam.objects.only(*SCAM_LIST_FIELDS).order_by('-created_at', '-pk')
     paginator = Paginator(scams, REPORTS_PER_PAGE)

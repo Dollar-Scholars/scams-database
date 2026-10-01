@@ -20,6 +20,6 @@ class ContributorsPageTest(TestCase):
 
     def test_footer_links_to_contributors_on_every_page(self):
         link = f'href="{reverse("contributors")}"'
-        for name in ('report_scam', 'dashboard', 'scam_list', 'thank_you', 'scam_awareness_page', 'contributors'):
+        for name in ('report_scam', 'dashboard', 'thank_you', 'scam_awareness_page', 'contributors'):
             response = self.client.get(reverse(name))
             self.assertContains(response, link, msg_prefix=name)

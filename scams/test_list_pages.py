@@ -2,6 +2,7 @@
 import re
 from datetime import date, timedelta
 
+from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.db import connection
 from django.template.loader import get_template
@@ -54,8 +55,31 @@ def row_titles(response):
 
 
 @override_settings(STORAGES=PLAIN_STORAGES)
+class ScamListAccessTests(TestCase):
+    url = reverse('scam_list')
+
+    def test_anonymous_visitors_are_sent_to_the_admin_login(self):
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f'{reverse("admin:login")}?next={self.url}')
+
+    def test_logged_in_non_staff_users_are_refused(self):
+        user = get_user_model().objects.create_user('visitor', password='x')
+        self.client.force_login(user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['Location'].startswith(reverse('admin:login')))
+
+    def test_staff_can_see_it(self):
+        self.client.force_login(get_user_model().objects.create_user('staff', password='x', is_staff=True))
+        self.assertEqual(self.client.get(self.url).status_code, 200)
+
+
 class ScamListPageTests(TestCase):
     url = reverse('scam_list')
+
+    def setUp(self):
+        # The page is staff only for now
+        self.client.force_login(get_user_model().objects.create_user('staff', password='x', is_staff=True))
 
     def make_many(self, count):
         """`count` reports; "Report 1" is the oldest, "Report <count>" the newest."""
@@ -244,7 +268,8 @@ class ThankYouPageTests(TestCase):
         self.assertIn(
             f'<a class="btn btn-secondary" href="{reverse("scam_awareness_page")}?from=report">'
             'Learn how to protect yourself from future scams</a>', main)
-        self.assertIn(f'href="{reverse("scam_list")}"', main)
+        self.assertIn(f'href="{reverse("dashboard")}">dashboard</a>', main)
+        self.assertNotIn(f'href="{reverse("scam_list")}"', main)
 
     def test_report_nav_item_marked_as_current_section(self):
         html = self.client.get(self.url).content.decode()
