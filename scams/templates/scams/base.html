@@ -4,19 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-        // Apply the saved (or OS) theme before first paint. Same key as dollarscholars.org.
+        // Apply the saved theme before first paint, like dollarscholars.org: light unless chosen.
         (() => {
             const root = document.documentElement;
             root.classList.remove('no-js');
             root.classList.add('js');
+            // ds_theme is shared with dollarscholars.org, so a choice made on either site shows
+            // on both; this app's own localStorage key is the fallback.
             let theme = null;
             try {
-                const stored = localStorage.getItem('ds.website.theme');
+                const shared = document.cookie.match(/(?:^|;\s*)ds_theme=(dark|light)(?:;|$)/);
+                const stored = shared ? shared[1] : localStorage.getItem('ds.website.theme');
                 if (stored === 'dark' || stored === 'light') theme = stored;
             } catch (_) { }
-            if (!theme) {
-                theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
+            if (!theme) theme = 'light';
             root.dataset.theme = theme;
             root.style.colorScheme = theme;
         })();
