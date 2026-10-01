@@ -265,8 +265,9 @@ class MainSiteHeaderFooterTests(SimpleTestCase):
         with self.settings(DS_SITE_URL='https://dollarscholars.org'):
             html = render_child()
         # picker=1 asks for the main site's language picker, so the header matches it exactly
-        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js?picker=1" defer></script>', html)
-        self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js" defer></script>', html)
+        # ...in the page's language (lang=en here)
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js?picker=1&amp;lang=en" defer></script>', html)
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js?lang=en" defer></script>', html)
         # This app's own header and footer stay inside, as the fallback.
         header = html[html.index('<ds-site-header>'):html.index('</ds-site-header>')]
         self.assertIn('<header class="site-header">', header)

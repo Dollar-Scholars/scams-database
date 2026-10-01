@@ -1,5 +1,5 @@
 {% load static %}<!doctype html>
-<html lang="en" dir="ltr" class="no-js">
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" class="no-js">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,14 +30,17 @@
     <meta property="og:site_name" content="Dollar Scholars">
     <meta property="og:type" content="website">
 
+    {% for code, url in LANGUAGE_ALTERNATES %}
+    <link rel="alternate" hreflang="{{ code }}" href="{{ url }}">
+    {% endfor %}
     <link rel="icon" type="image/svg+xml" href="{% static 'scams/img/vector_logo_ds_small.svg' %}">
     <link rel="stylesheet" href="{% static 'scams/css/ds-theme.css' %}">
     <script src="{% static 'scams/js/theme-toggle.js' %}" defer></script>
     <script src="{% static 'scams/js/site-nav.js' %}" defer></script>
     {% if DS_SITE_URL %}
     {# picker=1: the main site's language picker too, so the header matches it exactly #}
-    <script src="{{ DS_SITE_URL }}/embed/site-header.js?picker=1" defer></script>
-    <script src="{{ DS_SITE_URL }}/embed/site-footer.js" defer></script>
+    <script src="{{ DS_SITE_URL }}/embed/site-header.js?picker=1&amp;lang={{ LANGUAGE_CODE }}" defer></script>
+    <script src="{{ DS_SITE_URL }}/embed/site-footer.js?lang={{ LANGUAGE_CODE }}" defer></script>
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
