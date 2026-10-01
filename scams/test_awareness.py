@@ -170,7 +170,8 @@ class ScamAwarenessPageTests(SimpleTestCase):
             self.assertIn(f'<li><strong>{step}</strong>', html)
         main = html[html.index('<main id="main-content"'):html.index('</main>')]
         self.assertRegex(main, rf'<a href="{re.escape(reverse("report_scam"))}" class="btn btn-primary[^"]*">Report a scam</a>')
-        self.assertRegex(main, rf'<a href="{re.escape(reverse("scam_list"))}" class="btn btn-secondary[^"]*">View all reports</a>')
+        self.assertRegex(main, rf'<a href="{re.escape(reverse("dashboard"))}" class="btn btn-secondary[^"]*">View the dashboard</a>')
+        self.assertNotIn('/all-scams/', main)
         self.assertNotIn('Back to the Thank You page', main)
 
     def test_arriving_from_the_thank_you_page(self):

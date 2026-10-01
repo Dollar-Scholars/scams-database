@@ -40,7 +40,6 @@ STATIC_ASSETS = [
 APP_NAV = [
     ('report_scam', 'Report a scam'),
     ('dashboard', 'Dashboard'),
-    ('scam_list', 'All reports'),
     ('scam_awareness_page', 'Scam awareness'),
 ]
 
@@ -116,6 +115,7 @@ class BaseTemplateTests(SimpleTestCase):
         nav = nav_block(render_child('/scam-awareness/'))
         for url_name, label in APP_NAV:
             self.assertRegex(nav, rf'<a href="{re.escape(reverse(url_name))}"[^>]*>{label}</a>')
+        self.assertNotIn('/all-scams/', nav)
 
     def test_active_nav_item_marked_with_aria_current(self):
         for url_name, label in APP_NAV:
@@ -156,6 +156,7 @@ class BaseTemplateTests(SimpleTestCase):
             self.assertIn(f'>{heading}</h2>', footer)
         for url_name, label in APP_NAV:
             self.assertInHTML(f'<a href="{reverse(url_name)}">{label}</a>', footer)
+        self.assertNotIn('/all-scams/', footer)
         for href in (
             'https://dollarscholars.org/',
             'https://dollarscholars.org/what-we-do/',
