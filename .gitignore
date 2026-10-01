@@ -4,3 +4,8 @@ __pycache__/
 db.sqlite3
 .env
 .DS_*
+.venv/
+backups/
+staticfiles/
+# SQLite -> PostgreSQL dump (docs/POSTGRES.md, section 3): reporters' details and password hashes
+sqlite_data.json

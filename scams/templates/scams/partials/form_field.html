@@ -1,0 +1,34 @@
+{% comment %}
+Renders one Django form field in the Dollar Scholars style.
+
+    {% include "scams/partials/form_field.html" with field=form.title %}
+    {% include "scams/partials/form_field.html" with field=form.description extra_class="field-full" %}
+    {% include "scams/partials/form_field.html" with field=form.contact_method choices="list" %}
+    {% include "scams/partials/form_field.html" with field=form.platform help="Where did it happen?" %}
+
+Optional: extra_class (added to .field), help (overrides field.help_text),
+choices="list" (plain vertical radios instead of chips).
+The widget itself is rendered with {{ field }} so ids, names and attrs are unchanged.
+Help text and errors get the ids <auto_id>_helptext and <auto_id>_error (the same
+convention as the report form), so a form can point aria-describedby at them.
+{% endcomment %}
+{% with widget_type=field.widget_type help_text=help|default:field.help_text %}
+<div class="field{% if field.errors %} has-error{% endif %}{% if extra_class %} {{ extra_class }}{% endif %}">
+    {% if widget_type == 'checkbox' %}
+        <label class="check" for="{{ field.id_for_label }}">
+            {{ field }}
+            <span>{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</span>
+        </label>
+    {% elif widget_type == 'radioselect' or widget_type == 'checkboxselectmultiple' %}
+        <fieldset>
+            <legend class="label">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</legend>
+            <div class="{% if choices == 'list' %}choice-list{% else %}choice-chips{% endif %}">{{ field }}</div>
+        </fieldset>
+    {% else %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+        {{ field }}
+    {% endif %}
+    {% if help_text %}<p class="help"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ help_text }}</p>{% endif %}
+    {% if field.errors %}<ul class="errorlist"{% if field.auto_id %} id="{{ field.auto_id }}_error"{% endif %}>{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endwith %}

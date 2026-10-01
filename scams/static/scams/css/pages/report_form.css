@@ -1,0 +1,184 @@
+/* =====================================================================================
+   Report a scam page (scams/report_form.html)
+   Page-only styles; tokens and components come from ds-theme.css.
+   ===================================================================================== */
+
+/* Form column plus aside (one column on phones, aside after the form) */
+.report-layout {
+    --grid-gap: 24px;
+    align-items: start;
+}
+
+@media (min-width: 1024px) {
+    .report-layout { --grid-gap: 40px; }
+}
+
+.report-main {
+    min-width: 0;
+}
+
+/* ---- Error summary ---------------------------------------------------------------- */
+.error-summary {
+    margin-bottom: 24px;
+}
+
+.error-summary:focus {
+    outline: 3px solid var(--danger);
+    outline-offset: 3px;
+}
+
+.error-summary .alert-title {
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+.error-summary p {
+    margin: 0 0 10px;
+}
+
+.error-summary-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.error-summary-list li + li {
+    margin-top: 10px;
+}
+
+.error-summary-list a {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+.error-summary-list a:hover {
+    color: var(--danger);
+}
+
+.error-summary-label {
+    display: block;
+    font-weight: 700;
+}
+
+/* ---- Form card ---------------------------------------------------------------------- */
+.required-note {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: .875rem;
+}
+
+.form-section-intro {
+    margin: -8px 0 20px;
+    color: var(--muted);
+    font-size: .875rem;
+    line-height: 1.5;
+}
+
+.report-form textarea {
+    min-height: 160px;
+}
+
+/* "Submit anonymously" switches off the reporter fields (report_form.js) */
+.report-form .field {
+    transition: opacity .3s ease;
+}
+
+.report-form .field.is-greyed-out {
+    opacity: .45;
+    pointer-events: none;
+}
+
+/* ---- Severity slider: colour bands as before the redesign ----------------------------- */
+#sevRange[data-level="low"] { --control-accent: var(--success); }
+#sevRange[data-level="medium"] { --control-accent: var(--warning); }
+#sevRange[data-level="high"] { --control-accent: var(--danger); }
+
+.severity-field .range-value {
+    min-width: 7.5em;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.range-value[data-level="low"] {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.range-value[data-level="medium"] {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.range-value[data-level="high"] {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+/* Without JavaScript the live label cannot follow the slider, so hide it */
+html.no-js #sevValue {
+    visibility: hidden;
+}
+
+/* ---- Aside ------------------------------------------------------------------------------ */
+.report-aside {
+    --stack-gap: 24px;
+}
+
+.report-aside .card-header {
+    margin-bottom: 16px;
+}
+
+.report-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: report-step;
+}
+
+.report-steps li {
+    position: relative;
+    margin: 0;
+    padding-left: 44px;
+    color: var(--muted);
+    font-size: .9375rem;
+    line-height: 1.55;
+    counter-increment: report-step;
+}
+
+.report-steps li + li {
+    margin-top: 18px;
+}
+
+.report-steps li::before {
+    content: counter(report-step);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: .875rem;
+    font-weight: 700;
+}
+
+.report-steps strong {
+    display: block;
+    color: var(--ink);
+}
+
+.report-aside .checklist {
+    margin-bottom: 20px;
+    font-size: .9375rem;
+    line-height: 1.55;
+}
+
+.privacy-note-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}

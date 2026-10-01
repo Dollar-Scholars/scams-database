@@ -1,0 +1,4 @@
+# Files used on the Linux server must keep Unix line endings
+*.sh text eol=lf
+deploy/nginx/* text eol=lf
+Dockerfile text eol=lf

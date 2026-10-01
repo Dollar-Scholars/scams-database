@@ -1,0 +1,657 @@
+/* =====================================================================================
+   Scam awareness page (templates/scams/scam_awareness_page.html)
+   -------------------------------------------------------------------------------------
+   Builds on ds-theme.css: only tokens from there, no web fonts. Dark mode is
+   html[data-theme="dark"]. Behaviour lives in js/awareness.js; without JavaScript the
+   topics are shown open and the progress bar is hidden.
+
+   Contents
+     1. Hero
+     2. Progress
+     3. Guide sections (tinted panels)
+     4. Topic accordion
+     5. Warning-signs checklist
+     6. Steps panel
+     7. Resource cards
+     8. Disclaimer and actions
+     9. Reduced motion and print
+   ===================================================================================== */
+
+
+/* 1. Hero ----------------------------------------------------------------------------- */
+.awareness-hero-mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.awareness-hero-mark .eyebrow {
+    margin: 0;
+}
+
+.awareness-kicker {
+    margin: 0 0 6px;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.awareness-lang {
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+.awareness-lang a {
+    font-weight: 600;
+}
+
+
+/* 2. Progress ------------------------------------------------------------------------- */
+.awareness-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 24px;
+    padding: 16px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--ds-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.awareness-progress .progress {
+    width: 100%;
+}
+
+.awareness-progress .progress-bar {
+    width: 0;
+}
+
+.awareness-progress-label {
+    margin: 0;
+    color: var(--muted);
+    font-size: .875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.awareness-progress.is-complete .progress-bar {
+    background: var(--success);
+}
+
+.awareness-progress.is-complete .awareness-progress-label {
+    color: var(--success);
+}
+
+@media (min-width: 640px) {
+    .awareness-progress {
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .awareness-progress .progress {
+        flex: 1 1 auto;
+    }
+
+    .awareness-progress-label {
+        flex: 0 0 auto;
+    }
+}
+
+@media (min-width: 768px) {
+    .awareness-progress {
+        margin-bottom: 32px;
+    }
+}
+
+/* Progress only means something when the topics can be opened */
+html.no-js .awareness-progress {
+    display: none;
+}
+
+
+/* 3. Guide sections: pale teal panels (the site's hero-pod gradient) --------------------- */
+.awareness-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.guide-section {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--band-bg); /* pale teal; --ds-raised in dark mode */
+}
+
+.guide-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.guide-head > div {
+    min-width: 0;
+}
+
+.guide-head .icon-tile {
+    border: 1px solid var(--line);
+    background: var(--ds-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.guide-head .section-title {
+    font-size: 1.25rem;
+}
+
+@media (min-width: 640px) {
+    .guide-head {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .awareness-sections {
+        gap: 32px;
+    }
+
+    .guide-section {
+        padding: 32px;
+    }
+
+    .guide-head {
+        margin-bottom: 24px;
+    }
+
+    .guide-head .section-title {
+        font-size: 1.375rem;
+    }
+}
+
+
+/* 4. Topic accordion ------------------------------------------------------------------ */
+.accordion {
+    overflow: hidden; /* clips item backgrounds to the rounded corners */
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--ds-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.accordion-item {
+    transition: background-color .2s ease, box-shadow .2s ease;
+}
+
+.accordion-item + .accordion-item {
+    border-top: 1px solid var(--line);
+}
+
+.accordion-item.is-open {
+    background: var(--info-bg);
+    box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.accordion-heading {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+/* Phones: text, then the "Reviewed" badge under it; chevron on the right */
+.accordion-trigger {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "text chevron"
+        "tag  chevron";
+    align-items: center;
+    column-gap: 12px;
+    width: 100%;
+    margin: 0;
+    padding: 16px 18px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    text-align: left;
+    transition: background-color .2s ease;
+}
+
+.accordion-trigger:hover {
+    background: var(--ds-raised);
+}
+
+.accordion-item.is-open .accordion-trigger:hover {
+    background: transparent;
+}
+
+/* The accordion clips overflow, so draw the site focus ring inside the button */
+.accordion-trigger:focus-visible {
+    outline-offset: -3px;
+    border-radius: var(--radius-md);
+}
+
+.accordion-trigger-text {
+    grid-area: text;
+}
+
+.accordion-review-tag {
+    display: none; /* shown once the topic has been opened (also hides it from screen readers) */
+    grid-area: tag;
+    justify-self: start;
+    margin-top: 6px;
+}
+
+.accordion-item.is-reviewed .accordion-review-tag {
+    display: inline-flex;
+}
+
+.accordion-chevron {
+    grid-area: chevron;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--teal);
+    transition: transform .25s ease;
+}
+
+.accordion-item.is-open .accordion-chevron {
+    transform: rotate(180deg);
+}
+
+@media (min-width: 640px) {
+    .accordion-trigger {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-areas: "text tag chevron";
+        padding: 18px 20px;
+    }
+
+    .accordion-review-tag {
+        margin-top: 0;
+    }
+}
+
+/* Panel: open by default (no JS); collapses with a height transition once JS runs */
+.accordion-panel-wrap {
+    display: grid;
+    grid-template-rows: 1fr;
+}
+
+html.js .accordion-panel-wrap {
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition: grid-template-rows .3s ease, visibility 0s linear .3s;
+}
+
+html.js .accordion-item.is-open .accordion-panel-wrap {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: grid-template-rows .3s ease, visibility 0s linear 0s;
+}
+
+.accordion-panel-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.accordion-panel-inner p {
+    max-width: 68ch;
+    margin: 0;
+    padding: 0 18px 18px;
+    color: var(--ink);
+    font-size: .9375rem;
+    line-height: 1.65;
+}
+
+@media (min-width: 640px) {
+    .accordion-panel-inner p {
+        padding: 0 20px 20px;
+    }
+}
+
+html.no-js .accordion-chevron {
+    display: none;
+}
+
+html.no-js .accordion-trigger {
+    cursor: default;
+}
+
+html.no-js .accordion-trigger:hover {
+    background: transparent;
+}
+
+
+/* 5. Warning-signs checklist ---------------------------------------------------------- */
+.warning-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.warning-list li + li {
+    margin-top: 0;
+}
+
+.warning-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--ds-surface);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink);
+    font-size: .9375rem;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease;
+}
+
+.warning-item label:hover {
+    border-color: var(--input-border);
+}
+
+.warning-item input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--warning);
+}
+
+/* A sign the visitor recognises is flagged in the warning (amber) colours */
+.warning-item.is-checked label {
+    border-color: var(--warning-line);
+    background: var(--warning-bg);
+}
+
+.warning-item.is-checked label:hover {
+    border-color: var(--warning);
+}
+
+/* Clearing the checklist needs JavaScript */
+html.no-js .warning-reset {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .warning-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+
+/* 6. Steps panel (teal, like the site's CTA banner) ------------------------------------ */
+.guide-section.awareness-steps {
+    border-color: transparent;
+    background: var(--cta-bg);
+    box-shadow: var(--shadow-md);
+    color: var(--cta-ink);
+}
+
+.awareness-steps .guide-head {
+    align-items: flex-start;
+}
+
+.awareness-steps .section-title {
+    color: var(--cta-ink);
+}
+
+.awareness-steps .icon-tile {
+    border-color: var(--cta-line);
+    background: var(--cta-tint);
+    box-shadow: none;
+    color: var(--cta-ink);
+}
+
+.step-list {
+    display: grid;
+    gap: 14px;
+    max-width: 68ch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+}
+
+.step-list li {
+    position: relative;
+    min-height: 30px;
+    margin: 0;
+    padding-left: 44px;
+    color: var(--cta-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    counter-increment: step;
+}
+
+.step-list li::before {
+    content: counter(step);
+    position: absolute;
+    top: -2px;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--cta-ink);
+    color: var(--action);
+    font-size: .875rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.step-list strong {
+    color: var(--cta-ink);
+}
+
+@media (min-width: 640px) {
+    .awareness-steps .guide-head {
+        align-items: center;
+    }
+}
+
+html[data-theme="dark"] .guide-section.awareness-steps {
+    border-color: var(--info-line);
+    background: var(--info-bg);
+    color: var(--ink);
+}
+
+html[data-theme="dark"] .awareness-steps .section-title {
+    color: var(--ink);
+}
+
+html[data-theme="dark"] .awareness-steps .icon-tile {
+    border-color: var(--info-line);
+    background: var(--ds-surface);
+    color: var(--teal);
+}
+
+html[data-theme="dark"] .step-list li {
+    color: var(--muted);
+}
+
+html[data-theme="dark"] .step-list li::before {
+    background: var(--action);
+    color: var(--action-ink);
+}
+
+html[data-theme="dark"] .step-list strong {
+    color: var(--ink);
+}
+
+
+/* 7. Resource cards ------------------------------------------------------------------- */
+.resource-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+}
+
+.resource-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 18px 52px 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--ds-surface);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform .25s cubic-bezier(.16, 1, .3, 1), border-color .2s ease, box-shadow .25s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--teal);
+    box-shadow: var(--shadow-md);
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.resource-card-name {
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+}
+
+.resource-card:hover .resource-card-name {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: .2em;
+}
+
+.resource-card-desc {
+    color: var(--muted);
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
+.resource-card-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 20px;
+    height: 20px;
+    color: var(--teal);
+    transition: transform .2s ease;
+}
+
+.resource-card:hover .resource-card-icon {
+    transform: translate(2px, -2px);
+}
+
+.resource-empty {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 640px) {
+    .resource-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+
+/* 8. Disclaimer and actions ----------------------------------------------------------- */
+.awareness-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 32px 0 0;
+    color: var(--muted);
+    font-size: .875rem;
+    line-height: 1.5;
+}
+
+.awareness-disclaimer svg {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+}
+
+.awareness-actions {
+    margin-top: 20px;
+}
+
+
+/* 9. Reduced motion and print --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .resource-card:hover,
+    .resource-card:hover .resource-card-icon {
+        transform: none;
+    }
+}
+
+@media print {
+    html.js .accordion-panel-wrap {
+        grid-template-rows: 1fr;
+        visibility: visible;
+    }
+
+    .awareness-progress,
+    .accordion-chevron,
+    .accordion-review-tag,
+    .resource-card-icon {
+        display: none !important;
+    }
+
+    .guide-section,
+    html[data-theme="dark"] .guide-section,
+    .guide-section.awareness-steps,
+    html[data-theme="dark"] .guide-section.awareness-steps {
+        border: 1px solid #cccccc;
+        background: #ffffff;
+        box-shadow: none;
+        color: #000000;
+        break-inside: avoid;
+    }
+
+    .awareness-steps .section-title,
+    .step-list li,
+    .step-list strong {
+        color: #000000;
+    }
+
+    .step-list li::before {
+        border: 1px solid #000000;
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .accordion-item.is-open {
+        background: #ffffff;
+        box-shadow: none;
+    }
+
+    .resource-card {
+        padding-right: 20px;
+        box-shadow: none;
+    }
+
+    .resource-card::after {
+        content: attr(href);
+        color: #333333;
+        font-size: .8125rem;
+    }
+}

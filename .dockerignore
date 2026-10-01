@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+venv
+.vscode
+.idea
+.claude
+__pycache__
+*.pyc
+.env
+db.sqlite3
+backups
+staticfiles
+sqlite_data.json
+scams/backups.py

@@ -1,35 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "scams/base.html" %}
+{% load static %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Method</th>
-                <th>Date Seen</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for scam in scams %}
-            <tr>
-                <td>{{ scam.title }}</td>
-                <td>{{ scam.get_scam_type_display }}</td>
-                <td>{{ scam.get_contact_method_display }}</td>
-                <td>{{ scam.date_seen }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No scams reported yet.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block title %}All reports{% endblock %}
+{% block meta_description %}Every scam reported to the Dollar Scholars community, newest first. The names and contact details of the people who report are never shown.{% endblock %}
 
-</body>
-</html>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'scams/css/pages/scam_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <p class="eyebrow">Scam Reports</p>
+        <h1>All reports</h1>
+        <p class="lead">
+            {% if paginator.count %}<strong class="text-ink">{{ paginator.count }} report{{ paginator.count|pluralize }}</strong> shared by the community so far, newest first.{% else %}No reports have been shared yet.{% endif %}
+            We never show the name, email or phone number of the person who reported.
+        </p>
+        <div class="page-header-actions">
+            <a class="btn btn-primary" href="{% url 'report_scam' %}">Report a scam</a>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">View the dashboard</a>
+        </div>
+    </header>
+
+    {% if paginator.count %}
+    <section class="section reports" aria-labelledby="reports-heading">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title" id="reports-heading">Reported scams</h2>
+                <p class="section-subtitle">Newest first. Pending reports have not been reviewed yet.</p>
+            </div>
+            <p class="reports-range text-small text-muted">
+                Showing {{ page_obj.start_index }}&ndash;{{ page_obj.end_index }} of {{ paginator.count }}
+            </p>
+        </div>
+
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="reports-heading">
+            <table class="table table-stack reports-table">
+                <caption class="visually-hidden">
+                    Scam reports, newest first{% if is_paginated %} (page {{ page_obj.number }} of {{ paginator.num_pages }}){% endif %}
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Contact method</th>
+                        <th scope="col">Date occurred</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scam in scams %}
+                    <tr>
+                        <th scope="row" class="report-title">{{ scam.title }}</th>
+                        <td data-label="Type">
+                            {% if scam.scam_type and scam.scam_type != "undefined" %}{{ scam.get_scam_type_display }}{% else %}<span class="text-muted">Not given</span>{% endif %}
+                        </td>
+                        <td data-label="Contact method">
+                            {% if scam.contact_method and scam.contact_method != "undefined" %}{{ scam.get_contact_method_display }}{% else %}<span class="text-muted">Not given</span>{% endif %}
+                        </td>
+                        <td data-label="Date occurred" class="report-date">
+                            {% if scam.date_occurred %}<time datetime="{{ scam.date_occurred|date:'Y-m-d' }}">{{ scam.date_occurred|date:"M j, Y" }}</time>{% else %}<span class="text-muted">Not given</span>{% endif %}
+                        </td>
+                        <td data-label="Country">
+                            {% if scam.country %}{{ scam.get_country_display }}{% else %}<span class="text-muted">Not given</span>{% endif %}
+                        </td>
+                        <td data-label="Status">
+                            {% if scam.status %}<span class="badge badge-dot badge-{{ scam.status|slugify }}">{{ scam.status|capfirst }}</span>{% else %}<span class="badge badge-neutral">Unknown</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if is_paginated %}
+        <nav class="pager" aria-label="Pagination">
+            <ul class="pagination">
+                <li>
+                    {% if page_obj.has_previous %}
+                    <a class="pager-prev" href="?page={{ page_obj.previous_page_number }}" rel="prev" aria-label="Previous page">Previous</a>
+                    {% else %}
+                    <span class="pager-prev is-disabled">Previous</span>
+                    {% endif %}
+                </li>
+                {% for number in page_range %}
+                <li class="pager-num">
+                    {% if number == paginator.ELLIPSIS %}
+                    <span class="pagination-ellipsis">&hellip;</span>
+                    {% elif number == page_obj.number %}
+                    <a href="?page={{ number }}" aria-current="page" aria-label="Page {{ number }}">{{ number }}</a>
+                    {% else %}
+                    <a href="?page={{ number }}" aria-label="Page {{ number }}">{{ number }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                <li class="pager-status"><span>Page {{ page_obj.number }} of {{ paginator.num_pages }}</span></li>
+                <li>
+                    {% if page_obj.has_next %}
+                    <a class="pager-next" href="?page={{ page_obj.next_page_number }}" rel="next" aria-label="Next page">Next</a>
+                    {% else %}
+                    <span class="pager-next is-disabled">Next</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+    </section>
+    {% else %}
+    <section class="section" aria-labelledby="empty-heading">
+        <div class="empty-state">
+            <div class="empty-state-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1Z"/><path d="M16 5h2a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h2"/><path d="M9 12h6M9 16h4"/></svg>
+            </div>
+            <h2 class="empty-state-title" id="empty-heading">No reports yet</h2>
+            <p>When someone reports a scam it appears here, without their name or contact details. Be the first to warn others.</p>
+            <div class="cluster">
+                <a class="btn btn-primary" href="{% url 'report_scam' %}">Report a scam</a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

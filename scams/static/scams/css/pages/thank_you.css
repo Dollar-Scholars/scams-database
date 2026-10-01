@@ -1,0 +1,158 @@
+/* =====================================================================================
+   Thank-you page (scams/templates/scams/thank_you.html)
+   ===================================================================================== */
+
+.thanks-page {
+    padding-block: 32px 48px;
+}
+
+@media (min-width: 768px) {
+    .thanks-page {
+        padding-block: 56px 72px;
+    }
+}
+
+.thanks {
+    max-width: 720px;
+    margin-inline: auto;
+}
+
+/* ---- Success header ---- */
+
+.thanks-hero {
+    text-align: center;
+}
+
+.thanks-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    border: 1px solid var(--success-line);
+    border-radius: 50%;
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.thanks-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.thanks-hero h1 {
+    margin-bottom: 12px;
+}
+
+.thanks-hero .lead {
+    margin-inline: auto;
+    margin-bottom: 6px;
+    color: var(--ink);
+}
+
+.thanks-es {
+    max-width: 68ch;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: .9375rem;
+    font-weight: 600;
+}
+
+/* ---- What happens next ---- */
+
+.thanks-next {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.thanks-next-title {
+    margin: 0 0 20px;
+    font-size: 1.25rem;
+}
+
+.next-steps {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: next-step;
+}
+
+.next-steps li {
+    position: relative;
+    min-height: 32px;
+    padding-left: 48px;
+    counter-increment: next-step;
+}
+
+.next-steps li::before {
+    content: counter(next-step);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: .875rem;
+    font-weight: 700;
+}
+
+.next-steps h3 {
+    margin: 0 0 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 32px;
+    letter-spacing: -0.015em;
+}
+
+.next-steps p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+/* ---- Actions ---- */
+
+.thanks-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 16px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.action-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    text-align: center;
+}
+
+/* The long English labels must wrap instead of overflowing on phones */
+.action-block .btn {
+    max-width: 100%;
+    white-space: normal;
+}
+
+.action-label {
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+@media (max-width: 639.98px) {
+    .action-block,
+    .action-block .btn {
+        width: 100%;
+    }
+}
