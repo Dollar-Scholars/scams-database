@@ -250,3 +250,29 @@ class FormFieldPartialTests(SimpleTestCase):
         self.assertIn('<label class="check" for="id_anonymous">', html)
         self.assertIn('<p class="help" id="id_anonymous_helptext">Your name is hidden.</p>', html)
         self.assertNotIn('class="req"', html)
+
+
+@override_settings(STORAGES=PLAIN_STORAGES)
+class MainSiteHeaderFooterTests(SimpleTestCase):
+    """Every page shows the main Dollar Scholars site's live header and footer."""
+
+    def test_loads_the_main_sites_header_and_footer(self):
+        with self.settings(DS_SITE_URL='https://dollarscholars.org'):
+            html = render_child()
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js" defer></script>', html)
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js" defer></script>', html)
+        # This app's own header and footer stay inside, as the fallback.
+        header = html[html.index('<ds-site-header>'):html.index('</ds-site-header>')]
+        self.assertIn('<header class="site-header">', header)
+        footer = html[html.index('<ds-site-footer>'):html.index('</ds-site-footer>')]
+        self.assertIn('<footer class="ds-footer">', footer)
+        # The dark-mode button moves into the main header's slot for the host's controls.
+        self.assertIn("toggle.slot = 'actions'", html)
+
+    def test_empty_ds_site_url_uses_only_this_apps_header_and_footer(self):
+        with self.settings(DS_SITE_URL=''):
+            html = render_child()
+        self.assertNotIn('/embed/site-header.js', html)
+        self.assertNotIn('/embed/site-footer.js', html)
+        self.assertNotIn("toggle.slot = 'actions'", html)
+        self.assertIn('<header class="site-header">', html)

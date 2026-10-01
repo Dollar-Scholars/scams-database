@@ -33,20 +33,38 @@
     <link rel="stylesheet" href="{% static 'scams/css/ds-theme.css' %}">
     <script src="{% static 'scams/js/theme-toggle.js' %}" defer></script>
     <script src="{% static 'scams/js/site-nav.js' %}" defer></script>
+    {% if DS_SITE_URL %}
+    <script src="{{ DS_SITE_URL }}/embed/site-header.js" defer></script>
+    <script src="{{ DS_SITE_URL }}/embed/site-footer.js" defer></script>
+    {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    {# The main site's live header; this app's own header shows until it loads, or if it cannot. #}
+    <ds-site-header>
     {% include "scams/partials/site_header.html" %}
+    </ds-site-header>
+    {% if DS_SITE_URL %}
+    <script>
+        // Keep this app's dark-mode button, in the place the main site's header keeps for it.
+        document.querySelector('ds-site-header').addEventListener('ds-site-header-ready', (event) => {
+            const toggle = document.getElementById('ds-theme-toggle');
+            if (toggle) { toggle.slot = 'actions'; event.currentTarget.append(toggle); }
+        });
+    </script>
+    {% endif %}
 
     <main id="main-content" class="site-main" tabindex="-1">
         {% include "scams/partials/messages.html" %}
         {% block content %}{% endblock %}
     </main>
 
+    <ds-site-footer>
     {% include "scams/partials/site_footer.html" %}
+    </ds-site-footer>
 
     {% block extra_js %}{% endblock %}
 </body>

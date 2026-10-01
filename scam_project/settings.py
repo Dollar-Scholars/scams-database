@@ -78,6 +78,10 @@ if DEBUG and not ALLOWED_HOSTS:
 # Full origins (scheme + host), e.g. "https://scams.example.org".
 CSRF_TRUSTED_ORIGINS = env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
+# The main Dollar Scholars site, whose header and footer every page shows (loaded live from
+# <DS_SITE_URL>/embed/site-header.js and site-footer.js). Empty = use this app's own copies.
+DS_SITE_URL = env_str('DS_SITE_URL', 'https://dollarscholars.org').rstrip('/')
+
 
 # Application definition
 
@@ -114,6 +118,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'scams.context_processors.site_embeds',
             ],
         },
     },
