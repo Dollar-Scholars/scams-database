@@ -184,11 +184,11 @@ class ScamAwarenessPageTests(SimpleTestCase):
         nav = re.search(r'<nav class="site-nav" aria-label="Main">(.*?)</nav>', html, re.S).group(1)
         self.assertIn(f'<a href="{self.url}" aria-current="page">Scam awareness</a>', nav)
 
-    def test_spanish_contact_note(self):
+    def test_no_spanish_contact_note(self):
+        # Removed at grezziam's request (PR #7)
         _, html = self.get_page()
-        self.assertIn('lang="es"', html)
-        self.assertIn('¿Prefiere esta información en español?', html)
-        self.assertIn('<a href="mailto:grezzia@dollarscholars.org">Contáctenos</a>', html)
+        self.assertNotIn('¿Prefiere esta información en español?', html)
+        self.assertNotIn('mailto:grezzia@dollarscholars.org', html)
 
     def test_page_js_keeps_storage_keys_and_hooks(self):
         js = Path(finders.find(PAGE_JS)).read_text(encoding='utf-8')
