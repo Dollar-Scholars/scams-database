@@ -83,6 +83,11 @@ CSRF_TRUSTED_ORIGINS = env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 # Set but empty (DS_SITE_URL=) also means off, so not env_str, which treats empty as unset.
 DS_SITE_URL = os.environ.get('DS_SITE_URL', 'https://dollarscholars.org').strip().rstrip('/')
 
+# Where `python manage.py fetch_translations` downloads ScamDB's translations, which are made
+# and reviewed on dollarscholars.org (docs/TRANSLATIONS.md). Empty = don't download.
+DS_TRANSLATIONS_URL = os.environ.get(
+    'DS_TRANSLATIONS_URL', f'{DS_SITE_URL}/translations/scamdb.json' if DS_SITE_URL else '').strip()
+
 
 # Application definition
 
@@ -199,9 +204,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-# The same languages as dollarscholars.org (scams/languages.py). Translations: locale/.
+# The same languages as dollarscholars.org (scams/languages.py). Translations: docs/TRANSLATIONS.md.
 from scams.languages import LANGUAGES  # noqa: E402
 
+# Translations downloaded from dollarscholars.org by `python manage.py fetch_translations`
+# (not committed). scams/locale/ has empty catalogs for the languages Django has none for.
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
 TIME_ZONE = 'UTC'

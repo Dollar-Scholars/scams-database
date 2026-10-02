@@ -36,7 +36,7 @@
                 </svg>
                 <div class="alert-body">
                     <h2 class="alert-title" id="error-summary-title">{% translate "There is a problem with your report" %}</h2>
-                    <p>{% blocktranslate trimmed count counter=summary|length %}Please fix this and send it again:{% plural %}Please fix these {{ counter }} things and send it again:{% endblocktranslate %}</p>
+                    <p>{% translate "Please fix the following and send it again:" %}</p>
                     <ul class="error-summary-list">
                         {% for item in summary %}
                         <li>

@@ -195,7 +195,7 @@ class ScamAwarenessPageTests(SimpleTestCase):
                 self.assertIn(f'<span class="accordion-trigger-text">{title}</span>', html)
         self.assertEqual(html.count('>Reviewed</span>'), len(TOPICS))
         self.assertIn('data-progress-fill', html)
-        self.assertIn(f'data-progress-label>0 of {len(TOPICS)} topics reviewed</p>', html)
+        self.assertIn(f'data-progress-label>Topics reviewed: 0 of {len(TOPICS)}</p>', html)
 
     def test_warning_checklist_hooks(self):
         _, html = self.get_page()
@@ -258,7 +258,7 @@ class ScamAwarenessTranslationTests(SimpleTestCase):
         html = response.content.decode()
         self.assertIn('<html lang="es" dir="ltr"', html)
         # No catalogs exist yet, so the English source text is the fallback
-        self.assertIn('data-progress-label>0 of 4 topics reviewed</p>', html)
+        self.assertIn('data-progress-label>Topics reviewed: 0 of 4</p>', html)
         self.assertEqual(html.count('data-accordion-item '), len(TOPICS))
 
     def test_spanish_url_from_report(self):
@@ -284,7 +284,7 @@ class ScamAwarenessTranslationTests(SimpleTestCase):
         match = re.search(r'<script type="application/json" id="awareness-i18n">(.*?)</script>', html, re.S)
         self.assertIsNotNone(match)
         messages = json.loads(match.group(1))
-        self.assertEqual(messages['progress'], '{reviewed} of 4 topics reviewed')
+        self.assertEqual(messages['progress'], 'Topics reviewed: {reviewed} of 4')
         # The server-rendered label is the same message with 0 filled in
         self.assertIn(f'data-progress-label>{messages["progress"].replace("{reviewed}", "0")}</p>', html)
 

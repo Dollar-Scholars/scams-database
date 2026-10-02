@@ -9,17 +9,13 @@
 {% endblock %}
 
 {% block content %}
-{# Translators: progress text under the topic list, e.g. "2 of 4 topics reviewed". The plural follows the total number of topics. #}
-{% blocktranslate trimmed count total=4 with reviewed=0 asvar progress_initial %}
-    {{ reviewed }} of {{ total }} topic reviewed
-{% plural %}
-    {{ reviewed }} of {{ total }} topics reviewed
+{# Translators: progress text under the topic list, e.g. "Topics reviewed: 2 of 4". #}
+{% blocktranslate trimmed with reviewed=0 total=4 asvar progress_initial %}
+    Topics reviewed: {{ reviewed }} of {{ total }}
 {% endblocktranslate %}
 {# Same message again, with a "{reviewed}" placeholder that awareness.js fills in as topics are opened. #}
-{% blocktranslate trimmed count total=4 with reviewed="{reviewed}" asvar progress_template %}
-    {{ reviewed }} of {{ total }} topic reviewed
-{% plural %}
-    {{ reviewed }} of {{ total }} topics reviewed
+{% blocktranslate trimmed with reviewed="{reviewed}" total=4 asvar progress_template %}
+    Topics reviewed: {{ reviewed }} of {{ total }}
 {% endblocktranslate %}
 <div class="awareness-page">
     <div class="container container-narrow">

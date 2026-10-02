@@ -48,10 +48,8 @@
             <div class="stat stat-count">
                 <p class="stat-label">{% translate "Scams by date occurred" %}</p>
                 <p class="stat-value">{{ total_scams_o|floatformat:"g" }}</p>
-                <p class="stat-meta">{{ period_label_o }}{% if undated_count_o %} &middot; {% blocktranslate trimmed count counter=undated_count_o with shown=undated_count_o|floatformat:"g" %}
-                    {{ shown }} with no date given
-                {% plural %}
-                    {{ shown }} with no date given
+                <p class="stat-meta">{{ period_label_o }}{% if undated_count_o %} &middot; {% blocktranslate trimmed with shown=undated_count_o|floatformat:"g" %}
+                    No date given: {{ shown }}
                 {% endblocktranslate %}{% endif %}</p>
             </div>
 
@@ -162,11 +160,9 @@
                 {% with row=chart_rows.0 %}
                 <div class="dash-single">
                     <p class="dash-single-value">{{ row.1|floatformat:"g" }}</p>
-                    {# Translators: shown under a large number, e.g. "2" / "reports submitted in Mar 2026". #}
-                    <p class="dash-single-label">{% blocktranslate trimmed count counter=row.1 with month=row.0 %}
-                        report submitted in {{ month }}
-                    {% plural %}
-                        reports submitted in {{ month }}
+                    {# Translators: a label under a large number, e.g. "2" / "Reports submitted in Mar 2026". #}
+                    <p class="dash-single-label">{% blocktranslate trimmed with month=row.0 %}
+                        Reports submitted in {{ month }}
                     {% endblocktranslate %}</p>
                 </div>
                 {% endwith %}
@@ -243,11 +239,9 @@
                 {% with row=chart_rows_o.0 %}
                 <div class="dash-single">
                     <p class="dash-single-value">{{ row.1|floatformat:"g" }}</p>
-                    {# Translators: shown under a large number, e.g. "2" / "scams reported as happening in Mar 2025". #}
-                    <p class="dash-single-label">{% blocktranslate trimmed count counter=row.1 with month=row.0 %}
-                        scam reported as happening in {{ month }}
-                    {% plural %}
-                        scams reported as happening in {{ month }}
+                    {# Translators: a label under a large number, e.g. "2" / "Scams reported as happening in Mar 2025". #}
+                    <p class="dash-single-label">{% blocktranslate trimmed with month=row.0 %}
+                        Scams reported as happening in {{ month }}
                     {% endblocktranslate %}</p>
                 </div>
                 {% endwith %}
@@ -267,10 +261,8 @@
                     {% endif %}
                 </div>
                 {% endif %}
-                {% if undated_count_o and chart_rows_o %}<p class="text-small text-muted m-0">{% blocktranslate trimmed count counter=undated_count_o with shown=undated_count_o|floatformat:"g" %}
-                    {{ shown }} report with no date given is not in this chart.
-                {% plural %}
-                    {{ shown }} reports with no date given are not in this chart.
+                {% if undated_count_o and chart_rows_o %}<p class="text-small text-muted m-0">{% blocktranslate trimmed with shown=undated_count_o|floatformat:"g" %}
+                    Not in this chart: reports with no date given ({{ shown }}).
                 {% endblocktranslate %}</p>{% endif %}
             </article>
         </div>

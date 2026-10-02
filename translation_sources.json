@@ -1,0 +1,2022 @@
+{
+ "version": 1,
+ "messages": [
+  {
+   "text": "Started the original scam database, built the dashboard and its charts, and wrote the contributor guide.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:13"
+   ]
+  },
+  {
+   "text": "Set up the project and its data model, deployment and migrations, and added more currencies.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:18"
+   ]
+  },
+  {
+   "text": "Designed and built the scam report form.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:23"
+   ]
+  },
+  {
+   "text": "Created the scam awareness pages.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:27"
+   ]
+  },
+  {
+   "text": "Added detection of duplicate reports, with tests.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:31"
+   ]
+  },
+  {
+   "text": "Moved the site to PostgreSQL, gave it the Dollar Scholars look, upgraded Django and launched scamdb.dollarscholars.org.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/contributors.py:35"
+   ]
+  },
+  {
+   "text": "%(code)s — %(name)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/forms.py:77"
+   ]
+  },
+  {
+   "text": "What happened",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:88"
+   ]
+  },
+  {
+   "text": "Leave this blank if you did not lose any money.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:90"
+   ]
+  },
+  {
+   "text": "Money lost",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:90",
+    "scams/templates/scams/dashboard.html:57",
+    "scams/templates/scams/dashboard.html:74"
+   ]
+  },
+  {
+   "text": "Who contacted you",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:92"
+   ]
+  },
+  {
+   "text": "Anything you know about the scammer helps others recognise them.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:93"
+   ]
+  },
+  {
+   "text": "About you",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:95"
+   ]
+  },
+  {
+   "text": "Your details are kept private and are never shown on public pages.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:95"
+   ]
+  },
+  {
+   "text": "Choose a country",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:101"
+   ]
+  },
+  {
+   "text": "Choose a currency",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:101"
+   ]
+  },
+  {
+   "text": "Summarize the scam...",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:114"
+   ]
+  },
+  {
+   "text": "Provide as much detail as possible...",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:122"
+   ]
+  },
+  {
+   "text": "Title",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:137"
+   ]
+  },
+  {
+   "text": "Type of scam",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:138"
+   ]
+  },
+  {
+   "text": "Date it happened",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:139"
+   ]
+  },
+  {
+   "text": "Platform or website",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:140"
+   ]
+  },
+  {
+   "text": "Description",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:141"
+   ]
+  },
+  {
+   "text": "How serious was it?",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:142"
+   ]
+  },
+  {
+   "text": "Amount lost",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:143"
+   ]
+  },
+  {
+   "text": "Currency",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:144"
+   ]
+  },
+  {
+   "text": "How did they contact you?",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:145"
+   ]
+  },
+  {
+   "text": "Name they used",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:146"
+   ]
+  },
+  {
+   "text": "Their phone, email or username",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:147"
+   ]
+  },
+  {
+   "text": "Your name",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:148"
+   ]
+  },
+  {
+   "text": "Your email",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:149"
+   ]
+  },
+  {
+   "text": "Your phone number",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:150"
+   ]
+  },
+  {
+   "text": "Your country",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:151"
+   ]
+  },
+  {
+   "text": "Submit anonymously",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:152"
+   ]
+  },
+  {
+   "text": "A few words that sum it up, for example “Fake parcel delivery text”.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:157"
+   ]
+  },
+  {
+   "text": "Leave blank if you are not sure.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:158"
+   ]
+  },
+  {
+   "text": "For example WhatsApp, Facebook Marketplace or a website address.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:159"
+   ]
+  },
+  {
+   "text": "What happened, in order: what they said, what they asked for and what you did. At least 20 characters.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:160"
+   ]
+  },
+  {
+   "text": "1 means little or no harm. 5 means serious harm, such as losing money or personal details.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:162"
+   ]
+  },
+  {
+   "text": "In the currency you paid in.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:163"
+   ]
+  },
+  {
+   "text": "Any name, company or username they gave.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:164"
+   ]
+  },
+  {
+   "text": "The number, email address, profile or website they used.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:165"
+   ]
+  },
+  {
+   "text": "Needed so our team can follow up, even if you submit anonymously. Never shown publicly.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:166"
+   ]
+  },
+  {
+   "text": "Your name and phone number are not needed. We still need your email so our team can follow up, but it is never shown publicly.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:168"
+   ]
+  },
+  {
+   "text": "The amount lost cannot be negative.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:239"
+   ]
+  },
+  {
+   "text": "Please provide a more detailed description (at least 20 characters).",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:245"
+   ]
+  },
+  {
+   "text": "Please select a currency for the reported loss.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:254"
+   ]
+  },
+  {
+   "text": "A very similar scam report has already been submitted.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/forms.py:288"
+   ]
+  },
+  {
+   "text": "Phone call",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:9"
+   ]
+  },
+  {
+   "text": "SMS",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:10"
+   ]
+  },
+  {
+   "text": "Email",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:11"
+   ]
+  },
+  {
+   "text": "Mail",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:12"
+   ]
+  },
+  {
+   "text": "Social media",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:13"
+   ]
+  },
+  {
+   "text": "Messaging app",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:14"
+   ]
+  },
+  {
+   "text": "Website / ad",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:15"
+   ]
+  },
+  {
+   "text": "In person approach",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:16"
+   ]
+  },
+  {
+   "text": "Other channel",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:17"
+   ]
+  },
+  {
+   "text": "Financial transfer scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:21"
+   ]
+  },
+  {
+   "text": "Identity and impersonation scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:22"
+   ]
+  },
+  {
+   "text": "Investment and wealth scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:23"
+   ]
+  },
+  {
+   "text": "Other scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:24"
+   ]
+  },
+  {
+   "text": "EUR — Euro",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:29"
+   ]
+  },
+  {
+   "text": "GBP — British Pound",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:29"
+   ]
+  },
+  {
+   "text": "USD — US Dollar",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:29"
+   ]
+  },
+  {
+   "text": "AUD — Australian Dollar",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:30"
+   ]
+  },
+  {
+   "text": "CAD — Canadian Dollar",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:30"
+   ]
+  },
+  {
+   "text": "INR — Indian Rupee",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:30"
+   ]
+  },
+  {
+   "text": "MXN — Mexican Peso",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:31"
+   ]
+  },
+  {
+   "text": "BRL — Brazilian Real",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:32"
+   ]
+  },
+  {
+   "text": "NGN — Nigerian Naira",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:32"
+   ]
+  },
+  {
+   "text": "ZAR — South African Rand",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:32"
+   ]
+  },
+  {
+   "text": "CNY — Chinese Yuan",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:33"
+   ]
+  },
+  {
+   "text": "JPY — Japanese Yen",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:33"
+   ]
+  },
+  {
+   "text": "Other",
+   "context": "currency",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:33"
+   ]
+  },
+  {
+   "text": "The date cannot be in the future.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/models.py:83"
+   ]
+  },
+  {
+   "text": "Scam Reports",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/base.html:26",
+    "scams/templates/scams/contributors.html:14",
+    "scams/templates/scams/dashboard.html:16",
+    "scams/templates/scams/partials/site_footer.html:17",
+    "scams/templates/scams/partials/site_header.html:13",
+    "scams/templates/scams/report_form.html:21"
+   ]
+  },
+  {
+   "text": "Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/base.html:27"
+   ]
+  },
+  {
+   "text": "Skip to main content",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/base.html:49"
+   ]
+  },
+  {
+   "text": "Contributors",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:4",
+    "scams/templates/scams/contributors.html:15",
+    "scams/templates/scams/partials/site_footer.html:22"
+   ]
+  },
+  {
+   "text": "The volunteers who built Scam Reports for Dollar Scholars.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:5"
+   ]
+  },
+  {
+   "text": "Scam Reports is built and run by volunteers from the Dollar Scholars community and the Economics Discord server. Thank you to everyone who has helped.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/contributors.html:16"
+   ]
+  },
+  {
+   "text": "People",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:20"
+   ]
+  },
+  {
+   "text": "<bdi>@%(username)s</bdi> on GitHub",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/contributors.html:28"
+   ]
+  },
+  {
+   "text": "Want to help?",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:38"
+   ]
+  },
+  {
+   "text": "New volunteers are welcome, whatever your experience. Start with a small first task, then pick something on Scam Reports.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/contributors.html:39"
+   ]
+  },
+  {
+   "text": "Make your first contribution",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:41"
+   ]
+  },
+  {
+   "text": "See the code",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/contributors.html:42"
+   ]
+  },
+  {
+   "text": "Scam dashboard",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:4",
+    "scams/templates/scams/dashboard.html:17"
+   ]
+  },
+  {
+   "text": "Charts and totals of the scams people have reported to the Dollar Scholars Foundation: when reports arrived, when the scams happened and how much money was lost.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:5"
+   ]
+  },
+  {
+   "text": "Month",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:13",
+    "scams/templates/scams/dashboard.html:125",
+    "scams/templates/scams/dashboard.html:149",
+    "scams/templates/scams/dashboard.html:204",
+    "scams/templates/scams/dashboard.html:228"
+   ]
+  },
+  {
+   "text": "Reports",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:13",
+    "scams/templates/scams/dashboard.html:149",
+    "scams/templates/scams/dashboard.html:228"
+   ]
+  },
+  {
+   "text": "What the community has reported: how many reports arrive each month, when the scams actually happened, and how much money people lost.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:18"
+   ]
+  },
+  {
+   "text": "Report a scam",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:20",
+    "scams/templates/scams/dashboard.html:33",
+    "scams/templates/scams/dashboard.html:275",
+    "scams/templates/scams/partials/site_footer.html:19",
+    "scams/templates/scams/partials/site_header.html:31",
+    "scams/templates/scams/partials/site_header.html:38",
+    "scams/templates/scams/report_form.html:4",
+    "scams/templates/scams/report_form.html:22",
+    "scams/templates/scams/scam_awareness_page.html:242"
+   ]
+  },
+  {
+   "text": "No data yet",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:25"
+   ]
+  },
+  {
+   "text": "No reports yet",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:31"
+   ]
+  },
+  {
+   "text": "Charts and totals appear here as soon as people start reporting scams. Seen one? Your report helps warn others.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:32"
+   ]
+  },
+  {
+   "text": "Summary",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:40"
+   ]
+  },
+  {
+   "text": "Reports submitted",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:43",
+    "scams/templates/scams/dashboard.html:70",
+    "scams/views.py:383"
+   ]
+  },
+  {
+   "text": "Scams by date occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:49",
+    "scams/templates/scams/dashboard.html:87"
+   ]
+  },
+  {
+   "text": "No date given: %(shown)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:51"
+   ]
+  },
+  {
+   "text": "by date submitted",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:57"
+   ]
+  },
+  {
+   "text": "No amounts reported",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:68",
+    "scams/templates/scams/dashboard.html:85"
+   ]
+  },
+  {
+   "text": "by date occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:74"
+   ]
+  },
+  {
+   "text": "Money lost is shown in the currency each person reported. Amounts are never converted or added across currencies.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:90"
+   ]
+  },
+  {
+   "text": "Reports over time",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:97"
+   ]
+  },
+  {
+   "text": "Filter each chart on its own. The totals above follow the same filters.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:98"
+   ]
+  },
+  {
+   "text": "Reports submitted per month",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:106"
+   ]
+  },
+  {
+   "text": "By the date the report reached us",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:107"
+   ]
+  },
+  {
+   "text": "Year submitted",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:116"
+   ]
+  },
+  {
+   "text": "All years",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:118",
+    "scams/templates/scams/dashboard.html:197"
+   ]
+  },
+  {
+   "text": "All months",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:127",
+    "scams/templates/scams/dashboard.html:206"
+   ]
+  },
+  {
+   "text": "Apply",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:134",
+    "scams/templates/scams/dashboard.html:213"
+   ]
+  },
+  {
+   "text": "Reset",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:135",
+    "scams/templates/scams/dashboard.html:214"
+   ]
+  },
+  {
+   "text": "Reports submitted per month, as a table",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:140"
+   ]
+  },
+  {
+   "text": "Show the numbers",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:145",
+    "scams/templates/scams/dashboard.html:224"
+   ]
+  },
+  {
+   "text": "Reports submitted in %(month)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:164"
+   ]
+  },
+  {
+   "text": "No reports match these filters",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:174",
+    "scams/templates/scams/dashboard.html:254"
+   ]
+  },
+  {
+   "text": "Nothing was submitted in %(period)s. Try another year or month.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:175"
+   ]
+  },
+  {
+   "text": "Scams by the month they occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:185"
+   ]
+  },
+  {
+   "text": "By the date the person says the scam happened",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:186"
+   ]
+  },
+  {
+   "text": "Year occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:195"
+   ]
+  },
+  {
+   "text": "Scams by the month they occurred, as a table",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:219"
+   ]
+  },
+  {
+   "text": "Scams reported as happening in %(month)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:243"
+   ]
+  },
+  {
+   "text": "No scams were reported as happening in %(period)s. Try another year or month.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:255"
+   ]
+  },
+  {
+   "text": "No dates to chart",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:259"
+   ]
+  },
+  {
+   "text": "None of the reports say when the scam happened yet.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:260"
+   ]
+  },
+  {
+   "text": "Not in this chart: reports with no date given (%(shown)s).",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/dashboard.html:264"
+   ]
+  },
+  {
+   "text": "Seen a scam? Warn others.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:273"
+   ]
+  },
+  {
+   "text": "It takes a few minutes and helps people spot the same trick before it costs them.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/dashboard.html:274"
+   ]
+  },
+  {
+   "text": "Error:",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/form_field.html:32",
+    "scams/templates/scams/report_form.html:78",
+    "scams/templates/scams/report_form.html:87",
+    "scams/templates/scams/report_form.html:102",
+    "scams/templates/scams/report_form.html:110"
+   ]
+  },
+  {
+   "text": "Notifications",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/messages.html:2"
+   ]
+  },
+  {
+   "text": "Dollar Scholars home",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:8"
+   ]
+  },
+  {
+   "text": "Growing the economy through adult financial education.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:12"
+   ]
+  },
+  {
+   "text": "Scam Reports is our free community tool for reporting scams, seeing what others have reported and learning how to protect yourself.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:13"
+   ]
+  },
+  {
+   "text": "Dashboard",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:20",
+    "scams/templates/scams/partials/site_header.html:32"
+   ]
+  },
+  {
+   "text": "Scam awareness",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:21",
+    "scams/templates/scams/partials/site_header.html:33",
+    "scams/templates/scams/scam_awareness_page.html:27"
+   ]
+  },
+  {
+   "text": "Our Work",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:27"
+   ]
+  },
+  {
+   "text": "What We Do",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:29"
+   ]
+  },
+  {
+   "text": "Core Curriculum",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:30"
+   ]
+  },
+  {
+   "text": "Resources",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:31"
+   ]
+  },
+  {
+   "text": "News & Blog",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:32"
+   ]
+  },
+  {
+   "text": "Help & Policies",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:37"
+   ]
+  },
+  {
+   "text": "Privacy Policy",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:39"
+   ]
+  },
+  {
+   "text": "Accessibility",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:40"
+   ]
+  },
+  {
+   "text": "Contact Us",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:41"
+   ]
+  },
+  {
+   "text": "Donate",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:42"
+   ]
+  },
+  {
+   "text": "All rights reserved.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_footer.html:48"
+   ]
+  },
+  {
+   "text": "Dollar Scholars Foundation home",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_header.html:6"
+   ]
+  },
+  {
+   "text": "Menu",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_header.html:17"
+   ]
+  },
+  {
+   "text": "Main",
+   "context": "navigation landmark",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_header.html:29"
+   ]
+  },
+  {
+   "text": "Switch to light mode",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_header.html:41"
+   ]
+  },
+  {
+   "text": "Switch to dark mode",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/partials/site_header.html:42",
+    "scams/templates/scams/partials/site_header.html:43"
+   ]
+  },
+  {
+   "text": "Error: %(page_title)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/report_form.html:4"
+   ]
+  },
+  {
+   "text": "Report a scam to the Dollar Scholars community. Your report helps warn others, and your contact details are never shown publicly.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:5"
+   ]
+  },
+  {
+   "text": "Very low",
+   "context": "severity",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:14"
+   ]
+  },
+  {
+   "text": "Low",
+   "context": "severity",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:15"
+   ]
+  },
+  {
+   "text": "Medium",
+   "context": "severity",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:16"
+   ]
+  },
+  {
+   "text": "High",
+   "context": "severity",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:17"
+   ]
+  },
+  {
+   "text": "Severe",
+   "context": "severity",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:18"
+   ]
+  },
+  {
+   "text": "Tell us what happened. Your report helps warn others about scams going around right now. Your name, email and phone number are never shown publicly.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/report_form.html:23"
+   ]
+  },
+  {
+   "text": "There is a problem with your report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:38"
+   ]
+  },
+  {
+   "text": "Please fix the following and send it again:",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:39"
+   ]
+  },
+  {
+   "text": "Fields marked <span class=\"req\" aria-hidden=\"true\">*</span><span class=\"visually-hidden\">with an asterisk</span> are required.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/report_form.html:61"
+   ]
+  },
+  {
+   "text": "Submit report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:121"
+   ]
+  },
+  {
+   "text": "About your report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:126"
+   ]
+  },
+  {
+   "text": "What happens next",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:130",
+    "scams/templates/scams/thank_you.html:25"
+   ]
+  },
+  {
+   "text": "We save your report.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:134"
+   ]
+  },
+  {
+   "text": "It is added to the database with the status Pending.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:136"
+   ]
+  },
+  {
+   "text": "It joins the community data.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:139"
+   ]
+  },
+  {
+   "text": "ScamDB generates reports on the latest scams to help other individuals and organizations.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:140"
+   ]
+  },
+  {
+   "text": "Your details stay private.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:143"
+   ]
+  },
+  {
+   "text": "Your name, email and phone number are never shown on public pages.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:144"
+   ]
+  },
+  {
+   "text": "If you have been scammed",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:151"
+   ]
+  },
+  {
+   "text": "Stop replying to the scammer and do not send any more money.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:154"
+   ]
+  },
+  {
+   "text": "If you paid or shared card details, call your bank or card provider straight away.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:155"
+   ]
+  },
+  {
+   "text": "Change any passwords you shared and turn on two-step verification.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:156"
+   ]
+  },
+  {
+   "text": "Keep screenshots, messages and receipts as evidence.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:157"
+   ]
+  },
+  {
+   "text": "This form does not alert the police or your bank. Report it to them as well.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:158"
+   ]
+  },
+  {
+   "text": "How to spot and report scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:160"
+   ]
+  },
+  {
+   "text": "Your privacy",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/report_form.html:172"
+   ]
+  },
+  {
+   "text": "Your name, email and phone number are kept with your report. They are never shown on the dashboard or in the list of reports.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/report_form.html:174"
+   ]
+  },
+  {
+   "text": "<a href=\"%(privacy_url)s\">Read our privacy policy</a>.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/report_form.html:175"
+   ]
+  },
+  {
+   "text": "Stay Informed About Digital Scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:4"
+   ]
+  },
+  {
+   "text": "Learn the warning signs of common scams affecting immigrants and families, the steps to take if you are targeted, and where to report a scam.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:5"
+   ]
+  },
+  {
+   "text": "Topics reviewed: %(reviewed)s of %(total)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:13",
+    "scams/templates/scams/scam_awareness_page.html:17"
+   ]
+  },
+  {
+   "text": "Thank you for your report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:27"
+   ]
+  },
+  {
+   "text": "Read through the topics below to",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:30"
+   ]
+  },
+  {
+   "text": "Stay Informed &amp; Protect Yourself<br>From Future Scams",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:31"
+   ]
+  },
+  {
+   "text": "Scams keep changing, but the warning signs don't. Spend a few minutes here so you can spot trouble before it reaches your wallet.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:32"
+   ]
+  },
+  {
+   "text": "Common Scams Affecting Immigrants and Families",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:52"
+   ]
+  },
+  {
+   "text": "Tap each example to see what it looks like in real life.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:53"
+   ]
+  },
+  {
+   "text": "Fake job &amp; \"easy money\" offers",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:61"
+   ]
+  },
+  {
+   "text": "Reviewed",
+   "context": "awareness topic badge",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:63",
+    "scams/templates/scams/scam_awareness_page.html:82",
+    "scams/templates/scams/scam_awareness_page.html:102",
+    "scams/templates/scams/scam_awareness_page.html:121"
+   ]
+  },
+  {
+   "text": "Someone offers a job with great pay for very little work, often by text or social media. Before you start, they ask you to pay for training or equipment, or to deposit a check and send part of it back. A real employer never asks you to pay them before you start working.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:71"
+   ]
+  },
+  {
+   "text": "Scam messages claiming to be from immigration or government agencies",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:81"
+   ]
+  },
+  {
+   "text": "You get a call, text, or letter claiming to be from immigration, the IRS, or another agency. It says you owe a fee or risk losing your status unless you pay right away, often by gift card or wire transfer. Government agencies contact you by official mail first, and they never demand gift cards.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:91"
+   ]
+  },
+  {
+   "text": "Calls or texts impersonating banks, utilities, or tech support",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:101"
+   ]
+  },
+  {
+   "text": "You receive calls, texts, or voicemails from someone claiming to be from a bank, insurance company, utility provider, or tech support team. They may say you applied for a loan, have an account problem, or have a security issue. They pressure you to confirm personal information, banking details, or payment information immediately. Legitimate companies never ask for sensitive information through unsolicited calls or texts.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:110"
+   ]
+  },
+  {
+   "text": "Marketplace &amp; payment scams",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:120"
+   ]
+  },
+  {
+   "text": "You're buying or selling something online — a car, an apartment, or furniture. The other person pushes you to pay outside the platform, asks for a deposit before you see it in person, or sends a check for more than the price and asks you to refund the difference. Never pay for something you haven't seen in person.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:130"
+   ]
+  },
+  {
+   "text": "Warning Signs",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:145"
+   ]
+  },
+  {
+   "text": "Check off anything that sounds familiar.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:147"
+   ]
+  },
+  {
+   "text": "Someone says you must act right away or threatens you if you do not.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:154"
+   ]
+  },
+  {
+   "text": "They ask for gift cards, wire transfers, cash, or payments through apps.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:160"
+   ]
+  },
+  {
+   "text": "They contact you out of nowhere by phone, text, email, or social media.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:166"
+   ]
+  },
+  {
+   "text": "They ask for your personal information, Social Security number, bank details, or immigration documents.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:172"
+   ]
+  },
+  {
+   "text": "Clear checklist",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:177"
+   ]
+  },
+  {
+   "text": "Clear Steps to Take When Faced with a Scam",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:186"
+   ]
+  },
+  {
+   "text": "<strong>Stop.</strong> Do not send money or provide any personal information.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:190"
+   ]
+  },
+  {
+   "text": "<strong>Verify independently.</strong> Call the company or agency yourself, using a number from their official website — not the one the caller gave you.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:193"
+   ]
+  },
+  {
+   "text": "<strong>Talk to someone you trust.</strong> Before you act, speak with a family member, friend, or community organization.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:196"
+   ]
+  },
+  {
+   "text": "<strong>Report it.</strong> Report possible scams using our report page and the resources below so others can be warned too.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:199"
+   ]
+  },
+  {
+   "text": "Trusted External Resources",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:211"
+   ]
+  },
+  {
+   "text": "Use these resources for reporting and support.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:212"
+   ]
+  },
+  {
+   "text": "(opens in a new tab)",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:219"
+   ]
+  },
+  {
+   "text": "No resources available right now.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:225"
+   ]
+  },
+  {
+   "text": "This page is for general awareness only. It is not legal advice.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:234"
+   ]
+  },
+  {
+   "text": "Submit Another Report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:239"
+   ]
+  },
+  {
+   "text": "Back to the Thank You page",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:240"
+   ]
+  },
+  {
+   "text": "View the dashboard",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/scam_awareness_page.html:243",
+    "scams/templates/scams/thank_you.html:48"
+   ]
+  },
+  {
+   "text": "Thank you",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:4",
+    "scams/templates/scams/thank_you.html:20"
+   ]
+  },
+  {
+   "text": "Your scam report was submitted to Dollar Scholars and is pending review.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:5"
+   ]
+  },
+  {
+   "text": "Report submitted",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:19"
+   ]
+  },
+  {
+   "text": "Your report has been submitted successfully and is currently pending review.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:21"
+   ]
+  },
+  {
+   "text": "We review your report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:28"
+   ]
+  },
+  {
+   "text": "It shows as <span class=\"badge badge-dot badge-pending\">Pending</span> until it has been reviewed.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/thank_you.html:29"
+   ]
+  },
+  {
+   "text": "It helps warn others",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:32"
+   ]
+  },
+  {
+   "text": "Reports are counted on the <a href=\"%(dashboard_url)s\">dashboard</a> without the reporter's name, email or phone number.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/thank_you.html:34"
+   ]
+  },
+  {
+   "text": "Protect yourself now",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:37"
+   ]
+  },
+  {
+   "text": "If you lost money or shared bank or card details, contact your bank or card provider straight away, using the number on their website or the back of your card.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/templates/scams/thank_you.html:38"
+   ]
+  },
+  {
+   "text": "Submit another report",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:45"
+   ]
+  },
+  {
+   "text": "Learn how to protect yourself from future scams",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/templates/scams/thank_you.html:51"
+   ]
+  },
+  {
+   "text": "File a report with the Federal Trade Commission.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:46"
+   ]
+  },
+  {
+   "text": "Report internet-based fraud.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:51"
+   ]
+  },
+  {
+   "text": "Learn your rights and file a complaint about a financial company.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:56"
+   ]
+  },
+  {
+   "text": "For legal help and services.",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:61"
+   ]
+  },
+  {
+   "text": "Other currency",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:119"
+   ]
+  },
+  {
+   "text": "%(month)s, any year",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/views.py:151"
+   ]
+  },
+  {
+   "text": "All time",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:154"
+   ]
+  },
+  {
+   "text": "%(first)s to %(last)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/views.py:201"
+   ]
+  },
+  {
+   "text": "%(description)s, %(span)s. Busiest month: %(month)s (reports: %(count)s). Exact numbers are in the table below the chart.",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/views.py:202"
+   ]
+  },
+  {
+   "text": "Reports: %(count)s",
+   "context": "",
+   "is_format": true,
+   "locations": [
+    "scams/views.py:218"
+   ]
+  },
+  {
+   "text": "Currency not given",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:240"
+   ]
+  },
+  {
+   "text": "Bar chart of reports submitted per month",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:378"
+   ]
+  },
+  {
+   "text": "Bar chart of scams by the month they occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:379"
+   ]
+  },
+  {
+   "text": "Scams that occurred",
+   "context": "",
+   "is_format": false,
+   "locations": [
+    "scams/views.py:384"
+   ]
+  }
+ ]
+}

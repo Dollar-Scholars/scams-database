@@ -4,43 +4,81 @@ ScamDB is offered in the same 44 languages as dollarscholars.org (`scams/languag
 so the shared header's language picker works on both sites. English is the source; every
 other language lives under its own prefix: `/es/dashboard/`, `/ar/`, `/zh-hans/...`.
 
-The translations are machine-made with **Azure AI Translator** (the same service the main
-site uses) and are marked in the catalogs as *"Machine translated (Azure Translator), not
-reviewed"* until a person checks them.
+**ScamDB's translations are made and reviewed on dollarscholars.org**, together with the
+main site's own: machine translated there with Azure AI Translator, then checked by
+volunteers and staff in its admin and volunteer portal, where ScamDB's texts are listed as
+"ScamDB wording" (portal filter: *ScamDB*). Nothing is translated in this repository, and
+it has no translation keys.
+
+```
+ScamDB repo                        dollarscholars.org                       ScamDB server
+translation_sources.json  ──────>  sync_translations (reads it from GitHub)
+ (English, committed)              machine_translate --kind scamdb (Azure)
+                                   review in the admin / volunteer portal
+                                   /translations/scamdb.json  ──────────>  fetch_translations
+                                                                            (when it starts)
+```
 
 ## Where the text lives
 
 | What | Where |
 |---|---|
-| Page text, labels, messages | templates (`{% translate %}`, `{% blocktranslate %}`) and Python (`gettext`) |
+| Page text, labels, messages | templates (`{% translate %}`, `{% blocktranslate %}`) and Python (`gettext`, `pgettext`) |
 | Text the page scripts show | rendered into the page by the templates, so it is translated the same way |
-| Country and currency names | Babel (CLDR data), already in every language |
-| Translations | `locale/<language>/LC_MESSAGES/django.po` (edit these) and `django.mo` (compiled) |
+| Country, currency and month names | Babel (CLDR data), already in every language |
+| The English list for dollarscholars.org | `translation_sources.json` (committed) |
+| The translations | downloaded into `locale/<language>/LC_MESSAGES/django.mo` (not committed) |
+
+`scams/locale/` holds empty catalogs for Amharic, Haitian Creole, Tagalog, Yoruba and
+Zulu: Django serves a language's pages only if it has a catalog for it, and it ships none
+for those five.
 
 ## After changing or adding English text
 
-Run from the repo root with Git Bash (it ships the gettext tools Django needs) or on
-macOS/Linux with gettext installed:
-
 ```bash
-python manage.py makemessages --all --no-obsolete   # collect the new English text
-python manage.py translate_po --dry-run              # how many characters would be sent
-python manage.py translate_po                        # machine-translate what is missing
-python manage.py compilemessages                     # build the .mo files the site reads
+python manage.py export_translation_sources   # rewrite translation_sources.json
 python manage.py test scams
 ```
 
-`translate_po` needs `AZURE_TRANSLATOR_KEY` and `AZURE_TRANSLATOR_REGION` in `.env` (see
-`.env.example`). It only sends entries that have no translation yet, so a translation
-someone has reviewed or corrected is never replaced, and Azure's free tier (2 million
-characters a month, shared with the main site) is spent only on new text. It leaves out any
-translation that lost a placeholder such as `%(count)s`, so a page can never break.
-`translate_po -l es -l fr` does just some languages.
+Commit `translation_sources.json` with the change (a test fails until you do). Once it is
+on `main`, the new text reaches dollarscholars.org the next time it deploys, or straight
+away when someone runs these on its server:
 
-Commit the `.po` and `.mo` files together.
+```bash
+.venv/bin/python manage.py sync_translations --scamdb-only
+.venv/bin/python manage.py machine_translate --kind scamdb
+```
+
+Until then the new text shows in English in the other languages.
+
+**No plurals.** dollarscholars.org's translations have no plural forms, so `ngettext` and
+`{% plural %}` are refused (`export_translation_sources` names them). Word things so the
+number stands apart: "Reports: %(count)s", "Topics reviewed: %(reviewed)s of %(total)s",
+"No date given: %(count)s".
+
+Keep each placeholder (`%(name)s`, or `{{ name }}` in a template) in the sentence it
+belongs to: a translator can reorder words but not split a sentence across two texts.
+
+## Getting the latest translations
+
+ScamDB downloads them from `<DS_SITE_URL>/translations/scamdb.json` (or
+`DS_TRANSLATIONS_URL`) with `python manage.py fetch_translations`:
+
+- when the image is built (`deploy/deploy.sh`), and
+- every time the container starts, so `docker restart scamdb-app` brings in translations
+  reviewed since the last deploy.
+
+If the download fails, the translations already in the image stay and ScamDB starts
+anyway; any text with no translation shows in English. A translation whose placeholders
+don't match the English is left out, so it can't break a page.
+
+On your own computer, run `python manage.py fetch_translations` to see the pages
+translated (`locale/` is ignored by git). Set `DS_TRANSLATIONS_URL=` (empty) to stay in
+English.
 
 ## Reviewing a translation
 
-Open `locale/<language>/LC_MESSAGES/django.po`, correct the `msgstr` lines, remove the
-`#. Machine translated (Azure Translator), not reviewed` comment above each entry you
-checked, then run `python manage.py compilemessages` and open a pull request.
+On dollarscholars.org: the admin's Translations screens (filter by kind:
+*ScamDB wording*), or the volunteer portal's Translate pages (*Part of the site: ScamDB*). A
+reviewed translation is never replaced by machine translation. It reaches ScamDB the next
+time ScamDB starts.

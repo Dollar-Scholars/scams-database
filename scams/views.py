@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Sum
-from django.utils.translation import get_language, gettext as _, ngettext
+from django.utils.translation import get_language, gettext as _
 from .contributors import CONTRIBUTORS
 from .forms import ScamReportForm
 from .models import Scam, CURRENCY_CHOICES
@@ -199,12 +199,9 @@ def _chart_summary(series, description):
     peak_label, peak = max(series, key=lambda row: row[1])
     # Translators: a range of months, e.g. "Jan 2026 to Mar 2026".
     span = first if first == last else _('%(first)s to %(last)s') % {'first': first, 'last': last}
-    return ngettext(
-        '%(description)s, %(span)s. Busiest month: %(month)s with %(count)s report. '
-        'Exact numbers are in the table below the chart.',
-        '%(description)s, %(span)s. Busiest month: %(month)s with %(count)s reports. '
-        'Exact numbers are in the table below the chart.',
-        peak,
+    return _(
+        '%(description)s, %(span)s. Busiest month: %(month)s (reports: %(count)s). '
+        'Exact numbers are in the table below the chart.'
     ) % {'description': description, 'span': span, 'month': peak_label, 'count': peak}
 
 
@@ -218,8 +215,8 @@ def _chart_series(series, label):
         'data': [count for _month, count in series],
         'tooltips': [
             # Translators: chart tooltip. Keep %(count)s; it becomes the number of reports.
-            ngettext('%(count)s report', '%(count)s reports', count) % {'count': '{count}'}
-            for _month, count in series
+            _('Reports: %(count)s') % {'count': '{count}'}
+            for _row in series
         ],
     }
 

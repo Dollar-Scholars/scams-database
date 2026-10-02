@@ -18,10 +18,9 @@ PLAIN_STORAGES = {
 PAGES = ('report_scam', 'dashboard', 'scam_awareness_page', 'thank_you', 'contributors')
 
 # Django serves a /xx/ prefix only for a language it has a translation catalog for
-# (check_for_language: its own conf/locale, or this project's locale/). Django ships none
-# for these five, so until `locale/<code>/` exists for them their prefixed pages 404.
-# Every other language in settings.LANGUAGES has a Django catalog and works today.
-WITHOUT_CATALOG = {'am', 'ht', 'tl', 'yo', 'zu'}
+# (check_for_language: its own conf/locale, an app's locale/ or LOCALE_PATHS). Django ships
+# none for these five; scams/locale/ has an empty one for each.
+WITHOUT_DJANGO_CATALOG = {'am', 'ht', 'tl', 'yo', 'zu'}
 
 RTL_LANGUAGES = {'ar', 'fa', 'he', 'ur'}
 
@@ -55,9 +54,8 @@ def footer_html(response):
 @override_settings(STORAGES=PLAIN_STORAGES)
 class EveryLanguageTests(LanguageTestCase):
 
-    def test_only_languages_without_a_catalog_are_unavailable(self):
-        unavailable = {code for code, _name in settings.LANGUAGES if not check_for_language(code)}
-        self.assertLessEqual(unavailable, WITHOUT_CATALOG)
+    def test_every_language_is_available(self):
+        self.assertEqual(accepted_languages(), [code for code, _name in settings.LANGUAGES])
 
     def test_every_accepted_language_renders_every_page(self):
         for code in accepted_languages():
@@ -72,10 +70,10 @@ class EveryLanguageTests(LanguageTestCase):
                     direction = 'rtl' if code in RTL_LANGUAGES else 'ltr'
                     self.assertIn(f'<html lang="{code}" dir="{direction}"', html)
 
-    def test_languages_without_a_catalog_404_for_now(self):
-        for code in sorted(WITHOUT_CATALOG - set(accepted_languages())):
+    def test_languages_django_has_no_catalog_for(self):
+        for code in sorted(WITHOUT_DJANGO_CATALOG):
             with self.subTest(language=code):
-                self.assertEqual(self.client.get(f'/{code}/dashboard/').status_code, 404)
+                self.assertContains(self.client.get(f'/{code}/dashboard/'), f'<html lang="{code}"')
 
 
 @override_settings(STORAGES=PLAIN_STORAGES)

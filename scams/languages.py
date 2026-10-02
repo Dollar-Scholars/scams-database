@@ -60,14 +60,6 @@ LANGUAGES = [(code, english) for code, english, _native in SITE_LANGUAGES]
 # Every language except the English source text.
 TARGET_LANGUAGES = [code for code, _e, _n in SITE_LANGUAGES if code != SOURCE_LANGUAGE]
 
-# Site language code -> code the machine translation service expects.
-# Everything matches except Chinese, which Django calls "zh-hans"/"zh-hant".
-LANGUAGE_MAP = {code: code for code in TARGET_LANGUAGES}
-# Mexican Spanish is its own language to Azure, plain Spanish to Google.
-LANGUAGE_MAP["es-mx"] = "es"
-LANGUAGE_MAP["zh-hans"] = "zh-CN"
-LANGUAGE_MAP["zh-hant"] = "zh-TW"
-
 # Django doesn't ship locale info for these, so we register it on startup.
 EXTRA_LANG_INFO = {
     "am": {"bidi": False, "code": "am", "name": "Amharic", "name_local": "አማርኛ"},

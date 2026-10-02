@@ -96,7 +96,7 @@ class DashboardViewTests(TestCase):
         self.assertEqual(json.loads(response.context['chart_labels_o']), ['Feb 2026'])
         self.assertEqual(response.context['total_scams_o'], 2)
         self.assertEqual(response.context['undated_count_o'], 1)
-        self.assertContains(response, '1 with no date given')
+        self.assertContains(response, 'No date given: 1')
 
         # Filtering by the occurred date leaves the undated row out.
         response = self.get(year_o='2026')
@@ -280,9 +280,9 @@ class DashboardViewTests(TestCase):
         make_scam('Undated', created=utc(2026, 3, 7, 12), occurred=None)
         response = self.get()
         self.assertNotContains(response, '<canvas')
-        self.assertContains(response, 'reports submitted in Mar 2026')
-        self.assertContains(response, 'scams reported as happening in Mar 2025')
-        self.assertContains(response, '1 report with no date given is not in this chart.')
+        self.assertContains(response, 'Reports submitted in Mar 2026')
+        self.assertContains(response, 'Scams reported as happening in Mar 2025')
+        self.assertContains(response, 'Not in this chart: reports with no date given (1).')
 
     def test_month_filter_does_not_chart_other_months(self):
         make_scam('March', created=utc(2026, 3, 5, 12), occurred=date(2026, 3, 1))
@@ -360,7 +360,7 @@ class DashboardViewTests(TestCase):
         submitted = chart_payload(self.get())['submitted']
         self.assertEqual(submitted['label'], 'Reports submitted')
         # One tooltip per bar; dashboard.js puts the formatted number in place of {count}.
-        self.assertEqual(submitted['tooltips'], ['{count} report', '{count} reports', '{count} reports'])
+        self.assertEqual(submitted['tooltips'], ['Reports: {count}'] * 3)
 
     def test_other_currency_shows_its_label_not_its_code(self):
         make_scam('Other', created=utc(2026, 3, 5, 12), amount=Decimal('3'), currency='Other')
