@@ -91,7 +91,12 @@ class BaseTemplateTests(SimpleTestCase):
         self.assertIn('<html lang="en" dir="ltr" class="no-js">', html)
         init = html.index("localStorage.getItem('ds.website.theme')")
         self.assertLess(init, html.index('rel="stylesheet"'))
-        self.assertIn("prefers-color-scheme: dark", html[:html.index('rel="stylesheet"')])
+        head = html[:html.index('rel="stylesheet"')]
+        # Like dollarscholars.org: the shared ds_theme cookie first, then this app's key, else light.
+        self.assertIn("ds_theme=(dark|light)", head)
+        self.assertIn("if (!theme) theme = 'light';", head)
+        init = head[head.index('<script>'):head.index('</script>')]
+        self.assertNotIn("prefers-color-scheme", init)
         self.assertIn('root.dataset.theme = theme', html)
         self.assertIn('root.style.colorScheme = theme', html)
 
@@ -259,7 +264,8 @@ class MainSiteHeaderFooterTests(SimpleTestCase):
     def test_loads_the_main_sites_header_and_footer(self):
         with self.settings(DS_SITE_URL='https://dollarscholars.org'):
             html = render_child()
-        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js" defer></script>', html)
+        # picker=1 asks for the main site's language picker, so the header matches it exactly
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js?picker=1" defer></script>', html)
         self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js" defer></script>', html)
         # This app's own header and footer stay inside, as the fallback.
         header = html[html.index('<ds-site-header>'):html.index('</ds-site-header>')]
