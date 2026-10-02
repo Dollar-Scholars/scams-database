@@ -268,8 +268,8 @@ class DashboardViewTests(TestCase):
 
         html = response.content.decode()
         self.assertIn('https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js', html)
-        self.assertRegex(html, r'<canvas id="scamChart" role="img" aria-label="[^"]+Jan 2026 to Mar 2026')
-        self.assertRegex(html, r'<canvas id="scamChart_o" role="img" aria-label="[^"]+Nov 2025 to Jan 2026')
+        self.assertRegex(html, r'<canvas id="scamChart" role="img" aria-label="[^"]+Jan 2026 – Mar 2026')
+        self.assertRegex(html, r'<canvas id="scamChart_o" role="img" aria-label="[^"]+Nov 2025 – Jan 2026')
         # Data table fallback for each chart.
         self.assertEqual(html.count('<details class="chart-data"'), 2)
         self.assertIn('<td data-label="Reports" class="num">2</td>', html)
