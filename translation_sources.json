@@ -608,7 +608,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/base.html:26",
+    "scams/templates/scams/base.html:35",
     "scams/templates/scams/contributors.html:14",
     "scams/templates/scams/dashboard.html:16",
     "scams/templates/scams/partials/site_footer.html:17",
@@ -621,7 +621,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/base.html:27"
+    "scams/templates/scams/base.html:36"
    ]
   },
   {
@@ -629,7 +629,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/base.html:49"
+    "scams/templates/scams/base.html:58"
    ]
   },
   {

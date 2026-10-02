@@ -22,6 +22,15 @@
             root.style.colorScheme = theme;
         })();
     </script>
+    {% if DS_SITE_URL %}
+    <script>
+        // The main site's header and footer take a moment to arrive. Until then, keep this
+        // app's own copies hidden (ds-theme.css), so they don't flash first; show them after
+        // a few seconds if the main site's still haven't come (it is down, or very slow).
+        document.documentElement.classList.add('ds-embeds-loading');
+        setTimeout(() => document.documentElement.classList.remove('ds-embeds-loading'), 3000);
+    </script>
+    {% endif %}
 
     <title>{% block title %}{% translate "Scam Reports" %}{% endblock %} | Dollar Scholars</title>
     <meta name="description" content="{% block meta_description %}{% translate "Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation." %}{% endblock %}">
@@ -48,7 +57,7 @@
 <body>
     <a href="#main-content" class="skip-link">{% translate "Skip to main content" %}</a>
 
-    {# The main site's live header; this app's own header shows until it loads, or if it cannot. #}
+    {# The main site's live header; this app's own header shows only if it cannot load (base.html's ds-embeds-loading). #}
     <ds-site-header>
     {% include "scams/partials/site_header.html" %}
     </ds-site-header>

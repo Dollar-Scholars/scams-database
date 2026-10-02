@@ -395,6 +395,21 @@ ds-site-header {
     z-index: 100;
 }
 
+/* While the main site's header and footer load, this app's own copies keep their space but
+   stay hidden, so they don't flash first (base.html shows them if the main site's never come). */
+html.ds-embeds-loading ds-site-header:not([ready]) > *,
+html.ds-embeds-loading ds-site-footer:not([ready]) > * {
+    visibility: hidden;
+}
+
+/* ...and the space is the main site's header's height, so the page doesn't move when it
+   arrives (from 1280px it is 89px, this app's 79px; below that both are 73px). */
+@media (min-width: 1280px) {
+    html.ds-embeds-loading ds-site-header:not([ready]) {
+        min-height: 89px;
+    }
+}
+
 .site-header {
     position: sticky;
     top: 0;
