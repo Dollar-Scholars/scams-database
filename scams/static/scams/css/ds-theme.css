@@ -188,6 +188,9 @@ html {
     scroll-padding-top: calc(var(--header-height) + 16px); /* anchors clear the sticky header */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Always keep the scrollbar's room, so the header and page don't shift sideways between a
+       page that scrolls (the report form) and one that doesn't (the empty dashboard). */
+    scrollbar-gutter: stable;
 }
 
 body {
