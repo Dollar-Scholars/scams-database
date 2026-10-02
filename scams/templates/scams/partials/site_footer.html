@@ -1,49 +1,51 @@
-{% load static %}
+{% load i18n static %}
+{# dollarscholars.org has its pages in this language too: /es/what-we-do/ ... (English unprefixed). #}
+{% if LANGUAGE_CODE != "en" %}{% firstof "/"|add:LANGUAGE_CODE as ds_lang %}{% endif %}
 <footer class="ds-footer">
     <div class="container">
         <div class="footer-grid">
             <div class="footer-brand-col">
-                <a href="https://dollarscholars.org/" class="footer-brand" aria-label="Dollar Scholars home">
+                <a href="https://dollarscholars.org{{ ds_lang }}/" class="footer-brand" aria-label="{% translate "Dollar Scholars home" %}">
                     <img src="{% static 'scams/img/vector_logo_ds_small_white.svg' %}" alt="" width="32" height="32">
                     <span translate="no">Dollar Scholars</span>
                 </a>
-                <p class="footer-tagline">Growing the economy through adult financial education.</p>
-                <p class="footer-about">Scam Reports is our free community tool for reporting scams, seeing what others have reported and learning how to protect yourself.</p>
+                <p class="footer-tagline">{% translate "Growing the economy through adult financial education." %}</p>
+                <p class="footer-about">{% blocktranslate trimmed %}Scam Reports is our free community tool for reporting scams, seeing what others have reported and learning how to protect yourself.{% endblocktranslate %}</p>
             </div>
 
             <nav aria-labelledby="footer-heading-app">
-                <h2 class="footer-heading" id="footer-heading-app">Scam Reports</h2>
+                <h2 class="footer-heading" id="footer-heading-app">{% translate "Scam Reports" %}</h2>
                 <ul class="footer-links">
-                    <li><a href="{% url 'report_scam' %}">Report a scam</a></li>
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'scam_awareness_page' %}">Scam awareness</a></li>
-                    <li><a href="{% url 'contributors' %}">Contributors</a></li>
+                    <li><a href="{% url 'report_scam' %}">{% translate "Report a scam" %}</a></li>
+                    <li><a href="{% url 'dashboard' %}">{% translate "Dashboard" %}</a></li>
+                    <li><a href="{% url 'scam_awareness_page' %}">{% translate "Scam awareness" %}</a></li>
+                    <li><a href="{% url 'contributors' %}">{% translate "Contributors" %}</a></li>
                 </ul>
             </nav>
 
             <nav aria-labelledby="footer-heading-work">
-                <h2 class="footer-heading" id="footer-heading-work">Our Work</h2>
+                <h2 class="footer-heading" id="footer-heading-work">{% translate "Our Work" %}</h2>
                 <ul class="footer-links">
-                    <li><a href="https://dollarscholars.org/what-we-do/">What We Do</a></li>
-                    <li><a href="https://dollarscholars.org/core-curriculum/">Core Curriculum</a></li>
-                    <li><a href="https://dollarscholars.org/resources/">Resources</a></li>
-                    <li><a href="https://dollarscholars.org/blog/">News &amp; Blog</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/what-we-do/">{% translate "What We Do" %}</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/core-curriculum/">{% translate "Core Curriculum" %}</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/resources/">{% translate "Resources" %}</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/blog/">{% translate "News & Blog" %}</a></li>
                 </ul>
             </nav>
 
             <nav aria-labelledby="footer-heading-help">
-                <h2 class="footer-heading" id="footer-heading-help">Help &amp; Policies</h2>
+                <h2 class="footer-heading" id="footer-heading-help">{% translate "Help & Policies" %}</h2>
                 <ul class="footer-links">
-                    <li><a href="https://dollarscholars.org/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="https://dollarscholars.org/accessibility-statement/">Accessibility</a></li>
-                    <li><a href="mailto:partnerships@dollarscholars.org">Contact Us</a></li>
-                    <li><a href="https://www.paypal.com/donate/?hosted_button_id=QUDB8VUWZX5RQ">Donate</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/privacy-policy/">{% translate "Privacy Policy" %}</a></li>
+                    <li><a href="https://dollarscholars.org{{ ds_lang }}/accessibility-statement/">{% translate "Accessibility" %}</a></li>
+                    <li><a href="mailto:partnerships@dollarscholars.org">{% translate "Contact Us" %}</a></li>
+                    <li><a href="https://www.paypal.com/donate/?hosted_button_id=QUDB8VUWZX5RQ">{% translate "Donate" %}</a></li>
                 </ul>
             </nav>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; {% now "Y" %} <span translate="no">Dollar Scholars Foundation</span>. All rights reserved.</p>
+            <p>&copy; {% now "Y" %} <span translate="no">Dollar Scholars Foundation</span>. {% translate "All rights reserved." %}</p>
 
             <ul class="footer-social">
                 <li>

@@ -32,12 +32,13 @@
         root.dataset.theme = dark ? 'dark' : 'light';
         root.style.colorScheme = dark ? 'dark' : 'light';
         if (button) {
-            // Labels come from data attributes so they can be translated.
-            const label = dark
-                ? (button.dataset.labelLight || 'Switch to light mode')
-                : (button.dataset.labelDark || 'Switch to dark mode');
-            button.setAttribute('aria-label', label);
-            button.title = label;
+            // Labels come from data attributes, in the page's language (site_header.html);
+            // without them the label the template rendered stays.
+            const label = dark ? button.dataset.labelLight : button.dataset.labelDark;
+            if (label) {
+                button.setAttribute('aria-label', label);
+                button.title = label;
+            }
         }
         document.dispatchEvent(new CustomEvent('ds:themechange', {
             detail: { theme: dark ? 'dark' : 'light' },

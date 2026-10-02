@@ -5,6 +5,9 @@
  * - Warning-signs checklist: ticked signs are highlighted.
  * Both are remembered in localStorage under the same keys the page has always used, so
  * returning visitors keep their progress.
+ *
+ * This file holds no user-visible text. Translated strings come from the page's
+ * <script type="application/json" id="awareness-i18n"> block, rendered by Django i18n.
  */
 (function () {
     'use strict';
@@ -25,6 +28,28 @@
         catch (e) { /* ignore storage issues (private mode, blocked storage) */ }
     }
 
+    /* Translated strings rendered by the template. Values may contain HTML entities
+     * (translations are HTML), so decode them to plain text before using textContent. */
+    function decodeHtml(text) {
+        try { return new DOMParser().parseFromString(text, 'text/html').documentElement.textContent; }
+        catch (e) { return text; }
+    }
+
+    var messages = {};
+    var messagesEl = document.getElementById('awareness-i18n');
+    if (messagesEl) {
+        try { messages = JSON.parse(messagesEl.textContent) || {}; }
+        catch (e) { messages = {}; }
+    }
+
+    function progressText(reviewedCount, total) {
+        // messages.progress is e.g. "Topics reviewed: {reviewed} of 4" in the page language
+        if (typeof messages.progress === 'string' && messages.progress.indexOf('{reviewed}') !== -1) {
+            return decodeHtml(messages.progress.split('{reviewed}').join(String(reviewedCount)));
+        }
+        return reviewedCount + ' / ' + total;  // language-neutral fallback
+    }
+
     var progress = safeGet(STORAGE_KEY);
     var checklist = safeGet(CHECKLIST_KEY);
 
@@ -43,7 +68,7 @@
             if (progress[item.getAttribute('data-item-id')]) reviewedCount += 1;
         });
         var percent = totalTopics ? Math.round((reviewedCount / totalTopics) * 100) : 0;
-        var text = reviewedCount + ' of ' + totalTopics + ' topics reviewed';
+        var text = progressText(reviewedCount, totalTopics);
 
         if (progressFill) progressFill.style.width = percent + '%';
         if (progressLabel && progressLabel.textContent !== text) progressLabel.textContent = text;

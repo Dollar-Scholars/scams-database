@@ -4,10 +4,13 @@ import re
 from datetime import date, datetime, timezone
 from decimal import Decimal
 
+from babel import Locale
 from django.contrib.staticfiles import finders
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
+from django.utils import translation
 
+from . import views
 from .models import Scam
 
 # Plain storage so {% static %} works in tests whether or not collectstatic has run
@@ -93,7 +96,7 @@ class DashboardViewTests(TestCase):
         self.assertEqual(json.loads(response.context['chart_labels_o']), ['Feb 2026'])
         self.assertEqual(response.context['total_scams_o'], 2)
         self.assertEqual(response.context['undated_count_o'], 1)
-        self.assertContains(response, '1 with no date given')
+        self.assertContains(response, 'No date given: 1')
 
         # Filtering by the occurred date leaves the undated row out.
         response = self.get(year_o='2026')
@@ -277,9 +280,9 @@ class DashboardViewTests(TestCase):
         make_scam('Undated', created=utc(2026, 3, 7, 12), occurred=None)
         response = self.get()
         self.assertNotContains(response, '<canvas')
-        self.assertContains(response, 'reports submitted in Mar 2026')
-        self.assertContains(response, 'scams reported as happening in Mar 2025')
-        self.assertContains(response, '1 report with no date given is not in this chart.')
+        self.assertContains(response, 'Reports submitted in Mar 2026')
+        self.assertContains(response, 'Scams reported as happening in Mar 2025')
+        self.assertContains(response, 'Not in this chart: reports with no date given (1).')
 
     def test_month_filter_does_not_chart_other_months(self):
         make_scam('March', created=utc(2026, 3, 5, 12), occurred=date(2026, 3, 1))
@@ -349,3 +352,107 @@ class DashboardViewTests(TestCase):
         self.assertContains(response, 'aria-current="page"')
         for path in ('scams/css/pages/dashboard.css', 'scams/js/dashboard.js'):
             self.assertIsNotNone(finders.find(path), path)
+
+    def test_chart_payload_carries_the_scripts_text(self):
+        make_scam('A', created=utc(2026, 1, 5, 12))
+        make_scam('B', created=utc(2026, 3, 5, 12))
+        make_scam('C', created=utc(2026, 3, 6, 12))
+        submitted = chart_payload(self.get())['submitted']
+        self.assertEqual(submitted['label'], 'Reports submitted')
+        # One tooltip per bar; dashboard.js puts the formatted number in place of {count}.
+        self.assertEqual(submitted['tooltips'], ['Reports: {count}'] * 3)
+
+    def test_other_currency_shows_its_label_not_its_code(self):
+        make_scam('Other', created=utc(2026, 3, 5, 12), amount=Decimal('3'), currency='Other')
+        make_scam('Euro', created=utc(2026, 3, 6, 12), amount=Decimal('3'), currency='EUR')
+        response = self.get()
+        rows = {r['code']: r for r in response.context['loss_by_currency']}
+        self.assertEqual(rows['EUR']['abbr'], 'EUR')
+        self.assertEqual(rows['Other']['abbr'], '')
+        self.assertContains(response, f"<dt>{rows['Other']['label']}</dt>")
+        self.assertContains(response, '<dt><abbr title="Euro">EUR</abbr></dt>')
+
+
+@override_settings(STORAGES=PLAIN_STORAGES)
+class DashboardTranslationTests(TestCase):
+    """Month names, month labels and currency names follow the page language."""
+
+    def setUp(self):
+        # LocaleMiddleware leaves the request's language active in this thread, and
+        # reverse() follows it; put English back so later tests get unprefixed URLs.
+        self.addCleanup(translation.activate, translation.get_language())
+
+    def test_spanish_dashboard_renders(self):
+        make_scam('Jan', created=utc(2026, 1, 5, 12), occurred=date(2026, 1, 1),
+                  amount=Decimal('10'), currency='USD')
+        make_scam('Mar', created=utc(2026, 3, 5, 12), occurred=date(2026, 3, 1))
+        with translation.override('es'):
+            url = reverse('dashboard')
+        self.assertEqual(url, '/es/dashboard/')
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<html lang="es"')
+        self.assertEqual(chart_payload(response)['submitted']['labels'], ['ene 2026', 'feb 2026', 'mar 2026'])
+        self.assertEqual(response.context['months'], [(1, 'ene'), (3, 'mar')])
+        self.assertEqual(response.context['loss_by_currency'][0]['label'], 'dólar estadounidense')
+        self.assertContains(response, '<td data-label="Month">ene 2026</td>')
+
+        response = self.client.get(url, {'year': '2026', 'month': '3', 'month_o': '3'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('marzo', response.context['period_label'])
+        self.assertIn('2026', response.context['period_label'])
+        self.assertIn('marzo', response.context['period_label_o'])
+
+    def test_english_stays_unprefixed(self):
+        with translation.override('en'):
+            self.assertEqual(reverse('dashboard'), '/dashboard/')
+
+
+class DashboardLocaleHelperTests(SimpleTestCase):
+
+    def test_month_labels_are_localized(self):
+        with translation.override('en'):
+            self.assertEqual(views._month_name(3), 'Mar')
+            self.assertEqual(views._month_year(2026, 3), 'Mar 2026')
+            self.assertEqual(views._period_label(2026, 3), 'March 2026')
+            self.assertEqual(views._period_label(None, 3), 'March, any year')
+            self.assertEqual(views._period_label(2026, None), '2026')
+            self.assertEqual(views._period_label(None, None), 'All time')
+        with translation.override('es'):
+            self.assertEqual(views._month_name(3), 'mar')
+            self.assertEqual(views._month_year(2026, 3), 'mar 2026')
+            self.assertIn('marzo', views._period_label(2026, 3))
+            self.assertIn('marzo', views._period_label(None, 3))
+        with translation.override('ja'):
+            # Year first, in the language's own order.
+            self.assertTrue(views._month_year(2026, 3).startswith('2026'))
+
+    def test_currency_names_are_localized(self):
+        with translation.override('en'):
+            self.assertEqual(views._currency_name('USD'), 'US Dollar')
+        with translation.override('es'):
+            self.assertEqual(views._currency_name('USD'), 'dólar estadounidense')
+            self.assertEqual(views._currency_name('EUR'), 'euro')
+        with translation.override('de'):
+            self.assertEqual(views._currency_name('USD'), 'US-Dollar')
+
+    def test_django_language_codes_map_to_babel_locales(self):
+        self.assertEqual(views._babel_locale('zh-hans'), Locale('zh', script='Hans'))
+        self.assertEqual(views._babel_locale('zh-hant'), Locale('zh', script='Hant'))
+        self.assertEqual(views._babel_locale('es-mx'), Locale('es', territory='MX'))
+        self.assertEqual(views._babel_locale('pt'), Locale('pt'))
+        # Unknown codes fall back to English rather than failing.
+        self.assertEqual(views._babel_locale('xx'), Locale('en'))
+        self.assertEqual(views._babel_locale(None), Locale('en'))
+
+    def test_dashboard_js_has_no_english_text(self):
+        path = finders.find('scams/js/dashboard.js')
+        with open(path, encoding='utf-8') as f:
+            source = f.read()
+        for literal in ("'report'", "'reports'", "'Reports submitted'", "'Scams that occurred'"):
+            self.assertNotIn(literal, source)
+        # Numbers follow the page language rather than the browser's.
+        self.assertIn('document.documentElement.lang', source)
+        self.assertIn('Intl.NumberFormat', source)
+        self.assertNotIn('toLocaleString()', source)

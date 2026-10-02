@@ -80,7 +80,13 @@ CSRF_TRUSTED_ORIGINS = env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
 # The main Dollar Scholars site, whose header and footer every page shows (loaded live from
 # <DS_SITE_URL>/embed/site-header.js and site-footer.js). Empty = use this app's own copies.
-DS_SITE_URL = env_str('DS_SITE_URL', 'https://dollarscholars.org').rstrip('/')
+# Set but empty (DS_SITE_URL=) also means off, so not env_str, which treats empty as unset.
+DS_SITE_URL = os.environ.get('DS_SITE_URL', 'https://dollarscholars.org').strip().rstrip('/')
+
+# Where `python manage.py fetch_translations` downloads ScamDB's translations, which are made
+# and reviewed on dollarscholars.org (docs/TRANSLATIONS.md). Empty = don't download.
+DS_TRANSLATIONS_URL = os.environ.get(
+    'DS_TRANSLATIONS_URL', f'{DS_SITE_URL}/translations/scamdb.json' if DS_SITE_URL else '').strip()
 
 
 # Application definition
@@ -99,6 +105,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # The language comes from the URL (/es/..., English unprefixed), like dollarscholars.org.
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -118,6 +126,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
                 'scams.context_processors.site_embeds',
             ],
         },
@@ -193,7 +202,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+
+# The same languages as dollarscholars.org (scams/languages.py). Translations: docs/TRANSLATIONS.md.
+from scams.languages import LANGUAGES  # noqa: E402
+
+# Translations downloaded from dollarscholars.org by `python manage.py fetch_translations`
+# (not committed). scams/locale/ has empty catalogs for the languages Django has none for.
+LOCALE_PATHS = [BASE_DIR / 'locale']
 
 TIME_ZONE = 'UTC'
 

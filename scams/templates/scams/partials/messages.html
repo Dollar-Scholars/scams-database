@@ -1,5 +1,5 @@
-{% if messages %}
-<section class="messages container" aria-label="Notifications">
+{% load i18n %}{% if messages %}
+<section class="messages container" aria-label="{% translate "Notifications" %}">
     {% for message in messages %}
     <div class="alert alert-{{ message.level_tag|default:'info' }}{% if message.extra_tags %} {{ message.extra_tags }}{% endif %}"
         role="{% if message.level_tag == 'error' or message.level_tag == 'warning' %}alert{% else %}status{% endif %}">

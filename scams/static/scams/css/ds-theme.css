@@ -241,7 +241,7 @@ p, ul, ol, dl, blockquote, figure, pre, table {
 }
 
 ul, ol {
-    padding-left: 1.25rem;
+    padding-inline-start: 1.25rem;
 }
 
 li + li {
@@ -468,8 +468,8 @@ html[data-theme="dark"] .brand-mark .ds-logo-dark { display: block; }
 
 .product-label {
     flex: 0 0 auto;
-    padding-left: 12px;
-    border-left: 1px solid var(--line);
+    padding-inline-start: 12px;
+    border-inline-start: 1px solid var(--line);
     color: var(--muted);
     font-size: .875rem;
     font-weight: 600;
@@ -618,8 +618,7 @@ html:not([data-theme="dark"]) .header-cta:hover {
     html.js .site-nav-panel {
         position: absolute;
         top: 100%;
-        left: 0;
-        right: 0;
+        inset-inline: 0;
         display: none;
         flex-direction: column;
         align-items: stretch;
@@ -1035,6 +1034,15 @@ html[data-theme="dark"] .btn-white:hover {
     transform: translateX(3px);
 }
 
+/* Right-to-left pages: the arrow points the way the text reads */
+[dir="rtl"] .btn-link::after {
+    transform: scaleX(-1);
+}
+
+[dir="rtl"] .btn-link:hover::after {
+    transform: scaleX(-1) translateX(3px);
+}
+
 .btn-link.no-arrow::after {
     content: none;
 }
@@ -1363,13 +1371,13 @@ legend.label {
 }
 
 .req {
-    margin-left: 2px;
+    margin-inline-start: 2px;
     color: var(--danger);
     font-weight: 700;
 }
 
 .optional {
-    margin-left: 4px;
+    margin-inline-start: 4px;
     color: var(--muted);
     font-size: .8125rem;
     font-weight: 400;
@@ -1405,7 +1413,7 @@ legend.label {
 .errorlist.nonfield {
     padding: 12px 16px;
     border: 1px solid var(--danger-line);
-    border-left: 4px solid var(--danger);
+    border-inline-start: 4px solid var(--danger);
     border-radius: var(--radius-md);
     background: var(--danger-bg);
     font-size: .875rem;
@@ -1484,7 +1492,7 @@ textarea::placeholder {
 :where(select) {
     -webkit-appearance: none;
     appearance: none;
-    padding-right: 40px;
+    padding-inline-end: 40px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-position: right 12px center;
     background-repeat: no-repeat;
@@ -1492,12 +1500,16 @@ textarea::placeholder {
     cursor: pointer;
 }
 
+:where([dir="rtl"] select) {
+    background-position: left 12px center;
+}
+
 :where(html[data-theme="dark"] select) {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23b8c0cc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 :where(select[multiple], select[size]:not([size="1"])) {
-    padding-right: 12px;
+    padding-inline-end: 12px;
     background-image: none;
 }
 
@@ -1677,6 +1689,15 @@ input[type="range"]::-webkit-slider-runnable-track {
         var(--range-track) 100%);
 }
 
+/* Right-to-left pages: the slider runs from the right, so the fill does too */
+[dir="rtl"] input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(to left,
+        var(--control-accent) 0,
+        var(--control-accent) var(--fill, 0%),
+        var(--range-track) var(--fill, 0%),
+        var(--range-track) 100%);
+}
+
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -1818,7 +1839,7 @@ input[type="range"]:focus-visible {
     color: var(--ink);
     font-size: 1rem;
     font-weight: 700;
-    text-align: left;
+    text-align: start;
     caption-side: top;
 }
 
@@ -1826,7 +1847,7 @@ input[type="range"]:focus-visible {
 .table td {
     padding: 12px 16px;
     border-bottom: 1px solid var(--line);
-    text-align: left;
+    text-align: start;
     vertical-align: top;
 }
 
@@ -1860,7 +1881,7 @@ input[type="range"]:focus-visible {
 .table .num,
 .table td.num,
 .table th.num {
-    text-align: right;
+    text-align: end;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
@@ -1907,7 +1928,7 @@ input[type="range"]:focus-visible {
     .table-stack tbody th {
         padding: 4px 0;
         border: 0;
-        text-align: left;
+        text-align: start;
     }
 
     .table-stack td[data-label],
@@ -1931,7 +1952,7 @@ input[type="range"]:focus-visible {
 
     .table-stack td.num,
     .table-stack th.num {
-        text-align: left;
+        text-align: start;
     }
 }
 
@@ -2006,7 +2027,7 @@ input[type="range"]:focus-visible {
     margin: 0 0 1rem;
     padding: 14px 16px;
     border: 1px solid var(--info-line);
-    border-left: 4px solid var(--alert-accent);
+    border-inline-start: 4px solid var(--alert-accent);
     border-radius: var(--radius-md);
     background: var(--info-bg);
     color: var(--ink);
@@ -2043,21 +2064,21 @@ input[type="range"]:focus-visible {
 .alert-info {
     --alert-accent: var(--info);
     border-color: var(--info-line);
-    border-left-color: var(--alert-accent);
+    border-inline-start-color: var(--alert-accent);
     background: var(--info-bg);
 }
 
 .alert-success {
     --alert-accent: var(--success);
     border-color: var(--success-line);
-    border-left-color: var(--alert-accent);
+    border-inline-start-color: var(--alert-accent);
     background: var(--success-bg);
 }
 
 .alert-warning {
     --alert-accent: var(--warning);
     border-color: var(--warning-line);
-    border-left-color: var(--alert-accent);
+    border-inline-start-color: var(--alert-accent);
     background: var(--warning-bg);
 }
 
@@ -2065,14 +2086,14 @@ input[type="range"]:focus-visible {
 .alert-danger {
     --alert-accent: var(--danger);
     border-color: var(--danger-line);
-    border-left-color: var(--alert-accent);
+    border-inline-start-color: var(--alert-accent);
     background: var(--danger-bg);
 }
 
 .alert-debug {
     --alert-accent: var(--muted);
     border-color: var(--line);
-    border-left-color: var(--alert-accent);
+    border-inline-start-color: var(--alert-accent);
     background: var(--ds-raised);
 }
 
@@ -2278,7 +2299,7 @@ input[type="range"]:focus-visible {
 
 .prose ul,
 .prose ol {
-    padding-left: 1.4rem;
+    padding-inline-start: 1.4rem;
 }
 
 .prose li::marker {
@@ -2291,8 +2312,8 @@ input[type="range"]:focus-visible {
 
 .prose blockquote {
     margin-inline: 0;
-    padding-left: 16px;
-    border-left: 3px solid var(--line);
+    padding-inline-start: 16px;
+    border-inline-start: 3px solid var(--line);
     color: var(--muted);
 }
 
@@ -2305,7 +2326,7 @@ input[type="range"]:focus-visible {
 
 .checklist li {
     position: relative;
-    padding-left: 30px;
+    padding-inline-start: 30px;
 }
 
 .checklist li + li {
@@ -2316,7 +2337,7 @@ input[type="range"]:focus-visible {
     content: "";
     position: absolute;
     top: .3em;
-    left: 0;
+    inset-inline-start: 0;
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -2475,7 +2496,7 @@ html[data-theme="dark"] .checklist li::before {
 @media (min-width: 768px) {
     .footer-bottom {
         flex-direction: row;
-        text-align: left;
+        text-align: start;
     }
 }
 

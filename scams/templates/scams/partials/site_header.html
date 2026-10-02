@@ -1,18 +1,20 @@
-{% load static %}{% with current=request.resolver_match.url_name %}
+{% load i18n static %}{% with current=request.resolver_match.url_name %}
+{# dollarscholars.org has its pages in this language too: /es/ ... (English unprefixed). #}
+{% if LANGUAGE_CODE != "en" %}{% firstof "/"|add:LANGUAGE_CODE as ds_lang %}{% endif %}
 <header class="site-header">
     <div class="site-brand">
-        <a class="brand" href="https://dollarscholars.org/" aria-label="Dollar Scholars Foundation home">
+        <a class="brand" href="https://dollarscholars.org{{ ds_lang }}/" aria-label="{% translate "Dollar Scholars Foundation home" %}">
             <span class="brand-mark" aria-hidden="true">
                 <img src="{% static 'scams/img/vector_logo_ds_small.svg' %}" alt="" class="ds-logo-light" width="46" height="46">
                 <img src="{% static 'scams/img/vector_logo_ds_small_white.svg' %}" alt="" class="ds-logo-dark" width="46" height="46">
             </span>
             <span class="brand-title" translate="no">Dollar Scholars<span class="brand-title-extra"> Foundation</span></span>
         </a>
-        <a class="product-label" href="{% url 'report_scam' %}">Scam Reports</a>
+        <a class="product-label" href="{% url 'report_scam' %}">{% translate "Scam Reports" %}</a>
     </div>
 
     <button id="site-nav-toggle" class="nav-toggle" type="button"
-        aria-expanded="false" aria-controls="site-nav-panel" aria-label="Menu">
+        aria-expanded="false" aria-controls="site-nav-panel" aria-label="{% translate "Menu" %}">
         <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 6h16M4 12h16M4 18h16" />
@@ -24,21 +26,21 @@
     </button>
 
     <div id="site-nav-panel" class="site-nav-panel">
-        <nav class="site-nav" aria-label="Main">
+        <nav class="site-nav" aria-label="{% translate "Main" context "navigation landmark" %}">
             <ul class="nav-links">
-                <li><a href="{% url 'report_scam' %}"{% if current == 'report_scam' %} aria-current="page"{% elif current == 'thank_you' %} aria-current="true"{% endif %}>Report a scam</a></li>
-                <li><a href="{% url 'dashboard' %}"{% if current == 'dashboard' %} aria-current="page"{% endif %}>Dashboard</a></li>
-                <li><a href="{% url 'scam_awareness_page' %}"{% if current == 'scam_awareness_page' %} aria-current="page"{% endif %}>Scam awareness</a></li>
+                <li><a href="{% url 'report_scam' %}"{% if current == 'report_scam' %} aria-current="page"{% elif current == 'thank_you' %} aria-current="true"{% endif %}>{% translate "Report a scam" %}</a></li>
+                <li><a href="{% url 'dashboard' %}"{% if current == 'dashboard' %} aria-current="page"{% endif %}>{% translate "Dashboard" %}</a></li>
+                <li><a href="{% url 'scam_awareness_page' %}"{% if current == 'scam_awareness_page' %} aria-current="page"{% endif %}>{% translate "Scam awareness" %}</a></li>
             </ul>
         </nav>
 
         <div class="header-actions">
-            <a class="btn btn-primary header-cta" href="{% url 'report_scam' %}">Report a scam</a>
+            <a class="btn btn-primary header-cta" href="{% url 'report_scam' %}">{% translate "Report a scam" %}</a>
 
             <button id="ds-theme-toggle" class="ds-theme-toggle" type="button"
-                data-label-light="Switch to light mode"
-                data-label-dark="Switch to dark mode" aria-label="Switch to dark mode"
-                title="Switch to dark mode">
+                data-label-light="{% translate "Switch to light mode" %}"
+                data-label-dark="{% translate "Switch to dark mode" %}" aria-label="{% translate "Switch to dark mode" %}"
+                title="{% translate "Switch to dark mode" %}">
                 <svg class="ds-theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                     aria-hidden="true">
                     <path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" />

@@ -2,7 +2,8 @@
  * Mobile navigation (< 1024px): the hamburger button (#site-nav-toggle) shows/hides
  * the header panel (#site-nav-panel) holding the nav links, the "Report a scam"
  * button and the theme toggle.
- * - aria-expanded on the button reflects the state (its label stays "Menu")
+ * - aria-expanded on the button reflects the state; its label ("Menu", in the page's
+ *   language) comes from the template and never changes, so this script has no text
  * - Escape closes the panel and returns focus to the button
  * - clicking a link in the panel, or anywhere outside the header, closes it
  * - widening the window to desktop size resets it

@@ -3,6 +3,7 @@ its partials, and the static files it references."""
 import re
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.staticfiles import finders
@@ -11,7 +12,7 @@ from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.test import RequestFactory, SimpleTestCase, override_settings
 from django.urls import resolve, reverse
-from django.utils import timezone
+from django.utils import timezone, translation
 
 # Plain storage so {% static %} works in tests whether or not collectstatic has run
 # (the test runner forces DEBUG=False, which makes manifest storages strict).
@@ -44,6 +45,15 @@ APP_NAV = [
 ]
 
 
+class EnglishTestCase(SimpleTestCase):
+    """These tests check the English text. A request to /es/... in another test can leave
+    Spanish active in the thread, so each test here runs in the default language."""
+
+    def setUp(self):
+        super().setUp()
+        self.enterContext(translation.override(settings.LANGUAGE_CODE))
+
+
 def make_request(path='/', message_list=()):
     request = RequestFactory().get(path)
     request.resolver_match = resolve(path)
@@ -66,7 +76,7 @@ def nav_block(html):
 
 
 @override_settings(STORAGES=PLAIN_STORAGES)
-class BaseTemplateTests(SimpleTestCase):
+class BaseTemplateTests(EnglishTestCase):
 
     def test_blocks_render_in_place(self):
         html = render_child()
@@ -157,7 +167,8 @@ class BaseTemplateTests(SimpleTestCase):
     def test_footer_columns_and_links(self):
         html = render_child()
         footer = html[html.index('<footer class="ds-footer">'):html.index('</footer>')]
-        for heading in ('Scam Reports', 'Our Work', 'Help &amp; Policies'):
+        # "&" as on dollarscholars.org, so the two sites share the translations
+        for heading in ('Scam Reports', 'Our Work', 'Help & Policies'):
             self.assertIn(f'>{heading}</h2>', footer)
         for url_name, label in APP_NAV:
             self.assertInHTML(f'<a href="{reverse(url_name)}">{label}</a>', footer)
@@ -226,7 +237,7 @@ class DemoForm(forms.Form):
     anonymous = forms.BooleanField(label='Submit anonymously', required=False)
 
 
-class FormFieldPartialTests(SimpleTestCase):
+class FormFieldPartialTests(EnglishTestCase):
 
     def render_field(self, form, name, **extra):
         return render_to_string('scams/partials/form_field.html', {'field': form[name], **extra})
@@ -258,15 +269,16 @@ class FormFieldPartialTests(SimpleTestCase):
 
 
 @override_settings(STORAGES=PLAIN_STORAGES)
-class MainSiteHeaderFooterTests(SimpleTestCase):
+class MainSiteHeaderFooterTests(EnglishTestCase):
     """Every page shows the main Dollar Scholars site's live header and footer."""
 
     def test_loads_the_main_sites_header_and_footer(self):
         with self.settings(DS_SITE_URL='https://dollarscholars.org'):
             html = render_child()
         # picker=1 asks for the main site's language picker, so the header matches it exactly
-        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js?picker=1" defer></script>', html)
-        self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js" defer></script>', html)
+        # ...in the page's language (lang=en here)
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-header.js?picker=1&amp;lang=en" defer></script>', html)
+        self.assertIn('<script src="https://dollarscholars.org/embed/site-footer.js?lang=en" defer></script>', html)
         # This app's own header and footer stay inside, as the fallback.
         header = html[html.index('<ds-site-header>'):html.index('</ds-site-header>')]
         self.assertIn('<header class="site-header">', header)
@@ -282,3 +294,45 @@ class MainSiteHeaderFooterTests(SimpleTestCase):
         self.assertNotIn('/embed/site-footer.js', html)
         self.assertNotIn("toggle.slot = 'actions'", html)
         self.assertIn('<header class="site-header">', html)
+
+
+TRANSLATED_TEMPLATES = [
+    'scams/base.html',
+    'scams/partials/site_header.html',
+    'scams/partials/site_footer.html',
+    'scams/partials/messages.html',
+    'scams/partials/form_field.html',
+    'scams/thank_you.html',
+    'scams/contributors.html',
+]
+
+# Names that stay as they are in every language.
+BRAND_NAMES = ('Dollar Scholars Foundation', 'Dollar Scholars', 'LinkedIn', 'GitHub')
+
+
+class TranslationMarkupTests(SimpleTestCase):
+    """The shared layout and small pages have no text left outside {% translate %}."""
+
+    def untranslated_text(self, name):
+        source = engines['django'].engine.find_template(name)[0].source
+        text = re.sub(r'{%\s*comment\s*%}.*?{%\s*endcomment\s*%}|{#.*?#}', '', source, flags=re.S)
+        text = re.sub(r'{%\s*blocktranslate\b.*?{%\s*endblocktranslate\s*%}', '', text, flags=re.S)
+        text = re.sub(r'<(script|style|svg)\b.*?</\1>', '', text, flags=re.S)
+        text = re.sub(r'{%.*?%}|{{.*?}}', '', text, flags=re.S)
+        text = re.sub(r'&\w+;', ' ', re.sub(r'<[^>]*>', '', text))
+        for brand in BRAND_NAMES:
+            text = text.replace(brand, ' ')
+        return re.findall(r'[A-Za-z][^\n]*', text)
+
+    def test_visible_text_is_marked_for_translation(self):
+        for name in TRANSLATED_TEMPLATES:
+            with self.subTest(template=name):
+                self.assertEqual(self.untranslated_text(name), [])
+
+    def test_labels_are_marked_for_translation(self):
+        for name in TRANSLATED_TEMPLATES:
+            source = engines['django'].engine.find_template(name)[0].source
+            for attr in ('aria-label', 'title', 'data-label-light', 'data-label-dark', 'placeholder'):
+                for value in re.findall(rf'\s{attr}="((?:{{%.*?%}}|[^"])*)"', source):
+                    with self.subTest(template=name, attr=attr, value=value):
+                        self.assertTrue(value.startswith('{% translate ') or value in BRAND_NAMES, value)

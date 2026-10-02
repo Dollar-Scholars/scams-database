@@ -84,7 +84,7 @@
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
-    text-align: right;
+    text-align: end;
 }
 
 .loss-empty {
@@ -220,6 +220,11 @@ html.no-js .dash-chart {
     border-bottom: 2px solid currentColor;
     transform: rotate(-45deg);
     transition: transform .2s ease;
+}
+
+/* Right-to-left: the closed arrow points the other way (toward the text). */
+[dir="rtl"] .chart-data:not([open]) > summary::before {
+    transform: rotate(135deg);
 }
 
 .chart-data[open] > summary::before {

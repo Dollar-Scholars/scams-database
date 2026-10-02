@@ -4,6 +4,7 @@ import re
 from django.contrib.staticfiles import finders
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import translation
 
 # Plain storage so {% static %} works in tests whether or not collectstatic has run
 # (the test runner forces DEBUG=False, which makes manifest storages strict).
@@ -34,6 +35,10 @@ class RemovedAllReportsPageTests(TestCase):
 class ThankYouPageTests(TestCase):
     url = reverse('thank_you')
 
+    def setUp(self):
+        # /es/thank-you/ leaves Spanish active in this thread; switch back after each test.
+        self.addCleanup(translation.deactivate)
+
     def test_renders_in_theme(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -45,12 +50,29 @@ class ThankYouPageTests(TestCase):
         self.assertIn('scams/css/pages/thank_you.css', html)
         self.assertIsNotNone(finders.find('scams/css/pages/thank_you.css'))
 
-    def test_keeps_confirmation_and_spanish_copy(self):
+    def test_keeps_confirmation_copy(self):
         main = main_html(self.client.get(self.url))
         self.assertIn('class="thanks-icon"', main)
+        self.assertIn('<h1 id="thanks-heading">Thank you</h1>', main)
         self.assertIn('Your report has been submitted successfully and is currently pending review.', main)
-        self.assertIn('Su informe ha sido enviado y actualmente está en espera de revisión.', main)
         self.assertIn('What happens next', main)
+
+    def test_no_parallel_spanish_copy(self):
+        # The page is translated as a whole (/es/thank-you/ ...), so the English page
+        # no longer carries hand-written Spanish lines beside the English ones.
+        main = main_html(self.client.get(self.url))
+        self.assertNotIn('lang="es"', main)
+        for spanish in ('Gracias', 'Su informe ha sido enviado', 'Enviar otro informe de estafa',
+                        'Ver el panel de datos', 'Aprenda cómo protegerse'):
+            self.assertNotIn(spanish, main)
+
+    def test_spanish_page(self):
+        response = self.client.get(reverse('thank_you').replace('/', '/es/', 1))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<html lang="es" dir="ltr"')
+        main = main_html(response)
+        self.assertIn('href="/es/"', main)
+        self.assertIn('href="/es/dashboard/"', main)
 
     def test_call_to_action_links(self):
         main = main_html(self.client.get(self.url))

@@ -1,14 +1,18 @@
 """Tests for the report form (scams/forms.py) and the report page (scams/report_form.html)."""
+import json
 import re
 from datetime import date, timedelta
 from itertools import chain
 from pathlib import Path
+from unittest import mock
 
 from django.contrib.staticfiles import finders
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import translation
+from django.utils.functional import Promise
 
-from .forms import ScamReportForm
+from .forms import ScamReportForm, babel_locale
 from .models import Scam
 
 # Plain storage so {% static %} works in tests whether or not collectstatic has run
@@ -240,3 +244,119 @@ class ReportPageWordingTests(TestCase):
         response = self.client.get(reverse('report_scam'))
         self.assertContains(
             response, 'ScamDB generates reports on the latest scams to help other individuals and organizations.')
+
+
+@override_settings(STORAGES=PLAIN_STORAGES)
+class ReportPageTranslationTests(TestCase):
+    """The report page in other languages. There are no translations yet, so the page's own
+    text is still English, but Babel's country and currency names are not."""
+
+    def i18n_strings(self, html):
+        block = re.search(r'<script type="application/json" id="report-form-i18n">(.*?)</script>', html, re.S)
+        self.assertIsNotNone(block, 'the page has no #report-form-i18n block for report_form.js')
+        return json.loads(block.group(1))
+
+    def test_spanish_page_renders(self):
+        with translation.override('es'):
+            url = reverse('report_scam')
+        self.assertEqual(url, '/es/')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode()
+        self.assertIn('<html lang="es"', html)
+        self.assertIn('<h1>Report a scam</h1>', html)  # English until there are translations
+        self.assertIn('<option value="CH">Suiza</option>', html)
+        self.assertIn('<option value="" selected>Choose a country</option>', html)
+        self.assertEqual(self.i18n_strings(html)['severityLabels']['5'], 'Severe')
+
+    def test_spanish_page_rerenders_with_errors(self):
+        response = self.client.post('/es/', valid_data(title=''))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Scam.objects.exists())
+        self.assertContains(response, 'href="#id_title"')
+
+    def test_country_choices_use_babel_names_in_the_page_language(self):
+        with translation.override('es'):
+            choices = dict(ScamReportForm().fields['country'].choices)
+        self.assertEqual(choices['CH'], 'Suiza')
+        self.assertEqual(choices['DE'], 'Alemania')
+        self.assertEqual(str(choices['']), 'Choose a country')
+        with translation.override('en'):
+            self.assertEqual(dict(ScamReportForm().fields['country'].choices)['CH'], 'Switzerland')
+
+    def test_country_choices_sorted_by_the_localized_name(self):
+        with translation.override('de'):
+            names = [label for value, label in ScamReportForm().fields['country'].choices if value]
+        self.assertEqual(names[0], 'Afghanistan')
+        # Ägypten sorts with the A's in German, not after Z
+        self.assertLess(names.index('Ägypten'), names.index('Albanien'))
+        self.assertLess(names.index('Oman'), names.index('Österreich'))
+        self.assertLess(names.index('Österreich'), names.index('Pakistan'))
+        self.assertEqual(names[-1], 'Zypern')
+
+    def test_choices_follow_each_forms_language(self):
+        with translation.override('fr'):
+            french = dict(ScamReportForm().fields['country'].choices)['CH']
+        with translation.override('es'):
+            spanish = dict(ScamReportForm().fields['country'].choices)['CH']
+        self.assertEqual((french, spanish), ('Suisse', 'Suiza'))
+
+    def test_currency_labels_use_babel_names(self):
+        with translation.override('es'):
+            choices = dict(ScamReportForm().fields['currency'].choices)
+        self.assertTrue(choices['USD'].startswith('USD — '), choices['USD'])
+        self.assertIn('dólar estadounidense', choices['USD'])
+        self.assertEqual(str(choices['Other']), 'Other')
+        with translation.override('en'):
+            self.assertEqual(str(dict(ScamReportForm().fields['currency'].choices)['USD']), 'USD — US Dollar')
+
+    def test_every_site_language_has_a_babel_locale(self):
+        from django.conf import settings
+        for code, _name in settings.LANGUAGES:
+            with self.subTest(code=code):
+                self.assertIsNotNone(babel_locale(code))
+        self.assertEqual(str(babel_locale('zh-hant')), 'zh_Hant')
+        self.assertEqual(str(babel_locale('es-mx')), 'es_MX')
+        self.assertIsNone(babel_locale('xx-nope'))
+
+    def test_error_messages_are_translatable(self):
+        form = ScamReportForm(data=valid_data(description='Too short'))
+        self.assertFalse(form.is_valid())
+        error = form.errors.as_data()['description'][0]
+        self.assertIsInstance(error.message, Promise)  # gettext_lazy
+        self.assertEqual(str(error.message), SHORT_DESCRIPTION_ERROR)
+        self.assertIsInstance(ScamReportForm.Meta.labels['description'], Promise)
+        self.assertIsInstance(ScamReportForm.BLANK_CHOICE_LABELS['country'], Promise)
+        self.assertIsInstance(ScamReportForm.SECTIONS[0][1], Promise)
+
+    def test_error_messages_go_through_gettext(self):
+        """The message is looked up with gettext when it is shown, so it follows the page's language."""
+        form = ScamReportForm(data=valid_data(description='Too short'))
+        form.is_valid()
+        message = form.errors.as_data()['description'][0].message
+        fake = {SHORT_DESCRIPTION_ERROR: 'Descripción demasiado corta.'}
+        with mock.patch.object(translation._trans, 'gettext', side_effect=lambda text: fake.get(text, text)):
+            self.assertEqual(str(message), 'Descripción demasiado corta.')
+        self.assertEqual(str(message), SHORT_DESCRIPTION_ERROR)
+
+    def test_javascript_reads_its_words_from_the_page(self):
+        js = Path(finders.find('scams/js/report_form.js')).read_text(encoding='utf-8')
+        self.assertIn("getElementById('report-form-i18n')", js)
+        for word in ('Very low', "'Low'", "'Medium'", "'High'", 'Severe'):
+            self.assertNotIn(word, js)
+        html = self.client.get(reverse('report_scam')).content.decode()
+        labels = self.i18n_strings(html)['severityLabels']
+        self.assertEqual(labels, {'1': 'Very low', '2': 'Low', '3': 'Medium', '4': 'High', '5': 'Severe'})
+        # The scale under the slider uses the same words as the script
+        self.assertIn(f'<li>1 · {labels["1"]}</li>', html)
+        self.assertIn(f'<li>5 · {labels["5"]}</li>', html)
+
+    def test_page_text_is_marked_for_translation(self):
+        """Every bit of English in the template is inside a translate tag (or a Django tag)."""
+        source = (Path(__file__).parent / 'templates' / 'scams' / 'report_form.html').read_text(encoding='utf-8')
+        source = re.sub(r'{%\s*blocktranslate.*?{%\s*endblocktranslate\s*%}', '', source, flags=re.S)
+        source = re.sub(r'{%.*?%}|{{.*?}}|{#.*?#}', '', source, flags=re.S)
+        source = re.sub(r'<script\b.*?</script>|<svg\b.*?</svg>', '', source, flags=re.S)
+        source = re.sub(r'<[^>]*>', ' ', source)
+        leftover = re.findall(r'[A-Za-z]{2,}', source)
+        self.assertEqual(leftover, [], 'English text not wrapped in {% translate %}')

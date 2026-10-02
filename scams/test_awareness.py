@@ -1,5 +1,6 @@
 """Tests for the scam awareness page (scams/templates/scams/scam_awareness_page.html)
 on the Dollar Scholars theme."""
+import json
 import re
 from pathlib import Path
 
@@ -8,6 +9,7 @@ from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.test import RequestFactory, SimpleTestCase, override_settings
 from django.urls import resolve, reverse
+from django.utils import translation
 
 # Plain storage so {% static %} works in tests whether or not collectstatic has run
 # (the test runner forces DEBUG=False, which makes manifest storages strict).
@@ -42,6 +44,44 @@ TOPICS = [
 ]
 
 CHECKLIST_KEYS = ['urgency', 'payments', 'out-of-nowhere', 'personal-info']
+
+PAGE_TEMPLATE = Path(__file__).resolve().parent / 'templates' / 'scams' / 'scam_awareness_page.html'
+
+# Words that may legitimately stay untranslated in the template source (brand names).
+UNTRANSLATED_ALLOWED = set()
+
+# Attributes whose values are read out or shown to visitors.
+VISIBLE_ATTRIBUTES = ('aria-label', 'aria-valuetext', 'title', 'alt', 'placeholder')
+
+# English the page script used to build itself; it must now come from the template.
+FORMER_JS_ENGLISH = (' of ', 'topics reviewed', 'topic reviewed', 'Reviewed', 'Clear checklist')
+
+
+def untranslated_text(source):
+    """Return the visible English left in a template's source outside i18n tags.
+
+    Heuristic: drop comments, {% blocktranslate %} blocks, every other {% %} / {{ }} tag,
+    and the inside of <script>, <style> and <svg> elements. What is left is literal markup;
+    any letters in its text nodes or in visible attributes were not marked for translation.
+    """
+    text = re.sub(r'{%\s*comment\s*%}.*?{%\s*endcomment\s*%}', '', source, flags=re.S)
+    text = re.sub(r'{#.*?#}', '', text, flags=re.S)
+    text = re.sub(r'{%\s*blocktrans(?:late)?\b.*?{%\s*endblocktrans(?:late)?\s*%}', '', text, flags=re.S)
+    text = re.sub(r'{%.*?%}|{{.*?}}', '', text, flags=re.S)
+    text = re.sub(r'<(script|style|svg)\b[^>]*>.*?</\1>', '', text, flags=re.S | re.I)
+    found = []
+    for tag in re.findall(r'<[^>]*>', text):
+        for attr in VISIBLE_ATTRIBUTES:
+            for value in re.findall(rf'\s{attr}="([^"]*)"', tag):
+                if re.search(r'[^\W\d_]', value):
+                    found.append(f'{attr}="{value}"')
+    nodes = re.sub(r'<[^>]*>', '\n', text)
+    nodes = re.sub(r'&#?\w+;', ' ', nodes)
+    for node in nodes.splitlines():
+        node = node.strip()
+        if re.search(r'[^\W\d_]', node) and node not in UNTRANSLATED_ALLOWED:
+            found.append(node)
+    return found
 
 
 @override_settings(STORAGES=PLAIN_STORAGES)
@@ -155,7 +195,7 @@ class ScamAwarenessPageTests(SimpleTestCase):
                 self.assertIn(f'<span class="accordion-trigger-text">{title}</span>', html)
         self.assertEqual(html.count('>Reviewed</span>'), len(TOPICS))
         self.assertIn('data-progress-fill', html)
-        self.assertIn(f'data-progress-label>0 of {len(TOPICS)} topics reviewed</p>', html)
+        self.assertIn(f'data-progress-label>Topics reviewed: 0 of {len(TOPICS)}</p>', html)
 
     def test_warning_checklist_hooks(self):
         _, html = self.get_page()
@@ -198,3 +238,61 @@ class ScamAwarenessPageTests(SimpleTestCase):
                        '[data-checklist-item]', '[data-reset-checklist]', '.warning-item'):
             with self.subTest(needle=needle):
                 self.assertIn(needle, js)
+
+
+@override_settings(STORAGES=PLAIN_STORAGES)
+class ScamAwarenessTranslationTests(SimpleTestCase):
+
+    def setUp(self):
+        # LocaleMiddleware leaves a /es/ request's language active on the test thread;
+        # restore it so later tests (in any module) still run in English.
+        self.enterContext(translation.override(translation.get_language()))
+
+    def test_spanish_url_renders(self):
+        with translation.override('es'):
+            url = reverse('scam_awareness_page')
+        self.assertEqual(url, '/es/scam-awareness/')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'scams/scam_awareness_page.html')
+        html = response.content.decode()
+        self.assertIn('<html lang="es" dir="ltr"', html)
+        # No catalogs exist yet, so the English source text is the fallback
+        self.assertIn('data-progress-label>Topics reviewed: 0 of 4</p>', html)
+        self.assertEqual(html.count('data-accordion-item '), len(TOPICS))
+
+    def test_spanish_url_from_report(self):
+        response = self.client.get('/es/scam-awareness/', {'from': 'report'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<p class="eyebrow">', response.content.decode())
+
+    def test_template_has_no_untranslated_text(self):
+        source = PAGE_TEMPLATE.read_text(encoding='utf-8')
+        self.assertIn('{% load static i18n %}', source)
+        self.assertEqual(untranslated_text(source), [])
+
+    def test_untranslated_text_check_catches_plain_english(self):
+        # Guard against the heuristic silently passing everything
+        sample = ('{% load i18n %}<h2>{% translate "Fine" %}</h2><p>Forgot this one.</p>'
+                  '<button aria-label="Close">{% blocktranslate %}<strong>Ok</strong>{% endblocktranslate %}</button>'
+                  '{# a comment #}<svg><title>icon</title></svg>')
+        self.assertEqual(untranslated_text(sample), ['aria-label="Close"', 'Forgot this one.'])
+
+    def test_js_strings_come_from_the_page(self):
+        response = self.client.get(reverse('scam_awareness_page'))
+        html = response.content.decode()
+        match = re.search(r'<script type="application/json" id="awareness-i18n">(.*?)</script>', html, re.S)
+        self.assertIsNotNone(match)
+        messages = json.loads(match.group(1))
+        self.assertEqual(messages['progress'], 'Topics reviewed: {reviewed} of 4')
+        # The server-rendered label is the same message with 0 filled in
+        self.assertIn(f'data-progress-label>{messages["progress"].replace("{reviewed}", "0")}</p>', html)
+
+    def test_js_has_no_hard_coded_english(self):
+        js = Path(finders.find(PAGE_JS)).read_text(encoding='utf-8')
+        code = re.sub(r'/\*.*?\*/|//[^\n]*', '', js, flags=re.S)  # comments may stay English
+        for phrase in FORMER_JS_ENGLISH:
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, code)
+        self.assertIn("'awareness-i18n'", js)
+        self.assertIn('{reviewed}', js)

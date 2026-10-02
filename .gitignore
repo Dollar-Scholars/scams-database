@@ -9,3 +9,6 @@ backups/
 staticfiles/
 # SQLite -> PostgreSQL dump (docs/POSTGRES.md, section 3): reporters' details and password hashes
 sqlite_data.json
+# Translations downloaded from dollarscholars.org (python manage.py fetch_translations)
+/locale/*
+!/locale/.gitkeep

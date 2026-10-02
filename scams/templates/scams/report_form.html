@@ -1,19 +1,26 @@
 {% extends "scams/base.html" %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}{% if form.errors %}Error: {% endif %}Report a scam{% endblock %}
-{% block meta_description %}Report a scam to the Dollar Scholars community. Your report helps warn others, and your contact details are never shown publicly.{% endblock %}
+{% block title %}{% translate "Report a scam" as page_title %}{% if form.errors %}{% blocktranslate trimmed %}Error: {{ page_title }}{% endblocktranslate %}{% else %}{{ page_title }}{% endif %}{% endblock %}
+{% block meta_description %}{% translate "Report a scam to the Dollar Scholars community. Your report helps warn others, and your contact details are never shown publicly." as meta_description %}{{ meta_description|force_escape }}{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'scams/css/pages/report_form.css' %}">
 {% endblock %}
 
 {% block content %}
+{# Severity scale words: shown under the slider and read by report_form.js (see report-form-i18n below). #}
+{# Translators: How serious a scam was, on a scale from 1 (Very low) to 5 (Severe). #}
+{% translate "Very low" context "severity" as severity_1 %}
+{% translate "Low" context "severity" as severity_2 %}
+{% translate "Medium" context "severity" as severity_3 %}
+{% translate "High" context "severity" as severity_4 %}
+{% translate "Severe" context "severity" as severity_5 %}
 <div class="container">
     <header class="page-header">
-        <p class="eyebrow">Scam Reports</p>
-        <h1>Report a scam</h1>
-        <p class="lead">Tell us what happened. Your report helps warn others about scams going around right now. Your name, email and phone number are never shown publicly.</p>
+        <p class="eyebrow">{% translate "Scam Reports" %}</p>
+        <h1>{% translate "Report a scam" %}</h1>
+        <p class="lead">{% blocktranslate trimmed %}Tell us what happened. Your report helps warn others about scams going around right now. Your name, email and phone number are never shown publicly.{% endblocktranslate %}</p>
     </header>
 
     <div class="grid grid-main-aside report-layout">
@@ -28,8 +35,8 @@
                     <path d="M12 8v5M12 16.5v.01" />
                 </svg>
                 <div class="alert-body">
-                    <h2 class="alert-title" id="error-summary-title">There is a problem with your report</h2>
-                    <p>Please fix {% if summary|length == 1 %}this{% else %}these {{ summary|length }} things{% endif %} and send it again:</p>
+                    <h2 class="alert-title" id="error-summary-title">{% translate "There is a problem with your report" %}</h2>
+                    <p>{% translate "Please fix the following and send it again:" %}</p>
                     <ul class="error-summary-list">
                         {% for item in summary %}
                         <li>
@@ -49,7 +56,10 @@
             <form method="POST" class="card report-form" novalidate aria-describedby="required-note">
                 {% csrf_token %}
 
-                <p class="required-note" id="required-note">Fields marked <span class="req" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+                <p class="required-note" id="required-note">
+                    {# Translators: The red asterisk is hidden from screen readers, which read "with an asterisk" instead. Keep the HTML tags as they are. #}
+                    {% blocktranslate trimmed %}Fields marked <span class="req" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.{% endblocktranslate %}
+                </p>
 
                 {% for section in form.sections %}
                 <section class="form-section" aria-labelledby="section-{{ section.id }}">
@@ -65,7 +75,7 @@
                             <legend class="label">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</legend>
                             <div class="choice-chips">{{ field }}</div>
                             {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
-                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">{% translate "Error:" %} </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
                         </fieldset>
 
                         {% elif widget_type == 'checkbox' %}
@@ -74,7 +84,7 @@
                                 {{ field }}
                                 <span>{{ field.label }}{% if field.help_text %}<span class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% endif %}</span>
                             </label>
-                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">{% translate "Error:" %} </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
                         </div>
 
                         {% elif field.name == 'severity' %}
@@ -85,11 +95,11 @@
                             </div>
                             {{ field }}
                             <ul class="range-scale" aria-hidden="true">
-                                <li>1 · Very low</li>
-                                <li>5 · Severe</li>
+                                <li>1 · {{ severity_1 }}</li>
+                                <li>5 · {{ severity_5 }}</li>
                             </ul>
                             {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
-                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">{% translate "Error:" %} </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
                         </div>
 
                         {% else %}
@@ -97,7 +107,7 @@
                             <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
                             {{ field }}
                             {% if field.help_text %}<p class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
-                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">Error: </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                            {% if field.errors %}<ul class="errorlist" id="{{ field.auto_id }}_error">{% for error in field.errors %}<li><span class="visually-hidden">{% translate "Error:" %} </span>{{ error }}</li>{% endfor %}</ul>{% endif %}
                         </div>
                         {% endif %}
 
@@ -108,44 +118,46 @@
                 {% endfor %}
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-lg">Submit report</button>
+                    <button type="submit" class="btn btn-primary btn-lg">{% translate "Submit report" %}</button>
                 </div>
             </form>
         </div>
 
-        <aside class="report-aside stack" aria-label="About your report">
+        {% translate "About your report" as aside_label %}
+        <aside class="report-aside stack" aria-label="{{ aside_label|force_escape }}">
             <section class="card" aria-labelledby="next-steps-title">
                 <div class="card-header">
-                    <h2 class="card-title" id="next-steps-title">What happens next</h2>
+                    <h2 class="card-title" id="next-steps-title">{% translate "What happens next" %}</h2>
                 </div>
                 <ol class="report-steps">
                     <li>
-                        <strong>We save your report.</strong>
-                        It is added to the database with the status Pending.
+                        <strong>{% translate "We save your report." %}</strong>
+                        {# Translators: "Pending" is the status a new report gets until our team has looked at it. #}
+                        {% translate "It is added to the database with the status Pending." %}
                     </li>
                     <li>
-                        <strong>It joins the community data.</strong>
-                        ScamDB generates reports on the latest scams to help other individuals and organizations.
+                        <strong>{% translate "It joins the community data." %}</strong>
+                        {% translate "ScamDB generates reports on the latest scams to help other individuals and organizations." %}
                     </li>
                     <li>
-                        <strong>Your details stay private.</strong>
-                        Your name, email and phone number are never shown on public pages.
+                        <strong>{% translate "Your details stay private." %}</strong>
+                        {% translate "Your name, email and phone number are never shown on public pages." %}
                     </li>
                 </ol>
             </section>
 
             <section class="card card-muted" aria-labelledby="safety-tips-title">
                 <div class="card-header">
-                    <h2 class="card-title" id="safety-tips-title">If you have been scammed</h2>
+                    <h2 class="card-title" id="safety-tips-title">{% translate "If you have been scammed" %}</h2>
                 </div>
                 <ul class="checklist">
-                    <li>Stop replying to the scammer and do not send any more money.</li>
-                    <li>If you paid or shared card details, call your bank or card provider straight away.</li>
-                    <li>Change any passwords you shared and turn on two-step verification.</li>
-                    <li>Keep screenshots, messages and receipts as evidence.</li>
-                    <li>This form does not alert the police or your bank. Report it to them as well.</li>
+                    <li>{% translate "Stop replying to the scammer and do not send any more money." %}</li>
+                    <li>{% translate "If you paid or shared card details, call your bank or card provider straight away." %}</li>
+                    <li>{% translate "Change any passwords you shared and turn on two-step verification." %}</li>
+                    <li>{% translate "Keep screenshots, messages and receipts as evidence." %}</li>
+                    <li>{% translate "This form does not alert the police or your bank. Report it to them as well." %}</li>
                 </ul>
-                <a class="btn-link" href="{% url 'scam_awareness_page' %}">How to spot and report scams</a>
+                <a class="btn-link" href="{% url 'scam_awareness_page' %}">{% translate "How to spot and report scams" %}</a>
             </section>
 
             <section class="card card-muted privacy-note" aria-labelledby="privacy-title">
@@ -157,13 +169,17 @@
                             <path d="M8 11V7a4 4 0 0 1 8 0v4" />
                         </svg>
                     </span>
-                    <h2 class="card-title" id="privacy-title">Your privacy</h2>
+                    <h2 class="card-title" id="privacy-title">{% translate "Your privacy" %}</h2>
                 </div>
-                <p class="text-small text-muted">Your name, email and phone number are kept with your report. They are never shown on the dashboard or in the list of reports. <a href="https://dollarscholars.org/privacy-policy/">Read our privacy policy</a>.</p>
+                <p class="text-small text-muted">{% blocktranslate trimmed %}Your name, email and phone number are kept with your report. They are never shown on the dashboard or in the list of reports.{% endblocktranslate %}
+                    {% blocktranslate trimmed with privacy_url="https://dollarscholars.org/privacy-policy/" %}<a href="{{ privacy_url }}">Read our privacy policy</a>.{% endblocktranslate %}</p>
             </section>
         </aside>
     </div>
 </div>
+
+{# Words report_form.js shows on the page (it has no English of its own). escapejs keeps each one a valid JSON string. #}
+<script type="application/json" id="report-form-i18n">{"severityLabels": {"1": "{{ severity_1|escapejs }}", "2": "{{ severity_2|escapejs }}", "3": "{{ severity_3|escapejs }}", "4": "{{ severity_4|escapejs }}", "5": "{{ severity_5|escapejs }}"}}</script>
 {% endblock %}
 
 {% block extra_js %}

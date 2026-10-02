@@ -1,5 +1,5 @@
-{% load static %}<!doctype html>
-<html lang="en" dir="ltr" class="no-js">
+{% load i18n static %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" class="no-js">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,27 +23,30 @@
         })();
     </script>
 
-    <title>{% block title %}Scam Reports{% endblock %} | Dollar Scholars</title>
-    <meta name="description" content="{% block meta_description %}Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation.{% endblock %}">
+    <title>{% block title %}{% translate "Scam Reports" %}{% endblock %} | Dollar Scholars</title>
+    <meta name="description" content="{% block meta_description %}{% translate "Report a scam, see what the community has reported and learn how to protect yourself. A free tool from the Dollar Scholars Foundation." %}{% endblock %}">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
     <meta property="og:site_name" content="Dollar Scholars">
     <meta property="og:type" content="website">
 
+    {% for code, url in LANGUAGE_ALTERNATES %}
+    <link rel="alternate" hreflang="{{ code }}" href="{{ url }}">
+    {% endfor %}
     <link rel="icon" type="image/svg+xml" href="{% static 'scams/img/vector_logo_ds_small.svg' %}">
     <link rel="stylesheet" href="{% static 'scams/css/ds-theme.css' %}">
     <script src="{% static 'scams/js/theme-toggle.js' %}" defer></script>
     <script src="{% static 'scams/js/site-nav.js' %}" defer></script>
     {% if DS_SITE_URL %}
     {# picker=1: the main site's language picker too, so the header matches it exactly #}
-    <script src="{{ DS_SITE_URL }}/embed/site-header.js?picker=1" defer></script>
-    <script src="{{ DS_SITE_URL }}/embed/site-footer.js" defer></script>
+    <script src="{{ DS_SITE_URL }}/embed/site-header.js?picker=1&amp;lang={{ LANGUAGE_CODE }}" defer></script>
+    <script src="{{ DS_SITE_URL }}/embed/site-footer.js?lang={{ LANGUAGE_CODE }}" defer></script>
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">{% translate "Skip to main content" %}</a>
 
     {# The main site's live header; this app's own header shows until it loads, or if it cannot. #}
     <ds-site-header>
