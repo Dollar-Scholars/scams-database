@@ -36,10 +36,17 @@ class SourcesTests(SimpleTestCase):
         texts = {m['text']: m for m in data['messages']}
         self.assertEqual(data['version'], 1)
         self.assertIn('Scams by date occurred', texts)
-        summary = texts['Topics reviewed: %(reviewed)s of %(total)s']
+        summary = texts['Reports: %(count)s']
         self.assertTrue(summary['is_format'])
-        self.assertEqual(summary['locations'], ['scams/templates/scams/scam_awareness_page.html:13',
-                                                'scams/templates/scams/scam_awareness_page.html:17'])
+        self.assertEqual([place.split(':')[0] for place in summary['locations']],
+                         ['scams/views.py'])
+
+    def test_a_word_between_two_placeholders_is_refused(self):
+        extraction = Extraction()
+        extraction.add('%(first)s to %(last)s', '', True, 'views.py:1')
+        extraction.add('%(code)s — %(name)s', '', True, 'views.py:2')
+        self.assertEqual(len(extraction.warnings), 1)
+        self.assertIn('views.py:1', extraction.warnings[0])
 
     def test_plurals_are_refused(self):
         folder = Path(tempfile.mkdtemp())

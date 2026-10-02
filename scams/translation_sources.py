@@ -29,6 +29,9 @@ GETTEXT_FUNCTIONS = {'_', 'gettext', 'gettext_lazy', 'gettext_noop'}
 PGETTEXT_FUNCTIONS = {'pgettext', 'pgettext_lazy'}
 PLURAL_FUNCTIONS = {'ngettext', 'ngettext_lazy', 'npgettext', 'npgettext_lazy'}
 PLACEHOLDER_RE = re.compile(r'%\((\w+)\)[sdif]')
+# Two placeholders with only a word or two between them, as in "%(a)s of %(b)s": machine
+# translation tends to drop those words ("2 of 4" came back as "2 4" in 22 languages).
+WORDS_BETWEEN_RE = re.compile(r'%\(\w+\)[sdif]\s+[^\W\d_]+(?:\s+[^\W\d_]+)?\s+%\(\w+\)[sdif]')
 
 
 @dataclass
@@ -49,6 +52,10 @@ class Extraction:
         text = text.replace('\r\n', '\n').replace('\r', '\n')
         if not text.strip():
             return
+        if WORDS_BETWEEN_RE.search(text):
+            self.warnings.append(
+                f'{location}: {text!r}: a word or two between two placeholders gets lost in '
+                'machine translation; keep the numbers out of the text (e.g. "2/4")')
         message = self.messages.get((context, text))
         if message is None:
             message = self.messages[(context, text)] = Message(text, context, is_format)

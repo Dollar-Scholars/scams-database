@@ -43,7 +43,7 @@
     }
 
     function progressText(reviewedCount, total) {
-        // messages.progress is e.g. "Topics reviewed: {reviewed} of 4" in the page language
+        // messages.progress is e.g. "Topics reviewed: {reviewed}/4", the label in the page language
         if (typeof messages.progress === 'string' && messages.progress.indexOf('{reviewed}') !== -1) {
             return decodeHtml(messages.progress.split('{reviewed}').join(String(reviewedCount)));
         }

@@ -197,8 +197,9 @@ def _chart_summary(series, description):
         return ''
     first, last = series[0][0], series[-1][0]
     peak_label, peak = max(series, key=lambda row: row[1])
-    # Translators: a range of months, e.g. "Jan 2026 to Mar 2026".
-    span = first if first == last else _('%(first)s to %(last)s') % {'first': first, 'last': last}
+    # A range of months, "Jan 2026 – Mar 2026". Not translated: machine translation tends to
+    # drop a word between two placeholders ("%(first)s to %(last)s" came back without "to").
+    span = first if first == last else f'{first} – {last}'
     return _(
         '%(description)s, %(span)s. Busiest month: %(month)s (reports: %(count)s). '
         'Exact numbers are in the table below the chart.'

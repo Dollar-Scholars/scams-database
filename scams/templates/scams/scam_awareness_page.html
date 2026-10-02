@@ -9,14 +9,10 @@
 {% endblock %}
 
 {% block content %}
-{# Translators: progress text under the topic list, e.g. "Topics reviewed: 2 of 4". #}
-{% blocktranslate trimmed with reviewed=0 total=4 asvar progress_initial %}
-    Topics reviewed: {{ reviewed }} of {{ total }}
-{% endblocktranslate %}
-{# Same message again, with a "{reviewed}" placeholder that awareness.js fills in as topics are opened. #}
-{% blocktranslate trimmed with reviewed="{reviewed}" total=4 asvar progress_template %}
-    Topics reviewed: {{ reviewed }} of {{ total }}
-{% endblocktranslate %}
+{# Translators: the label before the count under the topic list, e.g. "Topics reviewed: 2/4". #}
+{% translate "Topics reviewed:" as progress_label %}
+{# The count is "2/4", outside the translation: machine translation tends to drop a word #}
+{# between two numbers ("2 of 4" came back as "2 4"). awareness.js fills in {reviewed}. #}
 <div class="awareness-page">
     <div class="container container-narrow">
         <header class="page-header awareness-hero">
@@ -39,7 +35,7 @@
                 aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" data-progress>
                 <span class="progress-bar" data-progress-fill></span>
             </div>
-            <p class="awareness-progress-label" id="awareness-progress-label" aria-live="polite" data-progress-label>{{ progress_initial }}</p>
+            <p class="awareness-progress-label" id="awareness-progress-label" aria-live="polite" data-progress-label>{{ progress_label }} 0/4</p>
         </div>
 
         <div class="awareness-sections">
@@ -245,7 +241,7 @@
         </div>
     </div>
     {# Translated strings for awareness.js. escapejs keeps every value a valid JSON string and safe inside <script>. #}
-    <script type="application/json" id="awareness-i18n">{"progress": "{{ progress_template|escapejs }}"}</script>
+    <script type="application/json" id="awareness-i18n">{"progress": "{{ progress_label|escapejs }} {reviewed}/4"}</script>
 </div>
 {% endblock %}
 
