@@ -3,7 +3,7 @@ asgiref==3.11.1
 Django==5.2.17
 sqlparse==0.5.5
 typing_extensions==4.15.0
-tzdata==2026.1
+tzdata==2026.5
 thefuzz==0.22.1
 python-levenshtein==0.27.3
 # PostgreSQL driver (only used when POSTGRES_HOST is set; SQLite needs nothing extra)
