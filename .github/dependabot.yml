@@ -1,0 +1,11 @@
+# GitHub checks every Monday for new versions of the Python packages in
+# requirements.txt (Django and the rest) and opens a pull request for each,
+# which GitHub emails about. Security fixes come as soon as they are known.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
