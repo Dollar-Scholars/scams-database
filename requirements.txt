@@ -2,7 +2,7 @@
 asgiref==3.11.1
 Django==5.2.17
 sqlparse==0.5.5
-typing_extensions==4.15.0
+typing_extensions==4.16.0
 tzdata==2026.1
 thefuzz==0.22.1
 python-levenshtein==0.27.3
