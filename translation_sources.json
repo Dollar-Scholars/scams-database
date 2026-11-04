@@ -1369,7 +1369,7 @@
    "is_format": false,
    "locations": [
     "scams/templates/scams/report_form.html:130",
-    "scams/templates/scams/thank_you.html:25"
+    "scams/templates/scams/thank_you.html:26"
    ]
   },
   {
@@ -1805,7 +1805,7 @@
    "is_format": false,
    "locations": [
     "scams/templates/scams/scam_awareness_page.html:239",
-    "scams/templates/scams/thank_you.html:48"
+    "scams/templates/scams/thank_you.html:45"
    ]
   },
   {
@@ -1818,7 +1818,7 @@
    ]
   },
   {
-   "text": "Your scam report was submitted to Dollar Scholars and is pending review.",
+   "text": "Your scam report was submitted to Dollar Scholars and has been counted on the scam dashboard.",
    "context": "",
    "is_format": false,
    "locations": [
@@ -1834,7 +1834,7 @@
    ]
   },
   {
-   "text": "Your report has been submitted successfully and is currently pending review.",
+   "text": "Your report has been submitted and has been counted on the dashboard.",
    "context": "",
    "is_format": false,
    "locations": [
@@ -1842,19 +1842,11 @@
    ]
   },
   {
-   "text": "We review your report",
+   "text": "We reserve the right to review any report for accuracy and to edit or remove reports that are false, abusive, or share someone's private details.",
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/thank_you.html:28"
-   ]
-  },
-  {
-   "text": "It shows as <span class=\"badge badge-dot badge-pending\">Pending</span> until it has been reviewed.",
-   "context": "",
-   "is_format": true,
-   "locations": [
-    "scams/templates/scams/thank_you.html:29"
+    "scams/templates/scams/thank_you.html:22"
    ]
   },
   {
@@ -1862,7 +1854,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/thank_you.html:32"
+    "scams/templates/scams/thank_you.html:29"
    ]
   },
   {
@@ -1870,7 +1862,7 @@
    "context": "",
    "is_format": true,
    "locations": [
-    "scams/templates/scams/thank_you.html:34"
+    "scams/templates/scams/thank_you.html:31"
    ]
   },
   {
@@ -1878,7 +1870,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/thank_you.html:37"
+    "scams/templates/scams/thank_you.html:34"
    ]
   },
   {
@@ -1886,7 +1878,7 @@
    "context": "",
    "is_format": true,
    "locations": [
-    "scams/templates/scams/thank_you.html:38"
+    "scams/templates/scams/thank_you.html:35"
    ]
   },
   {
@@ -1894,7 +1886,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/thank_you.html:45"
+    "scams/templates/scams/thank_you.html:42"
    ]
   },
   {
@@ -1902,7 +1894,7 @@
    "context": "",
    "is_format": false,
    "locations": [
-    "scams/templates/scams/thank_you.html:51"
+    "scams/templates/scams/thank_you.html:48"
    ]
   },
   {

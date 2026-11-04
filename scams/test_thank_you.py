@@ -54,7 +54,8 @@ class ThankYouPageTests(TestCase):
         main = main_html(self.client.get(self.url))
         self.assertIn('class="thanks-icon"', main)
         self.assertIn('<h1 id="thanks-heading">Thank you</h1>', main)
-        self.assertIn('Your report has been submitted successfully and is currently pending review.', main)
+        self.assertIn('Your report has been submitted and has been counted on the dashboard.', main)
+        self.assertIn('We reserve the right to review any report for accuracy', main)
         self.assertIn('What happens next', main)
 
     def test_no_parallel_spanish_copy(self):
