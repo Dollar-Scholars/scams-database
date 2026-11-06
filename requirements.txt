@@ -1,7 +1,7 @@
 # Python 3.10 to 3.14 (Django 5.2.17 supports 3.10-3.14; psycopg 3.3 needs 3.10+).
 asgiref==3.11.1
 Django==5.2.17
-sqlparse==0.5.5
+sqlparse==0.6.0
 typing_extensions==4.15.0
 tzdata==2026.1
 thefuzz==0.22.1
