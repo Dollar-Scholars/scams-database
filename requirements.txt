@@ -7,7 +7,7 @@ tzdata==2026.1
 thefuzz==0.22.1
 python-levenshtein==0.27.3
 # PostgreSQL driver (only used when POSTGRES_HOST is set; SQLite needs nothing extra)
-psycopg[binary]==3.3.6
+psycopg[binary]==3.3.8
 # Loads settings from a local .env file
 python-dotenv==1.2.3
 # Serves static files when DEBUG is off
