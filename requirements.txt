@@ -13,6 +13,6 @@ python-dotenv==1.2.3
 # Serves static files when DEBUG is off
 whitenoise==6.12.0
 # Production web server used by the Docker image (Linux only; runserver is for development)
-gunicorn==26.2.0
+gunicorn==27.0.1
 # Country and currency names in every language ScamDB is offered in
 babel==2.18.0
